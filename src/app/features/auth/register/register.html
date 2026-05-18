@@ -1,1 +1,284 @@
-<p>register works!</p>
+<div class="auth-page">
+
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="auth-stripe"></div>
+      <p class="auth-label">Rejoignez Novauto</p>
+      <h1 class="auth-title">
+        CRÉEZ VOTRE<br>
+        COMPTE<br>
+        <span>GRATUITEMENT.</span>
+      </h1>
+      <p class="auth-subtitle">
+        Achetez ou vendez des véhicules en toute confiance sur la plateforme automobile premium du Bénin.
+      </p>
+      <div class="auth-features">
+        <div class="auth-feature">
+          <lucide-icon [img]="Check" [size]="14" color="#C9A84C"></lucide-icon>
+          <span>Inscription gratuite et rapide</span>
+        </div>
+        <div class="auth-feature">
+          <lucide-icon [img]="Check" [size]="14" color="#C9A84C"></lucide-icon>
+          <span>Transactions 100% sécurisées</span>
+        </div>
+        <div class="auth-feature">
+          <lucide-icon [img]="Check" [size]="14" color="#C9A84C"></lucide-icon>
+          <span>Badge vendeur certifié disponible</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-form-container">
+
+      <a routerLink="/" class="auth-back">
+        <lucide-icon [img]="ArrowLeft" [size]="14" color="#7e7e7e"></lucide-icon>
+        Retour à l'accueil
+      </a>
+
+      <div class="auth-form-header">
+        <span class="auth-logo">NOV<span>AUTO</span></span>
+        <h2 class="auth-form-title">Inscription</h2>
+        <p class="auth-form-subtitle">
+          Déjà un compte ?
+          <a routerLink="/auth/login" class="auth-link">Se connecter</a>
+        </p>
+      </div>
+
+      <!-- TYPE DE COMPTE -->
+      <div class="type-selector">
+        <p class="type-label">Je suis un</p>
+        <div class="type-cards">
+
+          <div class="type-card"
+               [class.type-card-active]="isAcheteur"
+               (click)="selectType('ACHETEUR')">
+            <lucide-icon [img]="ShoppingBag" [size]="20"
+              [color]="isAcheteur ? '#C9A84C' : '#7e7e7e'">
+            </lucide-icon>
+            <span class="type-card-title">Acheteur</span>
+            <span class="type-card-desc">Je cherche un véhicule</span>
+          </div>
+
+          <div class="type-card"
+               [class.type-card-active]="isVendeurParticulier"
+               (click)="selectType('VENDEUR_PARTICULIER')">
+            <lucide-icon [img]="User" [size]="20"
+              [color]="isVendeurParticulier ? '#C9A84C' : '#7e7e7e'">
+            </lucide-icon>
+            <span class="type-card-title">Particulier</span>
+            <span class="type-card-desc">Je vends mon véhicule</span>
+          </div>
+
+          <div class="type-card"
+               [class.type-card-active]="isVendeurProfessionnel"
+               (click)="selectType('VENDEUR_PROFESSIONNEL')">
+            <lucide-icon [img]="Building2" [size]="20"
+              [color]="isVendeurProfessionnel ? '#C9A84C' : '#7e7e7e'">
+            </lucide-icon>
+            <span class="type-card-title">Professionnel</span>
+            <span class="type-card-desc">Parc auto / Concessionnaire</span>
+          </div>
+
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="auth-error">
+          <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+
+        <!-- INFORMATIONS PERSONNELLES -->
+        <div class="form-section-title">Informations personnelles</div>
+
+        <div class="form-group">
+          <label class="form-label">Nom complet</label>
+          <input
+            type="text"
+            formControlName="nom"
+            class="input-field"
+            [class.input-error]="nom?.invalid && nom?.touched"
+            placeholder="Jean Dupont"
+          />
+          @if (nom?.invalid && nom?.touched) {
+            <span class="form-error">
+              @if (nom?.errors?.['required']) { Le nom est obligatoire. }
+              @if (nom?.errors?.['minlength']) { Minimum 2 caractères. }
+            </span>
+          }
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Adresse email</label>
+            <input
+              type="email"
+              formControlName="email"
+              class="input-field"
+              [class.input-error]="email?.invalid && email?.touched"
+              placeholder="votre@email.com"
+            />
+            @if (email?.invalid && email?.touched) {
+              <span class="form-error">
+                @if (email?.errors?.['required']) { L'email est obligatoire. }
+                @if (email?.errors?.['email']) { Format invalide. }
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Téléphone</label>
+            <input
+              type="tel"
+              formControlName="tel"
+              class="input-field"
+              [class.input-error]="tel?.invalid && tel?.touched"
+              placeholder="+229 00 00 00 00"
+            />
+            @if (tel?.invalid && tel?.touched) {
+              <span class="form-error">
+                @if (tel?.errors?.['required']) { Le téléphone est obligatoire. }
+              </span>
+            }
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Mot de passe</label>
+            <div class="input-wrapper">
+              <input
+                [type]="showPassword() ? 'text' : 'password'"
+                formControlName="password"
+                class="input-field"
+                [class.input-error]="password?.invalid && password?.touched"
+                placeholder="••••••••"
+              />
+              <button type="button" class="input-toggle" (click)="togglePassword()">
+                @if (showPassword()) {
+                  <lucide-icon [img]="EyeOff" [size]="18" color="#7e7e7e"></lucide-icon>
+                } @else {
+                  <lucide-icon [img]="Eye" [size]="18" color="#7e7e7e"></lucide-icon>
+                }
+              </button>
+            </div>
+            @if (password?.invalid && password?.touched) {
+              <span class="form-error">
+                @if (password?.errors?.['required']) { Obligatoire. }
+                @if (password?.errors?.['minlength']) { Minimum 8 caractères. }
+              </span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirmer le mot de passe</label>
+            <div class="input-wrapper">
+              <input
+                [type]="showConfirmPassword() ? 'text' : 'password'"
+                formControlName="password_confirmation"
+                class="input-field"
+                [class.input-error]="registerForm.errors?.['passwordMismatch'] && password_confirmation?.touched"
+                placeholder="••••••••"
+              />
+              <button type="button" class="input-toggle" (click)="toggleConfirmPassword()">
+                @if (showConfirmPassword()) {
+                  <lucide-icon [img]="EyeOff" [size]="18" color="#7e7e7e"></lucide-icon>
+                } @else {
+                  <lucide-icon [img]="Eye" [size]="18" color="#7e7e7e"></lucide-icon>
+                }
+              </button>
+            </div>
+            @if (registerForm.errors?.['passwordMismatch'] && password_confirmation?.touched) {
+              <span class="form-error">Les mots de passe ne correspondent pas.</span>
+            }
+          </div>
+        </div>
+
+        <!-- INFORMATIONS PROFESSIONNELLES -->
+        @if (isVendeurProfessionnel) {
+          <div class="form-section-title" style="margin-top: 8px;">
+            Informations professionnelles
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Numéro IFU</label>
+              <input
+                type="text"
+                formControlName="ifu"
+                class="input-field"
+                [class.input-error]="ifu?.invalid && ifu?.touched"
+                placeholder="IFU à 13 chiffres"
+              />
+              @if (ifu?.invalid && ifu?.touched) {
+                <span class="form-error">L'IFU est obligatoire.</span>
+              }
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Numéro RCCM</label>
+              <input
+                type="text"
+                formControlName="rccm"
+                class="input-field"
+                [class.input-error]="rccm?.invalid && rccm?.touched"
+                placeholder="RB/COT/..."
+              />
+              @if (rccm?.invalid && rccm?.touched) {
+                <span class="form-error">Le RCCM est obligatoire.</span>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Nom du parc / concessionnaire</label>
+            <input
+              type="text"
+              formControlName="nom_structure"
+              class="input-field"
+              [class.input-error]="nom_structure?.invalid && nom_structure?.touched"
+              placeholder="Ex: Parc Auto Adjahi"
+            />
+            @if (nom_structure?.invalid && nom_structure?.touched) {
+              <span class="form-error">Le nom de la structure est obligatoire.</span>
+            }
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Adresse de la structure</label>
+            <input
+              type="text"
+              formControlName="adresse_structure"
+              class="input-field"
+              [class.input-error]="adresse_structure?.invalid && adresse_structure?.touched"
+              placeholder="Ex: Rue 1234, Cotonou"
+            />
+            @if (adresse_structure?.invalid && adresse_structure?.touched) {
+              <span class="form-error">L'adresse est obligatoire.</span>
+            }
+          </div>
+        }
+
+        <button
+          type="submit"
+          class="btn-primary"
+          style="width: 100%; margin-top: 8px;"
+          [disabled]="isLoading()">
+          @if (isLoading()) {
+            INSCRIPTION EN COURS...
+          } @else {
+            CRÉER MON COMPTE →
+          }
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+</div>

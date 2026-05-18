@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth-guard';
+import { acheteurGuard } from './core/guards/acheteur-guard';
+import { vendeurGuard } from './core/guards/vendeur-guard';
+import { adminGuard } from './core/guards/admin-guard';
 
 export const routes: Routes = [
 
@@ -50,6 +54,7 @@ export const routes: Routes = [
 
   {
     path: 'acheteur',
+    canActivate: [acheteurGuard],
     children: [
       {
         path: 'dashboard',
@@ -71,6 +76,7 @@ export const routes: Routes = [
 
   {
     path: 'vendeur',
+    canActivate: [vendeurGuard],
     children: [
       {
         path: 'dashboard',
@@ -97,6 +103,7 @@ export const routes: Routes = [
 
   {
     path: 'admin',
+    canActivate: [adminGuard],
     children: [
       {
         path: 'dashboard',
