@@ -1,0 +1,72 @@
+<nav class="bg-canvas border-b border-hairline" style="height: 64px; position: sticky; top: 0; z-index: 50;">
+  <div style="max-width: 1440px; margin: 0 auto; padding: 0 40px; height: 100%; display: flex; align-items: center; justify-content: space-between;">
+
+    <a routerLink="/" (click)="fermerMenu()" style="text-decoration: none;">
+      <span style="font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px;">
+        NOV<span style="color: #C9A84C;">AUTO</span>
+      </span>
+    </a>
+
+    <div class="nav-links" style="display: flex; align-items: center; gap: 32px;">
+      <a routerLink="/catalogue"
+         routerLinkActive="nav-link-active"
+         [routerLinkActiveOptions]="{exact: false}"
+         class="nav-link"
+         style="text-decoration: none;">
+        CATALOGUE
+      </a>
+      <a routerLink="/vin-decoder"
+         routerLinkActive="nav-link-active"
+         class="nav-link"
+         style="text-decoration: none;">
+        DÉCODEUR VIN
+      </a>
+      <a routerLink="/simulateur"
+         routerLinkActive="nav-link-active"
+         class="nav-link"
+         style="text-decoration: none;">
+        SIMULATEUR
+      </a>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 16px;">
+      <a routerLink="/auth/login" style="text-decoration: none;">
+        <button class="btn-ghost" style="padding: 10px 20px; font-size: 12px;">
+          CONNEXION
+        </button>
+      </a>
+      <a routerLink="/auth/register" style="text-decoration: none;">
+        <button class="btn-primary" style="padding: 10px 20px; font-size: 12px;">
+          S'INSCRIRE
+        </button>
+      </a>
+    </div>
+
+    <button
+      class="menu-toggle"
+      (click)="toggleMenu()"
+      style="display: none; background: transparent; border: none; cursor: pointer; padding: 8px;">
+      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
+      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
+      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
+    </button>
+
+  </div>
+
+  <div *ngIf="menuOuvert()"
+       style="background: #000; border-top: 1px solid #2a2a2a; padding: 24px 40px; display: flex; flex-direction: column; gap: 20px;">
+    <div style="height: 4px; background: linear-gradient(to right, #C9A84C, #E8C97A, #A07828); margin-bottom: 8px;"></div>
+    <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">CATALOGUE</a>
+    <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">DÉCODEUR VIN</a>
+    <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">SIMULATEUR</a>
+    <div style="display: flex; gap: 12px; margin-top: 8px;">
+      <a routerLink="/auth/login" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
+        <button class="btn-ghost" style="width: 100%; padding: 10px; font-size: 12px;">CONNEXION</button>
+      </a>
+      <a routerLink="/auth/register" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
+        <button class="btn-primary" style="width: 100%; padding: 10px; font-size: 12px;">S'INSCRIRE</button>
+      </a>
+    </div>
+  </div>
+
+</nav>
