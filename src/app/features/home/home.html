@@ -1,1 +1,190 @@
-<p>home works!</p>
+<main style="background: #000;">
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-bg-photo"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-inner">
+        <div class="hero-stripe"></div>
+        <p class="hero-label">Plateforme automobile premium du Bénin</p>
+        <h1 class="hero-title">
+          L'EXCELLENCE<br>
+          AUTOMOBILE À<br>
+          PORTÉE DE CLIC<br>
+          <span>AU BÉNIN.</span>
+        </h1>
+        <p class="hero-subtitle">
+          Réservez votre véhicule en toute sécurité avec une transparence totale sur les frais de douane et l'historique certifié.
+        </p>
+        <div class="hero-search">
+          <div class="hero-search-grid">
+            <div>
+              <label class="search-label">Marque</label>
+              <select class="select-field">
+                <option value="">Toutes les marques</option>
+                <option>Toyota</option>
+                <option>Mercedes</option>
+                <option>BMW</option>
+                <option>Porsche</option>
+                <option>Ford</option>
+              </select>
+            </div>
+            <div>
+              <label class="search-label">Modèle</label>
+              <select class="select-field">
+                <option value="">Tous les modèles</option>
+              </select>
+            </div>
+            <div>
+              <label class="search-label">Budget max (CFA)</label>
+              <select class="select-field">
+                <option value="">Illimité</option>
+                <option>10 000 000</option>
+                <option>20 000 000</option>
+                <option>30 000 000</option>
+                <option>50 000 000</option>
+              </select>
+            </div>
+            <button class="btn-primary" routerLink="/catalogue">
+              RECHERCHER
+            </button>
+          </div>
+        </div>
+        <div class="hero-cta">
+          <a routerLink="/catalogue" style="text-decoration: none;">
+            <button class="btn-primary">VOIR LE CATALOGUE →</button>
+          </a>
+          <a routerLink="/simulateur" style="text-decoration: none;">
+            <button class="btn-outline">SIMULER LE COÛT</button>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FONCTIONNALITÉS -->
+  <section class="fonctionnalites-section">
+    <div class="fonctionnalites-header">
+      <p class="section-label">Pourquoi Novauto ?</p>
+    </div>
+    <div class="fonctionnalites-grid">
+      @for (f of fonctionnalites; track f.titre) {
+        <div class="fonctionnalite-item">
+          <div class="fonctionnalite-icone">{{ f.icone }}</div>
+          <h3 class="fonctionnalite-titre">{{ f.titre }}</h3>
+          <p class="fonctionnalite-desc">{{ f.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- ANNONCES EN VEDETTE -->
+  <section class="annonces-section">
+    <div class="section-container">
+      <div class="section-header">
+        <div>
+          <p class="section-label">Sélection du moment</p>
+          <h2 class="section-title">Véhicules à la Une</h2>
+          <p class="section-subtitle">Découvrez nos dernières pépites sélectionnées pour vous.</p>
+        </div>
+        <a routerLink="/catalogue" style="text-decoration: none;">
+          <button class="btn-ghost">Voir tout le catalogue →</button>
+        </a>
+      </div>
+      <div class="annonces-grid">
+        @for (annonce of annonces; track annonce.titre) {
+          <div class="annonce-card">
+            <div class="annonce-image">
+              <img [src]="annonce.photo" [alt]="annonce.titre" loading="lazy"/>
+              @if (annonce.vin) {
+                <span class="badge-gold badge-top-left">VIN ✓</span>
+              }
+              <span class="badge-top-right"
+                    [class]="annonce.statut === 'DÉDOUANÉ' ? 'badge-success' : 'badge-muted'">
+                {{ annonce.statut }}
+              </span>
+            </div>
+            <div class="annonce-body">
+              <div class="annonce-header">
+                <h3 class="annonce-titre">{{ annonce.titre }}</h3>
+                <span class="annonce-annee">{{ annonce.annee }}</span>
+              </div>
+              <p class="annonce-meta">
+                <span>⊙ {{ annonce.km }} KM</span>
+              </p>
+              <hr class="annonce-divider"/>
+              <p class="annonce-prix-label">Prix clé en main</p>
+              <div class="annonce-footer">
+                <div>
+                  <p class="annonce-prix">
+                    {{ annonce.prix }} <span>FCFA</span>
+                  </p>
+                </div>
+                <button class="btn-outline" style="padding: 8px 14px; font-size: 11px;">
+                  VOIR →
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULATEUR CTA -->
+  <section class="simulateur-section">
+    <div class="simulateur-container">
+      <div class="simulateur-left">
+        <div class="simulateur-stripe"></div>
+        <p class="section-label">Outil exclusif</p>
+        <h2 class="simulateur-title">
+          ESTIMEZ VOTRE COÛT<br>DE REVIENT TOTAL
+        </h2>
+        <p class="simulateur-desc">
+          Notre simulateur intègre les droits de douane, frais CNCB, PVI, manutention portuaire et frais ANaTT pour vous donner une vision complète de votre budget avant tout engagement.
+        </p>
+        <div class="simulateur-cta">
+          <a routerLink="/simulateur" style="text-decoration: none;">
+            <button class="btn-primary">LANCER LE SIMULATEUR →</button>
+          </a>
+          <a routerLink="/vin-decoder" style="text-decoration: none;">
+            <button class="btn-outline">DÉCODEUR VIN</button>
+          </a>
+        </div>
+      </div>
+      <div class="simulateur-right">
+        <p class="frais-titre">Exemple de décomposition</p>
+        <div class="frais-item">
+          <span class="frais-label">Prix du véhicule</span>
+          <span class="frais-valeur">15 000 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Droits de douane</span>
+          <span class="frais-valeur">3 750 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Frais CNCB</span>
+          <span class="frais-valeur">225 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Frais PVI</span>
+          <span class="frais-valeur">150 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Manutention portuaire</span>
+          <span class="frais-valeur">180 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Frais ANaTT</span>
+          <span class="frais-valeur">85 000 FCFA</span>
+        </div>
+        <div class="frais-item frais-total">
+          <span class="frais-label">COÛT TOTAL ESTIMÉ</span>
+          <span class="frais-valeur">19 390 000 FCFA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
