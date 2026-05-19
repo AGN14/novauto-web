@@ -126,10 +126,10 @@ export class AuthService {
     }
   }
 
-  private clearSession(): void {
+    private clearSession(): void {
     localStorage.removeItem(this.TOKEN_KEY);
     localStorage.removeItem(this.USER_KEY);
     this._currentUser.set(null);
-    this.router.navigate(['/']);
+    this.router.navigate(['/auth/login']);
   }
 }

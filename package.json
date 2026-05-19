@@ -4,10 +4,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "ng build --configuration production",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:novauto-web": "node dist/novauto-web/server/server.mjs"
+    "vercel-build": "ng build --configuration production"
   },
   "private": true,
   "packageManager": "npm@10.9.2",

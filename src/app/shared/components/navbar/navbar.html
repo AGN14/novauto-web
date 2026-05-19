@@ -1,72 +1,127 @@
-<nav class="bg-canvas border-b border-hairline" style="height: 64px; position: sticky; top: 0; z-index: 50;">
-  <div style="max-width: 1440px; margin: 0 auto; padding: 0 40px; height: 100%; display: flex; align-items: center; justify-content: space-between;">
+<nav class="navbar">
+  <div class="navbar-container">
 
-    <a routerLink="/" (click)="fermerMenu()" style="text-decoration: none;">
-      <span style="font-size: 20px; font-weight: 700; color: #fff; letter-spacing: 2px;">
-        NOV<span style="color: #C9A84C;">AUTO</span>
-      </span>
+    <a routerLink="/" (click)="fermerMenu()" class="navbar-logo">
+      NOV<span>AUTO</span>
     </a>
 
-    <div class="nav-links" style="display: flex; align-items: center; gap: 32px;">
+    <div class="navbar-links">
       <a routerLink="/catalogue"
          routerLinkActive="nav-link-active"
-         [routerLinkActiveOptions]="{exact: false}"
-         class="nav-link"
-         style="text-decoration: none;">
+         class="nav-link">
         CATALOGUE
       </a>
       <a routerLink="/vin-decoder"
          routerLinkActive="nav-link-active"
-         class="nav-link"
-         style="text-decoration: none;">
+         class="nav-link">
         DÉCODEUR VIN
       </a>
       <a routerLink="/simulateur"
          routerLinkActive="nav-link-active"
-         class="nav-link"
-         style="text-decoration: none;">
+         class="nav-link">
         SIMULATEUR
       </a>
     </div>
 
-    <div style="display: flex; align-items: center; gap: 16px;">
-      <a routerLink="/auth/login" style="text-decoration: none;">
-        <button class="btn-ghost" style="padding: 10px 20px; font-size: 12px;">
-          CONNEXION
-        </button>
-      </a>
-      <a routerLink="/auth/register" style="text-decoration: none;">
-        <button class="btn-primary" style="padding: 10px 20px; font-size: 12px;">
-          S'INSCRIRE
-        </button>
-      </a>
+    <div class="navbar-actions">
+
+      @if (authService.isLoggedIn()) {
+
+        @if (authService.isVendeur()) {
+          <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
+            <button class="btn-outline" style="padding: 10px 16px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
+              <lucide-icon [img]="PlusCircle" [size]="14"></lucide-icon>
+              PUBLIER
+            </button>
+          </a>
+        }
+
+        <div class="user-menu-wrapper">
+          <button class="user-btn" (click)="toggleUserMenu()">
+            <div class="user-avatar">
+              {{ authService.currentUser()?.nom?.charAt(0)?.toUpperCase() }}
+            </div>
+            <span class="user-name">
+              {{ authService.currentUser()?.nom }}
+            </span>
+          </button>
+
+          @if (menuUserOuvert()) {
+            <div class="user-dropdown">
+              <div class="user-dropdown-header">
+                <p class="user-dropdown-name">{{ authService.currentUser()?.nom }}</p>
+                <p class="user-dropdown-email">{{ authService.currentUser()?.email }}</p>
+                <span class="user-dropdown-role">{{ authService.currentUser()?.role }}</span>
+              </div>
+              <div class="user-dropdown-divider"></div>
+              <a [routerLink]="dashboardLink" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
+                <lucide-icon [img]="LayoutDashboard" [size]="15"></lucide-icon>
+                Mon tableau de bord
+              </a>
+              <a routerLink="/profil" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
+                <lucide-icon [img]="User" [size]="15"></lucide-icon>
+                Mon profil
+              </a>
+              <div class="user-dropdown-divider"></div>
+              <button class="user-dropdown-logout" (click)="logout()">
+                <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
+                Se déconnecter
+              </button>
+            </div>
+          }
+        </div>
+
+      } @else {
+
+        <a routerLink="/auth/login" style="text-decoration: none;">
+          <button class="btn-ghost" style="padding: 10px 20px; font-size: 12px;">
+            CONNEXION
+          </button>
+        </a>
+        <a routerLink="/auth/register" style="text-decoration: none;">
+          <button class="btn-primary" style="padding: 10px 20px; font-size: 12px;">
+            S'INSCRIRE
+          </button>
+        </a>
+
+      }
+
     </div>
 
-    <button
-      class="menu-toggle"
-      (click)="toggleMenu()"
-      style="display: none; background: transparent; border: none; cursor: pointer; padding: 8px;">
-      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
-      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
-      <span style="display: block; width: 24px; height: 2px; background: #fff; margin: 5px 0;"></span>
+    <button class="menu-toggle" (click)="toggleMenu()">
+      @if (menuOuvert()) {
+        <lucide-icon [img]="X" [size]="22" color="#fff"></lucide-icon>
+      } @else {
+        <lucide-icon [img]="Menu" [size]="22" color="#fff"></lucide-icon>
+      }
     </button>
 
   </div>
 
-  <div *ngIf="menuOuvert()"
-       style="background: #000; border-top: 1px solid #2a2a2a; padding: 24px 40px; display: flex; flex-direction: column; gap: 20px;">
-    <div style="height: 4px; background: linear-gradient(to right, #C9A84C, #E8C97A, #A07828); margin-bottom: 8px;"></div>
-    <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">CATALOGUE</a>
-    <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">DÉCODEUR VIN</a>
-    <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link" style="text-decoration: none;">SIMULATEUR</a>
-    <div style="display: flex; gap: 12px; margin-top: 8px;">
-      <a routerLink="/auth/login" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
-        <button class="btn-ghost" style="width: 100%; padding: 10px; font-size: 12px;">CONNEXION</button>
-      </a>
-      <a routerLink="/auth/register" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
-        <button class="btn-primary" style="width: 100%; padding: 10px; font-size: 12px;">S'INSCRIRE</button>
-      </a>
+  @if (menuOuvert()) {
+    <div class="mobile-menu">
+      <div class="mobile-stripe"></div>
+      <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link">CATALOGUE</a>
+      <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link">DÉCODEUR VIN</a>
+      <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link">SIMULATEUR</a>
+      <div class="mobile-menu-divider"></div>
+      @if (authService.isLoggedIn()) {
+        <a [routerLink]="dashboardLink" (click)="fermerMenu()" class="nav-link">MON DASHBOARD</a>
+        <button class="user-dropdown-logout" style="width: 100%; text-align: left;" (click)="logout()">
+          <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
+          SE DÉCONNECTER
+        </button>
+      } @else {
+        <div style="display: flex; gap: 12px; margin-top: 8px;">
+          <a routerLink="/auth/login" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
+            <button class="btn-ghost" style="width: 100%; padding: 10px; font-size: 12px;">CONNEXION</button>
+          </a>
+          <a routerLink="/auth/register" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
+            <button class="btn-primary" style="width: 100%; padding: 10px; font-size: 12px;">S'INSCRIRE</button>
+          </a>
+        </div>
+      }
     </div>
-  </div>
+  }
 
 </nav>
