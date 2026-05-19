@@ -71,7 +71,6 @@ export class Register {
 
   selectType(type: 'ACHETEUR' | 'VENDEUR_PARTICULIER' | 'VENDEUR_PROFESSIONNEL'): void {
     this.typeCompte.set(type);
-
     if (type === 'VENDEUR_PROFESSIONNEL') {
       this.registerForm.get('ifu')?.setValidators([Validators.required]);
       this.registerForm.get('nom_structure')?.setValidators([Validators.required]);
@@ -83,7 +82,6 @@ export class Register {
       this.registerForm.get('adresse_structure')?.clearValidators();
       this.registerForm.get('rccm')?.clearValidators();
     }
-
     this.registerForm.get('ifu')?.updateValueAndValidity();
     this.registerForm.get('nom_structure')?.updateValueAndValidity();
     this.registerForm.get('adresse_structure')?.updateValueAndValidity();
@@ -93,37 +91,54 @@ export class Register {
   togglePassword(): void { this.showPassword.update(v => !v); }
   toggleConfirmPassword(): void { this.showConfirmPassword.update(v => !v); }
 
-  onSubmit(): void {
-    if (this.registerForm.invalid) {
-      this.registerForm.markAllAsTouched();
-      return;
-    }
+  successMessage = signal<string>('');
 
-    this.isLoading.set(true);
-    this.errorMessage.set('');
-
-    const payload = {
-      ...this.registerForm.value,
-      role: this.isAcheteur ? 'ACHETEUR' : 'VENDEUR',
-      type_compte: this.isVendeurProfessionnel ? 'PROFESSIONNEL' : this.isVendeurParticulier ? 'PARTICULIER' : null,
-    };
-
-    this.authService.register(payload).subscribe({
-      error: (err: HttpErrorResponse) => {
-        this.isLoading.set(false);
-        if (err.status === 422) {
-          const errors = err.error?.errors;
-          if (errors?.email) {
-            this.errorMessage.set('Cet email est déjà utilisé.');
-          } else if (errors?.ifu) {
-            this.errorMessage.set('Ce numéro IFU est déjà utilisé.');
-          } else {
-            this.errorMessage.set('Veuillez vérifier vos informations.');
-          }
-        } else {
-          this.errorMessage.set('Une erreur est survenue. Réessayez.');
-        }
-      }
-    });
+onSubmit(): void {
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
   }
+
+  this.isLoading.set(true);
+  this.errorMessage.set('');
+  this.successMessage.set('');
+
+  const payload = {
+    ...this.registerForm.value,
+    role: this.isAcheteur ? 'ACHETEUR' : 'VENDEUR',
+    type_compte: this.isVendeurProfessionnel
+      ? 'PROFESSIONNEL'
+      : this.isVendeurParticulier
+      ? 'PARTICULIER'
+      : null,
+  };
+
+  this.authService.register(payload).subscribe({
+    next: () => {
+      this.isLoading.set(false);
+      this.successMessage.set('Compte créé avec succès !');
+      this.registerForm.reset();
+      this.typeCompte.set('ACHETEUR');
+    },
+    error: (err: HttpErrorResponse) => {
+      this.isLoading.set(false);
+      if (err.status === 422) {
+        const errors = err.error?.errors;
+        if (errors?.email) {
+          this.errorMessage.set('Cet email est déjà utilisé.');
+        } else if (errors?.ifu) {
+          this.errorMessage.set('Ce numéro IFU est déjà utilisé.');
+        } else if (errors?.password) {
+          this.errorMessage.set('Les mots de passe ne correspondent pas.');
+        } else {
+          this.errorMessage.set('Veuillez vérifier vos informations.');
+        }
+      } else if (err.status === 500) {
+        this.errorMessage.set('Une erreur serveur est survenue. Réessayez.');
+      } else {
+        this.errorMessage.set('Une erreur est survenue. Réessayez.');
+      }
+    }
+  });
+}
 }

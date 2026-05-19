@@ -1,7 +1,7 @@
 import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
-import { Observable, tap, catchError, throwError } from 'rxjs';
+import { Observable, tap, catchError, throwError, map } from 'rxjs';
 import {
   LoginRequest,
   RegisterRequest,
@@ -54,21 +54,33 @@ export class AuthService {
   }
 
   register(data: RegisterRequest): Observable<AuthResponse> {
-    this._isLoading.set(true);
-    return this.http.post<AuthResponse>(`${this.API_URL}/auth/register`, data).pipe(
-      tap(response => {
-        this.storeToken(response.token);
-        this.storeUser(response.user);
-        this._currentUser.set(response.user);
-        this._isLoading.set(false);
-        this.redirectAfterLogin(response.user);
-      }),
-      catchError(error => {
-        this._isLoading.set(false);
-        return throwError(() => error);
-      })
-    );
-  }
+  this._isLoading.set(true);
+  return this.http.post<AuthResponse>(
+    `${this.API_URL}/auth/register`,
+    data,
+    {
+      observe: 'response',
+      headers: { 'Accept': 'application/json' }
+    }
+  ).pipe(
+    tap((response: any) => {
+      const body = response.body;
+      if (body?.token) {
+        this.storeToken(body.token);
+        this.storeUser(body.user);
+        this._currentUser.set(body.user);
+      }
+      this._isLoading.set(false);
+    }),
+    map((response: any) => response.body),
+    catchError(error => {
+      this._isLoading.set(false);
+      return throwError(() => error);
+    })
+  );
+}
+
+
 
   logout(): void {
     this.http.post(`${this.API_URL}/auth/logout`, {}).subscribe({

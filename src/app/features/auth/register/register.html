@@ -264,6 +264,20 @@
           </div>
         }
 
+                @if (successMessage()) {
+          <div class="auth-success">
+            <lucide-icon [img]="Check" [size]="16" color="#0fa336"></lucide-icon>
+            <div>
+              <p style="font-weight: 700; margin-bottom: 4px;">{{ successMessage() }}</p>
+              <p style="font-size: 12px;">
+                Veuillez vous
+                <a routerLink="/auth/login" class="auth-link">connecter</a>
+                pour accéder à votre espace.
+              </p>
+            </div>
+          </div>
+        }
+
         <button
           type="submit"
           class="btn-primary"

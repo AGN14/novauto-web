@@ -12,9 +12,16 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   const authReq = token
     ? req.clone({
-        headers: req.headers.set('Authorization', `Bearer ${token}`)
+        headers: req.headers
+          .set('Authorization', `Bearer ${token}`)
+          .set('Accept', 'application/json')
+          .set('Content-Type', 'application/json')
       })
-    : req;
+    : req.clone({
+        headers: req.headers
+          .set('Accept', 'application/json')
+          .set('Content-Type', 'application/json')
+      });
 
   return next(authReq).pipe(
     catchError((error: HttpErrorResponse) => {
