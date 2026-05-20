@@ -159,11 +159,11 @@
             <p style="font-size: 13px; color: #7e7e7e; font-weight: 300; line-height: 1.6; margin-bottom: 16px;">
               Estimez votre coût de revient total incluant les frais de douane, CNCB, PVI et ANaTT.
             </p>
-            <a routerLink="/simulateur" style="text-decoration: none;">
-              <button class="btn-ghost" style="width: 100%; font-size: 11px;">
+           <a [routerLink]="['/simulateur']" [queryParams]="{prix: annonce().prix}" style="text-decoration: none;">
+            <button class="btn-ghost" style="width: 100%; font-size: 11px;">
                 LANCER LE SIMULATEUR →
-              </button>
-            </a>
+            </button>
+           </a>
           </div>
 
         </div>

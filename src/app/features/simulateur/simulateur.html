@@ -1,1 +1,189 @@
-<p>simulateur works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 48px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto;">
+      <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 24px;"></div>
+      <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;">
+        Outil exclusif Novauto
+      </p>
+      <h1 style="font-size: clamp(28px, 3vw, 42px); font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+        SIMULATEUR DE COÛT DE REVIENT
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e; font-weight: 300; max-width: 600px; line-height: 1.6;">
+        Estimez votre coût total d'importation au Bénin incluant les droits de douane, TVA, CNCB, PVI, manutention portuaire et frais ANaTT.
+      </p>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 48px 80px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;">
+
+      <!-- FORMULAIRE -->
+      <div>
+        <div class="form-card">
+          <div class="form-card-header">
+            <lucide-icon [img]="Calculator" [size]="18" color="#C9A84C"></lucide-icon>
+            <p class="form-card-title">PARAMÈTRES DU VÉHICULE</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Prix FOB du véhicule (FCFA)</label>
+            <input
+              type="number"
+              class="input-field"
+              placeholder="Ex: 15000000"
+              [value]="prixFOB()"
+              (input)="onPrixChange($event)"
+            />
+            <p class="form-hint">Prix hors taxes au port d'embarquement</p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Année du véhicule</label>
+              <select class="select-field" [ngModel]="anneeVehicule()" (ngModelChange)="anneeVehicule.set($event)">
+                @for (annee of annees(); track annee) {
+                  <option [value]="annee">{{ annee }}</option>
+                }
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Type de véhicule</label>
+              <select class="select-field" [ngModel]="typeVehicule()" (ngModelChange)="typeVehicule.set($event)">
+                <option value="tourisme">Tourisme</option>
+                <option value="utilitaire">Utilitaire</option>
+                <option value="pickup">Pick-up</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Cylindrée du moteur</label>
+            <div class="cylindree-grid">
+              <div class="cylindree-option"
+                   [class.cylindree-active]="cylindree() === 'moins2000'"
+                   (click)="cylindree.set('moins2000')">
+                <p class="cylindree-label">Moins de 2000 cc</p>
+                <p class="cylindree-taux">Taxe 25%</p>
+              </div>
+              <div class="cylindree-option"
+                   [class.cylindree-active]="cylindree() === '2000a3000'"
+                   (click)="cylindree.set('2000a3000')">
+                <p class="cylindree-label">2000 à 3000 cc</p>
+                <p class="cylindree-taux">Taxe 30%</p>
+              </div>
+              <div class="cylindree-option"
+                   [class.cylindree-active]="cylindree() === 'plus3000'"
+                   (click)="cylindree.set('plus3000')">
+                <p class="cylindree-label">Plus de 3000 cc</p>
+                <p class="cylindree-taux">Taxe 35%</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn-ghost" style="width: 100%; margin-top: 8px; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                  (click)="reset()">
+            <lucide-icon [img]="RotateCcw" [size]="14"></lucide-icon>
+            RÉINITIALISER
+          </button>
+
+        </div>
+
+        <!-- INFO -->
+        <div class="info-card">
+          <lucide-icon [img]="Info" [size]="16" color="#C9A84C"></lucide-icon>
+          <p style="font-size: 13px; color: #7e7e7e; font-weight: 300; line-height: 1.6;">
+            Les taux appliqués sont basés sur les grilles officielles de la <strong style="color: #bbbbbb;">DGDDI Bénin</strong>.
+            Cette simulation est indicative et peut varier selon la valeur déclarée en douane.
+          </p>
+        </div>
+      </div>
+
+      <!-- RÉSULTATS -->
+      <div>
+        @if (!hasResult()) {
+          <div class="result-empty">
+            <lucide-icon [img]="Calculator" [size]="48" color="#2a2a2a"></lucide-icon>
+            <p style="font-size: 16px; font-weight: 700; color: #2a2a2a; margin-top: 16px; text-transform: uppercase; letter-spacing: 1px;">
+              Entrez le prix FOB
+            </p>
+            <p style="font-size: 13px; color: #2a2a2a; margin-top: 8px;">
+              Le résultat apparaîtra ici
+            </p>
+          </div>
+        } @else {
+          <div class="result-card">
+            <div class="result-header">
+              <p class="result-title">DÉCOMPOSITION DES FRAIS</p>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">Prix FOB</span>
+              <span class="result-valeur">{{ formatPrix(prixFOB()!) }} FCFA</span>
+            </div>
+
+            <div style="height: 1px; background: #1a1a1a; margin: 8px 0;"></div>
+
+            <div class="result-ligne">
+              <span class="result-label">
+                Droits de douane ({{ tauxDouane() * 100 }}%)
+              </span>
+              <span class="result-valeur">{{ formatPrix(droitsDouane()) }} FCFA</span>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">TVA (18%)</span>
+              <span class="result-valeur">{{ formatPrix(tva()) }} FCFA</span>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">CNCB (0.75%)</span>
+              <span class="result-valeur">{{ formatPrix(cncb()) }} FCFA</span>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">PVI (1%)</span>
+              <span class="result-valeur">{{ formatPrix(pvi()) }} FCFA</span>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">Manutention portuaire</span>
+              <span class="result-valeur">{{ formatPrix(manutention()) }} FCFA</span>
+            </div>
+
+            <div class="result-ligne">
+              <span class="result-label">Frais ANaTT</span>
+              <span class="result-valeur">{{ formatPrix(anatt()) }} FCFA</span>
+            </div>
+
+            <div style="height: 1px; background: #2a2a2a; margin: 16px 0;"></div>
+
+            <div class="result-ligne">
+              <span style="font-size: 13px; color: #bbbbbb; font-weight: 700;">Total des frais</span>
+              <span style="font-size: 14px; color: #fff; font-weight: 700;">{{ formatPrix(totalFrais()) }} FCFA</span>
+            </div>
+
+            <div class="result-total">
+              <p class="result-total-label">COÛT DE REVIENT TOTAL</p>
+              <p class="result-total-valeur">{{ formatPrix(coutTotal()) }}</p>
+              <p class="result-total-devise">FCFA</p>
+            </div>
+
+            <div style="margin-top: 20px; padding: 16px; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2);">
+              <p style="font-size: 12px; color: #C9A84C; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px;">
+                ÉCONOMIE POTENTIELLE
+              </p>
+              <p style="font-size: 13px; color: #7e7e7e; font-weight: 300;">
+                En achetant via Novauto, bénéficiez d'un accompagnement douanier et évitez les mauvaises surprises.
+              </p>
+            </div>
+
+          </div>
+        }
+      </div>
+
+    </div>
+  </div>
+
+</main>
