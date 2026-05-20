@@ -1,1 +1,176 @@
-<p>annonce-detail works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  @if (isLoading()) {
+    <div style="text-align: center; padding: 120px; color: #7e7e7e;">
+      <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
+    </div>
+  } @else if (annonce()) {
+
+    <!-- HEADER -->
+    <div style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 24px 80px;">
+      <div style="max-width: 1440px; margin: 0 auto; display: flex; align-items: center; gap: 16px;">
+        <a routerLink="/catalogue" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #7e7e7e; transition: color 0.2s;"
+           onmouseover="this.style.color='#C9A84C'" onmouseout="this.style.color='#7e7e7e'">
+          <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon>
+          Retour au catalogue
+        </a>
+        <span style="color: #2a2a2a;">|</span>
+        <p style="font-size: 13px; color: #7e7e7e;">
+          {{ annonce().vehicule?.modele?.marque?.nom }} {{ annonce().vehicule?.modele?.nom }} {{ annonce().vehicule?.annee }}
+        </p>
+      </div>
+    </div>
+
+    <div style="max-width: 1440px; margin: 0 auto; padding: 48px 80px;">
+      <div style="display: grid; grid-template-columns: 1fr 380px; gap: 48px; align-items: start;">
+
+        <!-- GAUCHE : PHOTOS + INFOS -->
+        <div>
+
+          <!-- PHOTO PRINCIPALE -->
+          <div class="photo-main">
+            <img [src]="annonce().photos[photoActive()]" [alt]="annonce().titre"/>
+            @if (annonce().vehicule?.vin_verifie) {
+              <span class="badge-gold" style="position: absolute; top: 16px; left: 16px;">VIN ✓</span>
+            }
+            <span style="position: absolute; top: 16px; right: 16px;"
+                  [class]="annonce().vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
+              {{ getStatutDouanier() }}
+            </span>
+          </div>
+
+          <!-- MINIATURES -->
+          @if (annonce().photos.length > 1) {
+            <div class="photos-grid">
+              @for (photo of annonce().photos; track $index) {
+                <div class="photo-thumb"
+                     [class.photo-thumb-active]="photoActive() === $index"
+                     (click)="setPhotoActive($index)">
+                  <img [src]="photo" [alt]="annonce().titre"/>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- SPECS -->
+          <div class="specs-section">
+            <p class="specs-title">CARACTÉRISTIQUES</p>
+            <div class="specs-grid">
+              <div class="spec-item">
+                <lucide-icon [img]="Calendar" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Année</p>
+                  <p class="spec-value">{{ annonce().vehicule?.annee }}</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="Gauge" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Kilométrage</p>
+                  <p class="spec-value">{{ annonce().vehicule?.kilometrage | number }} KM</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="Shield" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Statut douanier</p>
+                  <p class="spec-value">{{ getStatutDouanier() }}</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="CheckCircle" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">VIN vérifié</p>
+                  <p class="spec-value">{{ annonce().vehicule?.vin_verifie ? 'Oui' : 'Non' }}</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="MapPin" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Localisation</p>
+                  <p class="spec-value">Cotonou, Bénin</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="Shield" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Type</p>
+                  <p class="spec-value">{{ annonce().vehicule?.modele?.type_carrosserie }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- VIN -->
+          <div class="vin-section">
+            <p class="specs-title">NUMÉRO VIN</p>
+            <div class="vin-box">
+              <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
+              @if (annonce().vehicule?.vin_verifie) {
+                <span class="badge-gold">VÉRIFIÉ ✓</span>
+              }
+            </div>
+          </div>
+
+        </div>
+
+        <!-- DROITE : PRIX + ACTIONS -->
+        <div class="sidebar">
+
+          <div class="sidebar-card">
+            <p class="sidebar-marque">
+              {{ annonce().vehicule?.modele?.marque?.nom }}
+            </p>
+            <h1 class="sidebar-titre">
+              {{ annonce().vehicule?.modele?.nom }} {{ annonce().vehicule?.annee }}
+            </h1>
+            <div style="height: 2px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin: 20px 0;"></div>
+            <p class="sidebar-prix-label">Prix clé en main</p>
+            <p class="sidebar-prix">{{ formatPrix(annonce().prix) }} <span>FCFA</span></p>
+
+            <div style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px;">
+              <button class="btn-primary" style="width: 100%;">
+                RÉSERVER CE VÉHICULE →
+              </button>
+              <button class="btn-outline" style="width: 100%;">
+                PLANIFIER UNE VISITE
+              </button>
+            </div>
+
+            <div class="vendeur-card">
+              <div class="vendeur-avatar">
+                {{ annonce().vendeur?.user?.nom?.charAt(0)?.toUpperCase() }}
+              </div>
+              <div>
+                <p class="vendeur-name">{{ annonce().vendeur?.user?.nom }}</p>
+                <p class="vendeur-type">
+                  @if (annonce().vendeur?.certifie) {
+                    <span class="badge-gold" style="font-size: 9px;">CERTIFIÉ</span>
+                  }
+                  {{ annonce().vendeur?.type_compte === 'PROFESSIONNEL' ? 'Professionnel' : 'Particulier' }}
+                </p>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="sidebar-card" style="margin-top: 16px;">
+            <p class="specs-title" style="margin-bottom: 16px;">SIMULATEUR DE COÛT</p>
+            <p style="font-size: 13px; color: #7e7e7e; font-weight: 300; line-height: 1.6; margin-bottom: 16px;">
+              Estimez votre coût de revient total incluant les frais de douane, CNCB, PVI et ANaTT.
+            </p>
+            <a routerLink="/simulateur" style="text-decoration: none;">
+              <button class="btn-ghost" style="width: 100%; font-size: 11px;">
+                LANCER LE SIMULATEUR →
+              </button>
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  }
+
+</main>

@@ -223,12 +223,10 @@
   border: 1px solid #1a1a1a;
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.3s, transform 0.3s;
 }
 
 .annonce-card:hover {
   border-color: #C9A84C;
-  transform: translateY(-6px);
 }
 
 .annonce-image {
@@ -241,12 +239,10 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.5s ease;
+  
 }
 
-.annonce-card:hover .annonce-image img {
-  transform: scale(1.08);
-}
+
 
 .badge-top-left {
   position: absolute;

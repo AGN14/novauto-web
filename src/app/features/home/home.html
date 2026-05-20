@@ -83,47 +83,53 @@
   </section>
 
   <!-- ANNONCES EN VEDETTE -->
-  <section class="annonces-section">
-    <div class="section-container">
-      <div class="section-header">
-        <div>
-          <p class="section-label">Sélection du moment</p>
-          <h2 class="section-title">Véhicules à la Une</h2>
-          <p class="section-subtitle">Découvrez nos dernières pépites sélectionnées pour vous.</p>
-        </div>
-        <a routerLink="/catalogue" style="text-decoration: none;">
-          <button class="btn-ghost">Voir tout le catalogue →</button>
-        </a>
+<section class="annonces-section">
+  <div class="section-container">
+    <div class="section-header">
+      <div>
+        <p class="section-label">Sélection du moment</p>
+        <h2 class="section-title">Véhicules à la Une</h2>
+        <p class="section-subtitle">Découvrez nos dernières pépites sélectionnées pour vous.</p>
       </div>
+      <a routerLink="/catalogue" style="text-decoration: none;">
+        <button class="btn-ghost">Voir tout le catalogue →</button>
+      </a>
+    </div>
+
+    @if (isLoading()) {
+      <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+        <p>Chargement des annonces...</p>
+      </div>
+    } @else {
       <div class="annonces-grid">
-        @for (annonce of annonces; track annonce.titre) {
-          <div class="annonce-card">
+        @for (annonce of annonces(); track annonce.id) {
+          <div class="annonce-card" [routerLink]="['/catalogue', annonce.id]">
             <div class="annonce-image">
-              <img [src]="annonce.photo" [alt]="annonce.titre" loading="lazy"/>
-              @if (annonce.vin) {
+              <img [src]="annonce.photos[0]" [alt]="annonce.titre" loading="lazy"/>
+              @if (annonce.vehicule?.vin_verifie) {
                 <span class="badge-gold badge-top-left">VIN ✓</span>
               }
               <span class="badge-top-right"
-                    [class]="annonce.statut === 'DÉDOUANÉ' ? 'badge-success' : 'badge-muted'">
-                {{ annonce.statut }}
+                    [class]="annonce.vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
+                {{ getStatutDouanier(annonce) }}
               </span>
             </div>
             <div class="annonce-body">
               <div class="annonce-header">
-                <h3 class="annonce-titre">{{ annonce.titre }}</h3>
-                <span class="annonce-annee">{{ annonce.annee }}</span>
+                <h3 class="annonce-titre">
+                  {{ annonce.vehicule?.modele?.marque?.nom }} {{ annonce.vehicule?.modele?.nom }}
+                </h3>
+                <span class="annonce-annee">{{ annonce.vehicule?.annee }}</span>
               </div>
               <p class="annonce-meta">
-                <span>⊙ {{ annonce.km }} KM</span>
+                <span>⊙ {{ annonce.vehicule?.kilometrage | number }} KM</span>
               </p>
               <hr class="annonce-divider"/>
               <p class="annonce-prix-label">Prix clé en main</p>
               <div class="annonce-footer">
-                <div>
-                  <p class="annonce-prix">
-                    {{ annonce.prix }} <span>FCFA</span>
-                  </p>
-                </div>
+                <p class="annonce-prix">
+                  {{ formatPrix(annonce.prix) }} <span>FCFA</span>
+                </p>
                 <button class="btn-outline" style="padding: 8px 14px; font-size: 11px;">
                   VOIR →
                 </button>
@@ -132,63 +138,6 @@
           </div>
         }
       </div>
-    </div>
-  </section>
-
-  <!-- SIMULATEUR CTA -->
-  <section class="simulateur-section">
-    <div class="simulateur-container">
-      <div class="simulateur-left">
-        <div class="simulateur-stripe"></div>
-        <p class="section-label">Outil exclusif</p>
-        <h2 class="simulateur-title">
-          ESTIMEZ VOTRE COÛT<br>DE REVIENT TOTAL
-        </h2>
-        <p class="simulateur-desc">
-          Notre simulateur intègre les droits de douane, frais CNCB, PVI, manutention portuaire et frais ANaTT pour vous donner une vision complète de votre budget avant tout engagement.
-        </p>
-        <div class="simulateur-cta">
-          <a routerLink="/simulateur" style="text-decoration: none;">
-            <button class="btn-primary">LANCER LE SIMULATEUR →</button>
-          </a>
-          <a routerLink="/vin-decoder" style="text-decoration: none;">
-            <button class="btn-outline">DÉCODEUR VIN</button>
-          </a>
-        </div>
-      </div>
-      <div class="simulateur-right">
-        <p class="frais-titre">Exemple de décomposition</p>
-        <div class="frais-item">
-          <span class="frais-label">Prix du véhicule</span>
-          <span class="frais-valeur">15 000 000 FCFA</span>
-        </div>
-        <div class="frais-item">
-          <span class="frais-label">Droits de douane</span>
-          <span class="frais-valeur">3 750 000 FCFA</span>
-        </div>
-        <div class="frais-item">
-          <span class="frais-label">Frais CNCB</span>
-          <span class="frais-valeur">225 000 FCFA</span>
-        </div>
-        <div class="frais-item">
-          <span class="frais-label">Frais PVI</span>
-          <span class="frais-valeur">150 000 FCFA</span>
-        </div>
-        <div class="frais-item">
-          <span class="frais-label">Manutention portuaire</span>
-          <span class="frais-valeur">180 000 FCFA</span>
-        </div>
-        <div class="frais-item">
-          <span class="frais-label">Frais ANaTT</span>
-          <span class="frais-valeur">85 000 FCFA</span>
-        </div>
-        <div class="frais-item frais-total">
-          <span class="frais-label">COÛT TOTAL ESTIMÉ</span>
-          <span class="frais-valeur">19 390 000 FCFA</span>
-        </div>
-      </div>
-    </div>
-  </section>
-
-</main>
-
+    }
+  </div>
+</section>

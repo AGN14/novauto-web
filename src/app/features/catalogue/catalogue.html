@@ -1,1 +1,137 @@
-<p>catalogue works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 48px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto;">
+      <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 24px;"></div>
+      <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;">
+        Novauto
+      </p>
+      <h1 style="font-size: clamp(28px, 3vw, 42px); font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+        CATALOGUE VÉHICULES
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e; font-weight: 300;">
+        {{ totalAnnonces() }} véhicule(s) disponible(s)
+      </p>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px; display: grid; grid-template-columns: 280px 1fr; gap: 40px; align-items: start;">
+
+    <!-- FILTRES -->
+    <aside class="filtres-panel">
+      <div class="filtres-header">
+        <p class="filtres-title">FILTRES</p>
+        <button class="filtres-reset" (click)="resetFiltres()">Réinitialiser</button>
+      </div>
+
+      <div class="filtre-group">
+        <label class="filtre-label">Marque</label>
+        <select class="select-field" [(ngModel)]="filtres.marque_id" (change)="onMarqueChange()">
+          <option value="">Toutes les marques</option>
+          @for (marque of marques(); track marque.id) {
+            <option [value]="marque.id">{{ marque.nom }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filtre-group">
+        <label class="filtre-label">Modèle</label>
+        <select class="select-field" [(ngModel)]="filtres.modele_id" (change)="onFiltreChange()"
+                [disabled]="!filtres.marque_id">
+          <option value="">Tous les modèles</option>
+          @for (modele of modeles(); track modele.id) {
+            <option [value]="modele.id">{{ modele.nom }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filtre-group">
+        <label class="filtre-label">Statut douanier</label>
+        <select class="select-field" [(ngModel)]="filtres.statut_douanier" (change)="onFiltreChange()">
+          <option value="">Tous</option>
+          <option value="DEDOUANE">Dédouané</option>
+          <option value="EN_TRANSIT">En transit</option>
+        </select>
+      </div>
+
+      <div class="filtre-group">
+        <label class="filtre-label">Budget maximum</label>
+        <select class="select-field" [(ngModel)]="filtres.prix_max" (change)="onFiltreChange()">
+          @for (budget of budgets; track budget.value) {
+            <option [value]="budget.value">{{ budget.label }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="filtre-group">
+        <label class="filtre-checkbox">
+          <input type="checkbox" [(ngModel)]="filtres.vin_verifie" (change)="onFiltreChange()"/>
+          <span>VIN vérifié uniquement</span>
+        </label>
+      </div>
+
+    </aside>
+
+    <!-- LISTE ANNONCES -->
+    <div>
+      @if (isLoading()) {
+        <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+          <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
+        </div>
+      } @else if (annonces().length === 0) {
+        <div style="text-align: center; padding: 80px; color: #7e7e7e; border: 1px solid #1a1a1a;">
+          <p style="font-size: 20px; font-weight: 700; color: #fff; margin-bottom: 8px;">Aucun résultat</p>
+          <p style="font-size: 14px;">Modifiez vos filtres pour trouver des véhicules.</p>
+        </div>
+      } @else {
+        <div class="annonces-grid">
+          @for (annonce of annonces(); track annonce.id) {
+            <div class="annonce-card" [routerLink]="['/catalogue', annonce.id]">
+              <div class="annonce-image">
+                <img [src]="annonce.photos[0]" [alt]="annonce.titre" loading="lazy"/>
+                @if (annonce.vehicule?.vin_verifie) {
+                  <span class="badge-gold badge-top-left">VIN ✓</span>
+                }
+                <span class="badge-top-right"
+                      [class]="annonce.vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
+                  {{ getStatutDouanier(annonce) }}
+                </span>
+              </div>
+              <div class="annonce-body">
+                <div class="annonce-header">
+                  <h3 class="annonce-titre">
+                    {{ annonce.vehicule?.modele?.marque?.nom }} {{ annonce.vehicule?.modele?.nom }}
+                  </h3>
+                  <span class="annonce-annee">{{ annonce.vehicule?.annee }}</span>
+                </div>
+                <p class="annonce-meta">⊙ {{ annonce.vehicule?.kilometrage | number }} KM · Cotonou</p>
+                <hr class="annonce-divider"/>
+                <p class="annonce-prix-label">Prix clé en main</p>
+                <div class="annonce-footer">
+                  <p class="annonce-prix">{{ formatPrix(annonce.prix) }} <span>FCFA</span></p>
+                  <button class="btn-outline" style="padding: 8px 14px; font-size: 11px;">VOIR →</button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+
+        <!-- PAGINATION -->
+        @if (lastPage() > 1) {
+          <div class="pagination">
+            <button class="page-btn" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
+              ← Précédent
+            </button>
+            <span class="page-info">Page {{ currentPage() }} / {{ lastPage() }}</span>
+            <button class="page-btn" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === lastPage()">
+              Suivant →
+            </button>
+          </div>
+        }
+      }
+    </div>
+
+  </div>
+
+</main>
