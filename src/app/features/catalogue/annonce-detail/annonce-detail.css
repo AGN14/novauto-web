@@ -200,3 +200,18 @@
     grid-template-columns: 1fr;
   }
 }
+
+.copy-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s;
+}
+
+.copy-btn:hover {
+  border-color: #C9A84C;
+}

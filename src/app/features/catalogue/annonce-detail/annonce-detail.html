@@ -105,12 +105,26 @@
           <div class="vin-section">
             <p class="specs-title">NUMÉRO VIN</p>
             <div class="vin-box">
-              <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
-              @if (annonce().vehicule?.vin_verifie) {
-                <span class="badge-gold">VÉRIFIÉ ✓</span>
-              }
+                <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                @if (annonce().vehicule?.vin_verifie) {
+                    <span class="badge-gold">VÉRIFIÉ ✓</span>
+                }
+                <button class="copy-btn" (click)="copyVin()" [title]="vinCopied() ? 'Copié !' : 'Copier le VIN'">
+                    @if (vinCopied()) {
+                    <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+                    } @else {
+                    <lucide-icon [img]="Copy" [size]="16" color="#7e7e7e"></lucide-icon>
+                    }
+                </button>
+                </div>
             </div>
-          </div>
+            @if (vinCopied()) {
+                <p style="font-size: 11px; color: #0fa336; margin-top: 6px; letter-spacing: 0.5px;">
+                ✓ VIN copié dans le presse-papiers
+                </p>
+            }
+         </div>
 
         </div>
 

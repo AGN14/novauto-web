@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AnnonceService } from '../../../core/services/annonce';
-import { LucideAngularModule, ArrowLeft, MapPin, Calendar, Gauge, Shield, CheckCircle, Phone } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, MapPin, Calendar, Gauge, Shield, CheckCircle, Phone, Copy } from 'lucide-angular';
 
 @Component({
   selector: 'app-annonce-detail',
@@ -20,10 +20,12 @@ export class AnnonceDetail implements OnInit {
   readonly Shield = Shield;
   readonly CheckCircle = CheckCircle;
   readonly Phone = Phone;
+  readonly Copy = Copy;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
   photoActive = signal(0);
+  vinCopied = signal(false);
 
   constructor(
     private route: ActivatedRoute,
@@ -51,5 +53,14 @@ export class AnnonceDetail implements OnInit {
 
   setPhotoActive(index: number): void {
     this.photoActive.set(index);
+  }
+
+  copyVin(): void {
+    const vin = this.annonce()?.vehicule?.vin;
+    if (vin) {
+      navigator.clipboard.writeText(vin);
+      this.vinCopied.set(true);
+      setTimeout(() => this.vinCopied.set(false), 2000);
+    }
   }
 }

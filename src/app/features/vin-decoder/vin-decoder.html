@@ -1,1 +1,270 @@
-<p>vin-decoder works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 48px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto;">
+      <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 24px;"></div>
+      <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 3px; text-transform: uppercase; margin-bottom: 8px;">
+        Outil de vérification
+      </p>
+      <h1 style="font-size: clamp(28px, 3vw, 42px); font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+        DÉCODEUR VIN
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e; font-weight: 300; max-width: 600px; line-height: 1.6;">
+        Vérifiez les caractéristiques techniques d'un véhicule grâce à son numéro d'identification unique (VIN) via l'API officielle NHTSA.
+      </p>
+    </div>
+  </section>
+
+  <div style="max-width: 1000px; margin: 0 auto; padding: 48px 80px;">
+
+    <!-- FORMULAIRE -->
+    <div class="vin-form-card">
+      <div class="vin-form-header">
+        <lucide-icon [img]="Search" [size]="18" color="#C9A84C"></lucide-icon>
+        <p class="vin-form-title">ENTREZ LE NUMÉRO VIN</p>
+      </div>
+
+      <div class="vin-input-group">
+        <input
+          type="text"
+          class="vin-input"
+          placeholder="Ex: 1HGBH41JXMN109186"
+          [value]="vin()"
+          (input)="onVinInput($event)"
+          maxlength="17"
+        />
+        <span class="vin-counter" [class.vin-counter-valid]="vin().length === 17">
+          {{ vin().length }}/17
+        </span>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="vin-error">
+          <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <div style="display: flex; gap: 12px; margin-top: 20px;">
+        <button class="btn-primary" style="flex: 1;"
+          (click)="onSubmit()"
+          [disabled]="isLoading() || vin().length !== 17">
+          @if (isLoading()) { VÉRIFICATION EN COURS... }
+          @else { DÉCODER LE VIN → }
+        </button>
+        @if (result() || vin().length > 0) {
+          <button class="btn-ghost" (click)="reset()">RÉINITIALISER</button>
+        }
+      </div>
+
+      <div class="vin-hint">
+        <lucide-icon [img]="Info" [size]="14" color="#7e7e7e"></lucide-icon>
+        <p>Le VIN se trouve sur le tableau de bord, le montant de la portière ou les documents du véhicule.</p>
+      </div>
+    </div>
+
+    <!-- RÉSULTATS -->
+    @if (result()) {
+      <div class="result-card">
+
+        <!-- HEADER RÉSULTAT -->
+        <div class="result-header">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <lucide-icon [img]="CheckCircle" [size]="20" color="#0fa336"></lucide-icon>
+            <p class="result-title">VIN VÉRIFIÉ AVEC SUCCÈS</p>
+          </div>
+          <span class="badge-gold" style="font-family: monospace; letter-spacing: 2px;">{{ result().vin }}</span>
+        </div>
+
+        <!-- HERO -->
+        <div class="result-hero">
+          <div>
+            <p class="result-marque">{{ result().marque }}</p>
+            <h2 class="result-modele">{{ result().modele }} {{ result().annee }}</h2>
+            @if (result().serie) {
+              <p style="font-size: 14px; color: #7e7e7e; margin-top: 4px;">{{ result().serie }}</p>
+            }
+            @if (result().fabricant) {
+              <p style="font-size: 13px; color: #7e7e7e; margin-top: 8px; font-weight: 300;">{{ result().fabricant }}</p>
+            }
+          </div>
+          <lucide-icon [img]="Car" [size]="48" color="#2a2a2a"></lucide-icon>
+        </div>
+
+        <!-- DÉCOMPOSITION WMI/VDS/VIS -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">DÉCOMPOSITION DU VIN</p>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+            <div class="vin-segment">
+              <p class="vin-segment-label">WMI — Positions 1-3</p>
+              <p class="vin-segment-value">{{ result().wmi }}</p>
+              <p class="vin-segment-desc">Identifiant constructeur mondial</p>
+            </div>
+            <div class="vin-segment">
+              <p class="vin-segment-label">VDS — Positions 4-9</p>
+              <p class="vin-segment-value">{{ result().vds }}</p>
+              <p class="vin-segment-desc">Descripteur du véhicule</p>
+            </div>
+            <div class="vin-segment">
+              <p class="vin-segment-label">VIS — Positions 10-17</p>
+              <p class="vin-segment-value">{{ result().vis }}</p>
+              <p class="vin-segment-desc">Section d'identification</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONTRÔLE DE SÉCURITÉ -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a; background: #050505;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">CONTRÔLE DE SÉCURITÉ</p>
+          <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+            <div class="check-item">
+              <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+              <div>
+                <p class="check-label">Format VIN valide</p>
+                <p class="check-desc">Conforme à la norme ISO 3779</p>
+              </div>
+            </div>
+            <div class="check-item">
+              <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+              <div>
+                <p class="check-label">VIN reconnu</p>
+                <p class="check-desc">Présent dans la base constructeur</p>
+              </div>
+            </div>
+            @if (result().pays) {
+              <div class="check-item">
+                <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+                <div>
+                  <p class="check-label">Pays d'origine identifié</p>
+                  <p class="check-desc">{{ result().pays }} @if (result().ville) { — {{ result().ville }} }</p>
+                </div>
+              </div>
+            }
+            @if (result().annee) {
+              <div class="check-item">
+                <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+                <div>
+                  <p class="check-label">Année confirmée</p>
+                  <p class="check-desc">Année modèle {{ result().annee }}</p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- CARACTÉRISTIQUES TECHNIQUES -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">CARACTÉRISTIQUES TECHNIQUES</p>
+          <div class="result-grid">
+            @if (result().type) {
+              <div class="result-item">
+                <p class="result-label">Type de véhicule</p>
+                <p class="result-value">{{ result().type }}</p>
+              </div>
+            }
+            @if (result().carrosserie) {
+              <div class="result-item">
+                <p class="result-label">Carrosserie</p>
+                <p class="result-value">{{ result().carrosserie }}</p>
+              </div>
+            }
+            @if (result().cylindres) {
+              <div class="result-item">
+                <p class="result-label">Cylindres</p>
+                <p class="result-value">{{ result().cylindres }}</p>
+              </div>
+            }
+            @if (result().cylindree) {
+              <div class="result-item">
+                <p class="result-label">Cylindrée</p>
+                <p class="result-value">{{ result().cylindree }} cc</p>
+              </div>
+            }
+            @if (result().cylindreeLitres) {
+              <div class="result-item">
+                <p class="result-label">Cylindrée (L)</p>
+                <p class="result-value">{{ result().cylindreeLitres }} L</p>
+              </div>
+            }
+            @if (result().puissance) {
+              <div class="result-item">
+                <p class="result-label">Puissance</p>
+                <p class="result-value">{{ result().puissance }} hp</p>
+              </div>
+            }
+            @if (result().carburant) {
+              <div class="result-item">
+                <p class="result-label">Carburant</p>
+                <p class="result-value">{{ result().carburant }}</p>
+              </div>
+            }
+            @if (result().transmission) {
+              <div class="result-item">
+                <p class="result-label">Transmission</p>
+                <p class="result-value">{{ result().transmission }}</p>
+              </div>
+            }
+            @if (result().vitesses) {
+              <div class="result-item">
+                <p class="result-label">Vitesses</p>
+                <p class="result-value">{{ result().vitesses }}</p>
+              </div>
+            }
+            @if (result().traction) {
+              <div class="result-item">
+                <p class="result-label">Traction</p>
+                <p class="result-value">{{ result().traction }}</p>
+              </div>
+            }
+            @if (result().portes) {
+              <div class="result-item">
+                <p class="result-label">Portes</p>
+                <p class="result-value">{{ result().portes }}</p>
+              </div>
+            }
+            @if (result().places) {
+              <div class="result-item">
+                <p class="result-label">Places</p>
+                <p class="result-value">{{ result().places }}</p>
+              </div>
+            }
+            @if (result().turbo) {
+              <div class="result-item">
+                <p class="result-label">Turbo</p>
+                <p class="result-value">{{ result().turbo }}</p>
+              </div>
+            }
+            @if (result().freinageABS) {
+              <div class="result-item">
+                <p class="result-label">ABS</p>
+                <p class="result-value">{{ result().freinageABS }}</p>
+              </div>
+            }
+            @if (result().pays) {
+              <div class="result-item">
+                <p class="result-label">Pays de fabrication</p>
+                <p class="result-value">{{ result().pays }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="result-footer">
+          <p style="font-size: 12px; color: #7e7e7e;">
+            Source : API NHTSA (National Highway Traffic Safety Administration)
+          </p>
+          <a routerLink="/simulateur" style="text-decoration: none;">
+            <button class="btn-outline" style="font-size: 11px; padding: 8px 16px;">
+              SIMULER LE COÛT →
+            </button>
+          </a>
+        </div>
+
+      </div>
+    }
+
+  </div>
+
+</main>
