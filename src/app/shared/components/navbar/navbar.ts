@@ -42,4 +42,35 @@ export class Navbar {
       default: return '/';
     }
   }
+  get menuVendeurLinks() {
+  return [
+    { label: 'Mon Dashboard', route: '/vendeur/dashboard' },
+    { label: 'Mes Annonces', route: '/vendeur/mes-annonces' },
+    { label: 'Nouvelle Annonce', route: '/vendeur/nouvelle-annonce' },
+    { label: 'Mes Disponibilités', route: '/vendeur/disponibilites' },
+  ];
+}
+
+get menuAcheteurLinks() {
+  return [
+    { label: 'Mon Dashboard', route: '/acheteur/dashboard' },
+    { label: 'Mes Réservations', route: '/acheteur/reservations' },
+    { label: 'Mes Rendez-Vous', route: '/acheteur/rendez-vous' },
+  ];
+}
+
+get menuAdminLinks() {
+  return [
+    { label: 'Dashboard Admin', route: '/admin/dashboard' },
+    { label: 'Vendeurs', route: '/admin/vendeurs' },
+    { label: 'Annonces', route: '/admin/annonces' },
+    { label: 'Transactions', route: '/admin/transactions' },
+  ];
+}
+
+get menuLinks() {
+  if (this.authService.isAdmin()) return this.menuAdminLinks;
+  if (this.authService.isVendeur()) return this.menuVendeurLinks;
+  return this.menuAcheteurLinks;
+}
 }

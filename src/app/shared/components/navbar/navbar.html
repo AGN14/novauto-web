@@ -1,26 +1,28 @@
 <nav class="navbar">
   <div class="navbar-container">
 
-    <a routerLink="/" (click)="fermerMenu()" class="navbar-logo">
+    <a [routerLink]="authService.isVendeur() ? '/vendeur/dashboard' : authService.isAdmin() ? '/admin/dashboard' : '/'"
+      (click)="fermerMenu()" class="navbar-logo">
       NOV<span>AUTO</span>
     </a>
 
     <div class="navbar-links">
-      <a routerLink="/catalogue"
-         routerLinkActive="nav-link-active"
-         class="nav-link">
-        CATALOGUE
-      </a>
-      <a routerLink="/vin-decoder"
-         routerLinkActive="nav-link-active"
-         class="nav-link">
-        DÉCODEUR VIN
-      </a>
-      <a routerLink="/simulateur"
-         routerLinkActive="nav-link-active"
-         class="nav-link">
-        SIMULATEUR
-      </a>
+      @if (!authService.isVendeur() && !authService.isAdmin()) {
+        <a routerLink="/catalogue" routerLinkActive="nav-link-active" class="nav-link">CATALOGUE</a>
+        <a routerLink="/vin-decoder" routerLinkActive="nav-link-active" class="nav-link">DÉCODEUR VIN</a>
+        <a routerLink="/simulateur" routerLinkActive="nav-link-active" class="nav-link">SIMULATEUR</a>
+      }
+      @if (authService.isVendeur()) {
+        <a routerLink="/vendeur/dashboard" routerLinkActive="nav-link-active" class="nav-link">DASHBOARD</a>
+        <a routerLink="/vendeur/mes-annonces" routerLinkActive="nav-link-active" class="nav-link">MES ANNONCES</a>
+        <a routerLink="/vendeur/disponibilites" routerLinkActive="nav-link-active" class="nav-link">DISPONIBILITÉS</a>
+      }
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/dashboard" routerLinkActive="nav-link-active" class="nav-link">DASHBOARD</a>
+        <a routerLink="/admin/vendeurs" routerLinkActive="nav-link-active" class="nav-link">VENDEURS</a>
+        <a routerLink="/admin/annonces" routerLinkActive="nav-link-active" class="nav-link">ANNONCES</a>
+        <a routerLink="/admin/transactions" routerLinkActive="nav-link-active" class="nav-link">TRANSACTIONS</a>
+      }
     </div>
 
     <div class="navbar-actions">
@@ -54,14 +56,14 @@
                 <span class="user-dropdown-role">{{ authService.currentUser()?.role }}</span>
               </div>
               <div class="user-dropdown-divider"></div>
-              <a [routerLink]="dashboardLink" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
-                <lucide-icon [img]="LayoutDashboard" [size]="15"></lucide-icon>
-                Mon tableau de bord
-              </a>
-              <a routerLink="/profil" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
-                <lucide-icon [img]="User" [size]="15"></lucide-icon>
-                Mon profil
-              </a>
+
+              @for (link of menuLinks; track link.route) {
+                <a [routerLink]="link.route" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
+                  <lucide-icon [img]="LayoutDashboard" [size]="15"></lucide-icon>
+                  {{ link.label }}
+                </a>
+              }
+
               <div class="user-dropdown-divider"></div>
               <button class="user-dropdown-logout" (click)="logout()">
                 <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
@@ -101,12 +103,23 @@
   @if (menuOuvert()) {
     <div class="mobile-menu">
       <div class="mobile-stripe"></div>
-      <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link">CATALOGUE</a>
-      <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link">DÉCODEUR VIN</a>
-      <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link">SIMULATEUR</a>
+      @if (!authService.isVendeur() && !authService.isAdmin()) {
+        <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link">CATALOGUE</a>
+        <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link">DÉCODEUR VIN</a>
+        <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link">SIMULATEUR</a>
+      }
+      @if (authService.isVendeur()) {
+        <a routerLink="/vendeur/dashboard" (click)="fermerMenu()" class="nav-link">DASHBOARD</a>
+        <a routerLink="/vendeur/mes-annonces" (click)="fermerMenu()" class="nav-link">MES ANNONCES</a>
+        <a routerLink="/vendeur/nouvelle-annonce" (click)="fermerMenu()" class="nav-link">PUBLIER</a>
+      }
+      @if (authService.isAdmin()) {
+        <a routerLink="/admin/dashboard" (click)="fermerMenu()" class="nav-link">DASHBOARD</a>
+        <a routerLink="/admin/vendeurs" (click)="fermerMenu()" class="nav-link">VENDEURS</a>
+        <a routerLink="/admin/annonces" (click)="fermerMenu()" class="nav-link">ANNONCES</a>
+      }
       <div class="mobile-menu-divider"></div>
       @if (authService.isLoggedIn()) {
-        <a [routerLink]="dashboardLink" (click)="fermerMenu()" class="nav-link">MON DASHBOARD</a>
         <button class="user-dropdown-logout" style="width: 100%; text-align: left;" (click)="logout()">
           <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
           SE DÉCONNECTER

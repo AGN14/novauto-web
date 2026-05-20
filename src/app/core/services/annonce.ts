@@ -39,4 +39,20 @@ export class AnnonceService {
   getById(id: number): Observable<any> {
     return this.http.get<any>(`${this.API_URL}/catalogue/${id}`);
   }
+
+  getMesAnnonces(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.API_URL}/vendeur/annonces`);
+  }
+
+  create(data: any): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/vendeur/annonces`, data);
+  }
+
+  update(id: number, data: any): Observable<any> {
+    return this.http.put<any>(`${this.API_URL}/vendeur/annonces/${id}`, data);
+  }
+
+  delete(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.API_URL}/vendeur/annonces/${id}`);
+  }
 }

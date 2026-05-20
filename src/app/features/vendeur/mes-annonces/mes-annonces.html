@@ -1,1 +1,160 @@
-<p>mes-annonces works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
+          Espace Vendeur
+        </p>
+        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">
+          MES ANNONCES
+        </h1>
+      </div>
+      <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
+        <button class="btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
+          NOUVELLE ANNONCE
+        </button>
+      </a>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+
+    @if (isLoading()) {
+      <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+        <p>Chargement...</p>
+      </div>
+    } @else if (annonces().length === 0) {
+      <div class="empty-state">
+        <lucide-icon [img]="Car" [size]="48" color="#2a2a2a"></lucide-icon>
+        <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
+          Aucune annonce publiée
+        </p>
+        <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 24px;">
+          Publiez votre premier véhicule dès maintenant.
+        </p>
+        <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
+          <button class="btn-primary">PUBLIER UNE ANNONCE →</button>
+        </a>
+      </div>
+    } @else {
+      <div class="annonces-grid">
+        @for (annonce of annonces(); track annonce.id) {
+          <div class="annonce-card">
+            <div class="annonce-image">
+              <img [src]="annonce.photos[0]" [alt]="annonce.titre"/>
+              <span [class]="getStatutClass(annonce.statut)" style="position: absolute; top: 10px; right: 10px;">
+                {{ annonce.statut }}
+              </span>
+            </div>
+            <div class="annonce-body">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                <h3 class="annonce-titre">
+                  {{ annonce.vehicule?.modele?.marque?.nom }} {{ annonce.vehicule?.modele?.nom }}
+                </h3>
+                <span style="font-size: 13px; color: #C9A84C; font-weight: 700;">
+                  {{ annonce.vehicule?.annee }}
+                </span>
+              </div>
+              <p style="font-size: 12px; color: #7e7e7e; margin-bottom: 12px;">
+                {{ annonce.vehicule?.kilometrage | number }} KM · {{ annonce.created_at | date:'dd/MM/yyyy' }}
+              </p>
+              <p class="annonce-prix">{{ formatPrix(annonce.prix) }} <span>FCFA</span></p>
+              <div class="annonce-actions">
+                <a [routerLink]="['/catalogue', annonce.id]" style="text-decoration: none; flex: 1;">
+                    <button class="action-btn-full">
+                    <lucide-icon [img]="Eye" [size]="14"></lucide-icon>
+                    VOIR
+                    </button>
+                </a>
+                <button class="action-btn-edit" (click)="openEdit(annonce)">
+                    <lucide-icon [img]="Edit" [size]="14"></lucide-icon>
+                </button>
+                <button class="action-btn-danger" (click)="confirmDelete(annonce.id)">
+                    <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                </button>
+                </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+
+  <!-- MODAL CONFIRMATION SUPPRESSION -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="cancelDelete()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px;">
+          Supprimer l'annonce ?
+        </h3>
+        <p style="font-size: 14px; color: #7e7e7e; margin-bottom: 24px; font-weight: 300;">
+          Cette action est irréversible. L'annonce sera définitivement supprimée.
+        </p>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-ghost" style="flex: 1;" (click)="cancelDelete()">
+            ANNULER
+          </button>
+          <button class="btn-danger" style="flex: 1;" (click)="deleteAnnonce(deleteConfirm()!)"
+                  [disabled]="isDeleting()">
+            @if (isDeleting()) { SUPPRESSION... }
+            @else { SUPPRIMER }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (editAnnonce()) {
+  <div class="modal-overlay" (click)="cancelEdit()">
+    <div class="modal-card" style="max-width: 500px;" (click)="$event.stopPropagation()">
+      <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 24px; text-transform: uppercase;">
+        Modifier l'annonce
+      </h3>
+
+      <div class="form-group">
+        <label class="form-label">Titre</label>
+        <input type="text" class="input-field" [(ngModel)]="editForm.titre"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Prix (FCFA)</label>
+        <input type="number" class="input-field" [(ngModel)]="editForm.prix"/>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Statut</label>
+        <select class="select-field" [(ngModel)]="editForm.statut">
+          <option value="DISPONIBLE">Disponible</option>
+          <option value="RESERVEE">Réservée</option>
+          <option value="VENDUE">Vendue</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Statut douanier</label>
+        <select class="select-field" [(ngModel)]="editForm.statut_douanier">
+          <option value="DEDOUANE">Dédouané</option>
+          <option value="EN_TRANSIT">En transit</option>
+        </select>
+      </div>
+
+      <div style="display: flex; gap: 12px; margin-top: 24px;">
+        <button class="btn-ghost" style="flex: 1;" (click)="cancelEdit()">
+          ANNULER
+        </button>
+        <button class="btn-primary" style="flex: 1;" (click)="saveEdit()"
+                [disabled]="isSaving()">
+          @if (isSaving()) { SAUVEGARDE... }
+          @else { SAUVEGARDER }
+        </button>
+      </div>
+    </div>
+  </div>
+}
+
+</main>

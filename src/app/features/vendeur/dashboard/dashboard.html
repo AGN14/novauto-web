@@ -1,1 +1,128 @@
-<p>dashboard works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
+          Espace Vendeur
+        </p>
+        <div style="display: flex; align-items: center; gap: 12px;">
+        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">
+            Bonjour, {{ authService.currentUser()?.nom }}
+        </h1>
+        <lucide-icon [img]="Smile" [size]="28" color="#C9A84C"></lucide-icon>
+        </div>
+      </div>
+      <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
+        <button class="btn-primary" style="display: flex; align-items: center; gap: 8px;">
+          <lucide-icon [img]="Plus" [size]="16"></lucide-icon>
+          NOUVELLE ANNONCE
+        </button>
+      </a>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <p class="stat-label">Total annonces</p>
+        <p class="stat-value">{{ totalAnnonces }}</p>
+        <lucide-icon [img]="Car" [size]="24" color="#C9A84C"></lucide-icon>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Disponibles</p>
+        <p class="stat-value" style="color: #0fa336;">{{ annoncesDisponibles }}</p>
+        <lucide-icon [img]="TrendingUp" [size]="24" color="#0fa336"></lucide-icon>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Réservées</p>
+        <p class="stat-value" style="color: #C9A84C;">{{ annoncesReservees }}</p>
+        <lucide-icon [img]="Eye" [size]="24" color="#C9A84C"></lucide-icon>
+      </div>
+      <div class="stat-card">
+        <p class="stat-label">Vendues</p>
+        <p class="stat-value" style="color: #7e7e7e;">{{ annoncesVendues }}</p>
+        <lucide-icon [img]="Car" [size]="24" color="#7e7e7e"></lucide-icon>
+      </div>
+    </div>
+
+    <!-- MES ANNONCES -->
+    <div style="margin-top: 40px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h2 style="font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">
+          MES ANNONCES RÉCENTES
+        </h2>
+        <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; font-size: 12px; color: #C9A84C; letter-spacing: 1px;">
+          VOIR TOUT →
+        </a>
+      </div>
+
+      @if (isLoading()) {
+        <div style="text-align: center; padding: 60px; color: #7e7e7e;">
+          <p>Chargement...</p>
+        </div>
+      } @else if (annonces().length === 0) {
+        <div class="empty-state">
+          <lucide-icon [img]="Car" [size]="48" color="#2a2a2a"></lucide-icon>
+          <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
+            Aucune annonce publiée
+          </p>
+          <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 24px;">
+            Publiez votre premier véhicule dès maintenant.
+          </p>
+          <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
+            <button class="btn-primary">PUBLIER UNE ANNONCE →</button>
+          </a>
+        </div>
+      } @else {
+        <div class="annonces-table">
+          <div class="table-header">
+            <span>VÉHICULE</span>
+            <span>PRIX</span>
+            <span>STATUT</span>
+            <span>DATE</span>
+            <span>ACTIONS</span>
+          </div>
+          @for (annonce of annonces().slice(0, 5); track annonce.id) {
+            <div class="table-row">
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <img [src]="annonce.photos[0]" style="width: 60px; height: 45px; object-fit: cover; border: 1px solid #1a1a1a;"/>
+                <div>
+                  <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                    {{ annonce.vehicule?.modele?.marque?.nom }} {{ annonce.vehicule?.modele?.nom }}
+                  </p>
+                  <p style="font-size: 12px; color: #7e7e7e;">{{ annonce.vehicule?.annee }}</p>
+                </div>
+              </div>
+              <p style="font-size: 14px; font-weight: 700; color: #C9A84C;">
+                {{ formatPrix(annonce.prix) }} FCFA
+              </p>
+              <span [class]="getStatutClass(annonce.statut)">{{ annonce.statut }}</span>
+              <p style="font-size: 12px; color: #7e7e7e;">
+                {{ annonce.created_at | date:'dd/MM/yyyy' }}
+              </p>
+              <div style="display: flex; gap: 8px;">
+                <a [routerLink]="['/catalogue', annonce.id]" style="text-decoration: none;">
+                  <button class="action-btn">
+                    <lucide-icon [img]="Eye" [size]="14" color="#7e7e7e"></lucide-icon>
+                  </button>
+                </a>
+                <a [routerLink]="['/vendeur/mes-annonces']" style="text-decoration: none;">
+                  <button class="action-btn">
+                    <lucide-icon [img]="Edit" [size]="14" color="#7e7e7e"></lucide-icon>
+                  </button>
+                </a>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  </div>
+
+</main>
