@@ -1,36 +1,23 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 
+
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const router = inject(Router);
+  // Ne pas ajouter le token pour Cloudinary
+  if (req.url.includes('cloudinary.com')) {
+    return next(req);
+  }
 
-  const token = authService.getToken();
+  const token = localStorage.getItem('novauto_token');
+  if (token) {
+    const cloned = req.clone({
+      headers: req.headers.set('Authorization', `Bearer ${token}`)
+    });
+    return next(cloned);
+  }
 
-  const authReq = token
-    ? req.clone({
-        headers: req.headers
-          .set('Authorization', `Bearer ${token}`)
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-      })
-    : req.clone({
-        headers: req.headers
-          .set('Accept', 'application/json')
-          .set('Content-Type', 'application/json')
-      });
-
-  return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        localStorage.removeItem('novauto_token');
-        localStorage.removeItem('novauto_user');
-        router.navigate(['/auth/login']);
-      }
-      return throwError(() => error);
-    })
-  );
+  return next(req);
 };

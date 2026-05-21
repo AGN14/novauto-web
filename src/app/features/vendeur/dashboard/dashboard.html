@@ -80,49 +80,36 @@
         </div>
       } @else {
         <div class="annonces-table">
-          <div class="table-header">
-            <span>VÉHICULE</span>
-            <span>PRIX</span>
-            <span>STATUT</span>
-            <span>DATE</span>
-            <span>ACTIONS</span>
-          </div>
-          @for (annonce of annonces().slice(0, 5); track annonce.id) {
-            <div class="table-row">
-              <div style="display: flex; align-items: center; gap: 12px;">
-                <img [src]="annonce.photos[0]" style="width: 60px; height: 45px; object-fit: cover; border: 1px solid #1a1a1a;"/>
-                <div>
-                  <p style="font-size: 14px; font-weight: 700; color: #fff;">
-                    {{ annonce.vehicule?.modele?.marque?.nom }} {{ annonce.vehicule?.modele?.nom }}
-                  </p>
-                  <p style="font-size: 12px; color: #7e7e7e;">{{ annonce.vehicule?.annee }}</p>
-                </div>
-              </div>
-              <p style="font-size: 14px; font-weight: 700; color: #C9A84C;">
-                {{ formatPrix(annonce.prix) }} FCFA
-              </p>
-              <span [class]="getStatutClass(annonce.statut)">{{ annonce.statut }}</span>
-              <p style="font-size: 12px; color: #7e7e7e;">
-                {{ annonce.created_at | date:'dd/MM/yyyy' }}
-              </p>
-              <div style="display: flex; gap: 8px;">
-                <a [routerLink]="['/catalogue', annonce.id]" style="text-decoration: none;">
-                  <button class="action-btn">
-                    <lucide-icon [img]="Eye" [size]="14" color="#7e7e7e"></lucide-icon>
-                  </button>
-                </a>
-                <a [routerLink]="['/vendeur/mes-annonces']" style="text-decoration: none;">
-                  <button class="action-btn">
-                    <lucide-icon [img]="Edit" [size]="14" color="#7e7e7e"></lucide-icon>
-                  </button>
-                </a>
-              </div>
-            </div>
+  <div class="table-header" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
+    <span>VÉHICULE</span>
+    <span>PRIX</span>
+    <span>STATUT</span>
+    <span>DATE</span>
+  </div>
+  @for (annonce of annonces().slice(0, 5); track annonce.id) {
+    <div class="table-row" style="grid-template-columns: 2fr 1fr 1fr 1fr; cursor: pointer;"
+         [routerLink]="['/vendeur/mes-annonces', annonce.id]">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <img [src]="annonce.photos[0]" style="width: 60px; height: 45px; object-fit: cover; border: 1px solid #1a1a1a;"/>
+        <div>
+          <p style="font-size: 14px; font-weight: 700; color: #fff;">{{ annonce.titre }}</p>
+          <p style="font-size: 12px; color: #7e7e7e;">{{ annonce.vehicule?.annee }}</p>
+        </div>
+      </div>
+      <p style="font-size: 14px; font-weight: 700; color: #C9A84C;">
+        {{ formatPrix(annonce.prix) }} FCFA
+      </p>
+      <span [class]="getStatutClass(annonce.statut)">{{ annonce.statut }}</span>
+      <p style="font-size: 12px; color: #7e7e7e;">
+        {{ annonce.created_at | date:'dd/MM/yyyy' }}
+      </p>
+    </div>
+  }
+</div>
           }
         </div>
-      }
+      
     </div>
 
-  </div>
-
+ 
 </main>

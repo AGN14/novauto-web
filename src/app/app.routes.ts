@@ -71,6 +71,11 @@ export const routes: Routes = [
               import('./features/vendeur/mes-annonces/mes-annonces').then(m => m.MesAnnonces)
           },
           {
+            path: 'mes-annonces/:id',
+            loadComponent: () =>
+              import('./features/vendeur/annonce-detail/annonce-detail').then(m => m.VendeurAnnonceDetail)
+          },
+          {
             path: 'nouvelle-annonce',
             loadComponent: () =>
               import('./features/vendeur/nouvelle-annonce/nouvelle-annonce').then(m => m.NouvelleAnnonce)

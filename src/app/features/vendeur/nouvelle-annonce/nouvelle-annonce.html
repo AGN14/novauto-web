@@ -1,1 +1,294 @@
-<p>nouvelle-annonce works!</p>
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Espace Vendeur</p>
+        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">PUBLIER UNE ANNONCE</h1>
+      </div>
+      <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; font-size: 12px; color: #7e7e7e;">← Retour à mes annonces</a>
+    </div>
+  </section>
+
+  <div style="max-width: 1100px; margin: 0 auto; padding: 48px 80px;">
+
+    @if (errorMessage()) {
+      <div class="alert-error">
+        <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert-success">
+        <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+      <!-- ÉTAPE 1 : VIN -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <lucide-icon [img]="Search" [size]="16" color="#C9A84C"></lucide-icon>
+          <p class="form-section-title">IDENTIFICATION PAR VIN</p>
+        </div>
+        <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 20px; font-weight: 300;">
+          Le VIN nous permet de récupérer automatiquement les caractéristiques techniques officielles du véhicule.
+        </p>
+
+        <div class="vin-group">
+          <div style="position: relative; flex: 1;">
+            <input
+              type="text"
+              class="vin-input"
+              placeholder="Entrez le numéro VIN (17 caractères)"
+              [value]="vinInput()"
+              (input)="onVinInput($event)"
+              maxlength="17"
+              [class.vin-valid]="vinVerifie()"
+            />
+            @if (vinVerifie()) {
+              <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"
+                style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);"></lucide-icon>
+            }
+          </div>
+          <button type="button" class="btn-primary"
+                  style="white-space: nowrap; display: flex; align-items: center; gap: 8px;"
+                  (click)="verifierVin()"
+                  [disabled]="vinLoading() || vinInput().length !== 17">
+            <lucide-icon [img]="Search" [size]="14"></lucide-icon>
+            @if (vinLoading()) { VÉRIFICATION... } @else { VÉRIFIER & PRÉ-REMPLIR }
+          </button>
+        </div>
+
+        @if (vinError()) {
+          <p style="font-size: 12px; color: #e22718; margin-top: 8px;">{{ vinError() }}</p>
+        }
+
+        @if (vinData()) {
+          <div class="vin-result">
+            <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 16px;">
+              INFORMATIONS AUTOMATISÉES
+            </p>
+            <div class="vin-result-grid">
+              <div class="vin-result-item">
+                <p class="vin-result-label">MARQUE</p>
+                <p class="vin-result-value">{{ vinData().marque }}</p>
+              </div>
+              <div class="vin-result-item">
+                <p class="vin-result-label">MODÈLE</p>
+                <p class="vin-result-value">{{ vinData().modele }}</p>
+              </div>
+              <div class="vin-result-item">
+                <p class="vin-result-label">ANNÉE</p>
+                <p class="vin-result-value">{{ vinData().annee }}</p>
+              </div>
+              @if (vinData().carburant) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">MOTORISATION</p>
+                  <p class="vin-result-value">{{ vinData().carburant }}</p>
+                </div>
+              }
+              @if (vinData().carrosserie) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">CARROSSERIE</p>
+                  <p class="vin-result-value">{{ vinData().carrosserie }}</p>
+                </div>
+              }
+              @if (vinData().transmission) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">TRANSMISSION</p>
+                  <p class="vin-result-value">{{ vinData().transmission }}</p>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- ÉTAPE 2 : ÉTAT & LOCALISATION -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <lucide-icon [img]="MapPin" [size]="16" color="#C9A84C"></lucide-icon>
+          <p class="form-section-title">ÉTAT & LOCALISATION</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Kilométrage (KM) *</label>
+            <input type="number" class="input-field" formControlName="kilometrage"
+                   placeholder="Ex: 45000"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Prix de vente (FCFA) *</label>
+            <input type="number" class="input-field" formControlName="prix"
+                   placeholder="Ex: 25000000"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">État douanier *</label>
+          <div class="radio-group">
+            <label class="radio-option"
+                   [class.radio-active]="form.get('statut_douanier')?.value === 'DEDOUANE'">
+              <input type="radio" formControlName="statut_douanier" value="DEDOUANE"/>
+              <span>✓ Dédouané</span>
+            </label>
+            <label class="radio-option"
+                   [class.radio-active]="form.get('statut_douanier')?.value === 'EN_TRANSIT'">
+              <input type="radio" formControlName="statut_douanier" value="EN_TRANSIT"/>
+              <span style="display: flex; align-items: center; gap: 6px;">
+                <lucide-icon [img]="RotateCcw" [size]="14"></lucide-icon>
+                En Transit
+              </span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Ville *</label>
+          <select class="select-field" formControlName="ville">
+            @for (ville of villes; track ville) {
+              <option [value]="ville">{{ ville }}</option>
+            }
+          </select>
+        </div>
+      </div>
+
+      <!-- ÉTAPE 3 : PHOTOS -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <p class="form-section-title">MULTIMÉDIA</p>
+          <span class="photos-count" [class.photos-count-ok]="photos().length >= 5">
+            {{ photos().length }}/5 MIN.
+          </span>
+        </div>
+
+        @if (uploadError()) {
+          <div class="alert-error" style="margin-bottom: 16px;">
+            <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+            <span>{{ uploadError() }}</span>
+          </div>
+        }
+
+        
+
+        <div class="upload-angles-grid">
+          @for (angle of angles; track angle.value) {
+            <div class="upload-angle-card">
+              <p class="upload-angle-label">
+                {{ angle.label }}
+                @if (angle.required) { <span style="color: #e22718;">*</span> }
+              </p>
+
+              @if (photos().some(p => p.angle === angle.value)) {
+                @for (photo of photos(); track $index) {
+                  @if (photo.angle === angle.value) {
+                    <div class="upload-preview">
+                      @if (photo.uploading) {
+                        <div class="upload-loading">
+                          <p style="font-size: 11px; color: #C9A84C;">UPLOAD...</p>
+                        </div>
+                      } @else {
+                        <img [src]="photo.url" [alt]="angle.label"/>
+                        <button type="button" class="photo-remove" (click)="removePhoto($index)">
+                          <lucide-icon [img]="Trash2" [size]="12" color="#e22718"></lucide-icon>
+                        </button>
+                      }
+                    </div>
+                  }
+                }
+              } @else {
+                <label class="upload-zone">
+                  <input type="file" accept="image/jpeg,image/png,image/webp"
+                         style="display:none;"
+                         (change)="onFileSelected($event, angle.value)"/>
+                  <lucide-icon [img]="Plus" [size]="24" color="#2a2a2a"></lucide-icon>
+                  <p style="font-size: 11px; color: #2a2a2a; margin-top: 8px;">Choisir</p>
+                </label>
+              }
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- ÉTAPE 4 : ÉQUIPEMENTS & DESCRIPTION -->
+      <div class="form-section">
+        <div class="form-section-header">
+          <p class="form-section-title">ÉQUIPEMENTS & DESCRIPTION</p>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Équipements principaux</label>
+          <div class="equipements-grid">
+            @for (eq of equipements; track eq.key) {
+              <label class="equipement-option"
+                     [class.equipement-active]="isEquipementSelected(eq.key)"
+                     (click)="toggleEquipement(eq.key)">
+                <div class="equipement-checkbox" [class.checked]="isEquipementSelected(eq.key)">
+                  @if (isEquipementSelected(eq.key)) { ✓ }
+                </div>
+                <span>{{ eq.label }}</span>
+              </label>
+            }
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description libre</label>
+          <textarea class="input-field" formControlName="description" rows="5"
+                    placeholder="Décrivez l'état général, les entretiens effectués ou les particularités du véhicule..."
+                    style="height: auto; resize: vertical;"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Titre de l'annonce *</label>
+          <input type="text" class="input-field" formControlName="titre"
+                 placeholder="Ex: Toyota Prado 2023 - Excellent état, dédouané"/>
+        </div>
+      </div>
+
+      <!-- SUBMIT -->
+      <div style="display: flex; gap: 12px;">
+        <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; flex: 1;">
+          <button type="button" class="btn-ghost" style="width: 100%;">ANNULER</button>
+        </a>
+        @if (isPublished()) {
+  <div class="published-success">
+    <lucide-icon [img]="CheckCircle" [size]="32" color="#0fa336"></lucide-icon>
+    <h3 style="font-size: 20px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
+      Annonce publiée avec succès !
+    </h3>
+    <p style="font-size: 14px; color: #7e7e7e; margin-bottom: 24px;">
+      Votre véhicule est maintenant visible dans le catalogue.
+    </p>
+    <div style="display: flex; gap: 12px; justify-content: center;">
+      <a routerLink="/vendeur/mes-annonces" style="text-decoration: none;">
+        <button class="btn-outline">VOIR MES ANNONCES →</button>
+      </a>
+      <button class="btn-ghost" (click)="isPublished.set(false); successMessage.set(''); form.reset();">
+        PUBLIER UNE AUTRE ANNONCE
+      </button>
+    </div>
+  </div>
+} @else {
+  <div style="display: flex; gap: 12px;">
+    <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; flex: 1;">
+      <button type="button" class="btn-ghost" style="width: 100%;">ANNULER</button>
+    </a>
+    <button type="submit" class="btn-primary" style="flex: 2;" [disabled]="isLoading()">
+      @if (isLoading()) { PUBLICATION EN COURS... }
+      @else { CERTIFIER & PUBLIER LE VÉHICULE → }
+    </button>
+  </div>
+}
+      </div>
+
+    </form>
+  </div>
+
+</main>

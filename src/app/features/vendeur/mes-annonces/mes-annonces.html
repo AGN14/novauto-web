@@ -64,19 +64,13 @@
               </p>
               <p class="annonce-prix">{{ formatPrix(annonce.prix) }} <span>FCFA</span></p>
               <div class="annonce-actions">
-                <a [routerLink]="['/catalogue', annonce.id]" style="text-decoration: none; flex: 1;">
-                    <button class="action-btn-full">
+                <a [routerLink]="['/vendeur/mes-annonces', annonce.id]" style="text-decoration: none; flex: 1;">
+                  <button class="action-btn-full">
                     <lucide-icon [img]="Eye" [size]="14"></lucide-icon>
                     VOIR
-                    </button>
+                  </button>
                 </a>
-                <button class="action-btn-edit" (click)="openEdit(annonce)">
-                    <lucide-icon [img]="Edit" [size]="14"></lucide-icon>
-                </button>
-                <button class="action-btn-danger" (click)="confirmDelete(annonce.id)">
-                    <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
-                </button>
-                </div>
+              </div>
             </div>
           </div>
         }

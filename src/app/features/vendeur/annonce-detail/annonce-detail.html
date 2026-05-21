@@ -1,0 +1,195 @@
+<main style="background: #000; min-height: 100vh;">
+
+  @if (isLoading()) {
+    <div style="text-align: center; padding: 120px; color: #7e7e7e;">
+      <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
+    </div>
+  } @else if (annonce()) {
+
+    <!-- HEADER -->
+    <div style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 20px 80px;">
+      <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+        <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #7e7e7e;">
+          <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon>
+          Retour à mes annonces
+        </a>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <span [class]="getStatutClass()" style="font-size: 10px; padding: 4px 10px; font-weight: 700; letter-spacing: 1px;">
+            {{ annonce().statut }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+      <div style="display: grid; grid-template-columns: 1fr 360px; gap: 40px; align-items: start;">
+
+        <!-- GAUCHE -->
+        <div>
+
+          <!-- PHOTO PRINCIPALE -->
+          <div class="photo-main">
+            <img [src]="annonce().photos[photoActive()]" [alt]="annonce().titre"/>
+            @if (annonce().vehicule?.vin_verifie) {
+              <span class="badge-gold" style="position: absolute; top: 16px; left: 16px;">VIN ✓</span>
+            }
+            <span style="position: absolute; top: 16px; right: 16px;"
+                  [class]="annonce().vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
+              {{ getStatutDouanier() }}
+            </span>
+          </div>
+
+          <!-- MINIATURES -->
+          @if (annonce().photos.length > 1) {
+            <div class="photos-grid">
+              @for (photo of annonce().photos; track $index) {
+                <div class="photo-thumb"
+                     [class.photo-thumb-active]="photoActive() === $index"
+                     (click)="setPhotoActive($index)">
+                  <img [src]="photo" [alt]="annonce().titre"/>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- CARACTÉRISTIQUES -->
+          <div class="specs-section">
+            <p class="specs-title">CARACTÉRISTIQUES</p>
+            <div class="specs-grid">
+              <div class="spec-item">
+                <lucide-icon [img]="Calendar" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Année</p>
+                  <p class="spec-value">{{ annonce().vehicule?.annee }}</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="Gauge" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Kilométrage</p>
+                  <p class="spec-value">{{ annonce().vehicule?.kilometrage | number }} KM</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="Shield" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Statut douanier</p>
+                  <p class="spec-value">{{ getStatutDouanier() }}</p>
+                </div>
+              </div>
+              <div class="spec-item">
+                <lucide-icon [img]="MapPin" [size]="16" color="#C9A84C"></lucide-icon>
+                <div>
+                  <p class="spec-label">Localisation</p>
+                  <p class="spec-value">{{ annonce().ville || 'Cotonou' }}, Bénin</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ÉQUIPEMENTS -->
+          @if (annonce().equipements && annonce().equipements.length > 0) {
+            <div class="specs-section">
+              <p class="specs-title">ÉQUIPEMENTS</p>
+              <div class="equipements-list">
+                @for (eq of annonce().equipements; track eq) {
+                  <span class="equipement-tag">✓ {{ eq }}</span>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- DESCRIPTION -->
+          @if (annonce().description) {
+            <div class="specs-section">
+              <p class="specs-title">DESCRIPTION</p>
+              <p style="font-size: 14px; color: #bbbbbb; font-weight: 300; line-height: 1.8;">
+                {{ annonce().description }}
+              </p>
+            </div>
+          }
+
+          <!-- VIN -->
+          <div class="specs-section">
+            <p class="specs-title">NUMÉRO VIN</p>
+            <div class="vin-box">
+                <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
+                @if (annonce().vehicule?.vin_verifie) {
+                <span class="badge-gold">VÉRIFIÉ ✓</span>
+                }
+            </div>
+            </div>
+
+        </div>
+
+        <!-- DROITE SIDEBAR -->
+        <div class="sidebar">
+
+          <div class="sidebar-card">
+            <p class="sidebar-marque">{{ annonce().vehicule?.modele?.marque?.nom }}</p>
+            <h1 class="sidebar-titre">{{ annonce().titre }}</h1>
+            <div style="height: 2px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin: 16px 0;"></div>
+            <p class="sidebar-prix-label">Prix clé en main</p>
+            <p class="sidebar-prix">{{ formatPrix(annonce().prix) }} <span>FCFA</span></p>
+
+            <!-- ACTIONS VENDEUR -->
+            <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
+              <a [routerLink]="['/vendeur/mes-annonces']" style="text-decoration: none;">
+                <button class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                  <lucide-icon [img]="Edit" [size]="14"></lucide-icon>
+                  MODIFIER L'ANNONCE
+                </button>
+              </a>
+              <button class="btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                      (click)="deleteConfirm.set(true)">
+                <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
+                SUPPRIMER L'ANNONCE
+              </button>
+            </div>
+          </div>
+
+          <!-- STATS -->
+          <div class="sidebar-card" style="margin-top: 16px;">
+            <p class="specs-title" style="margin-bottom: 16px;">INFORMATIONS</p>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 13px; color: #7e7e7e;">Publiée le</span>
+                <span style="font-size: 13px; color: #fff; font-weight: 700;">
+                  {{ annonce().created_at | date:'dd/MM/yyyy' }}
+                </span>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span style="font-size: 13px; color: #7e7e7e;">Statut</span>
+                <span [class]="getStatutClass()" style="font-size: 10px; padding: 4px 10px; font-weight: 700;">
+                  {{ annonce().statut }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL SUPPRESSION -->
+    @if (deleteConfirm()) {
+      <div class="modal-overlay" (click)="deleteConfirm.set(false)">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+          <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px;">
+            Supprimer l'annonce ?
+          </h3>
+          <p style="font-size: 14px; color: #7e7e7e; margin-bottom: 24px; font-weight: 300;">
+            Cette action est irréversible.
+          </p>
+          <div style="display: flex; gap: 12px;">
+            <button class="btn-ghost" style="flex: 1;" (click)="deleteConfirm.set(false)">ANNULER</button>
+            <button class="btn-danger" style="flex: 1;" (click)="deleteAnnonce()" [disabled]="isDeleting()">
+              @if (isDeleting()) { SUPPRESSION... } @else { SUPPRIMER }
+            </button>
+          </div>
+        </div>
+      </div>
+    }
+
+  }
+</main>

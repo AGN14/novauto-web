@@ -1,0 +1,373 @@
+/* ALERTS */
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(226, 39, 24, 0.1);
+  border: 1px solid #e22718;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #e22718;
+}
+
+.alert-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 163, 54, 0.1);
+  border: 1px solid #0fa336;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 13px;
+  color: #0fa336;
+}
+
+/* FORM SECTION */
+.form-section {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+.form-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.form-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #C9A84C;
+  letter-spacing: 2px;
+  flex: 1;
+}
+
+/* VIN */
+.vin-group {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.vin-input {
+  width: 100%;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 14px 48px 14px 16px;
+  font-size: 16px;
+  font-family: monospace;
+  letter-spacing: 2px;
+  font-weight: 700;
+  text-transform: uppercase;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.vin-input:focus {
+  border-color: #C9A84C;
+}
+
+.vin-valid {
+  border-color: #0fa336 !important;
+}
+
+.vin-result {
+  margin-top: 20px;
+  background: #050505;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  padding: 20px;
+}
+
+.vin-result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.vin-result-item {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 12px;
+}
+
+.vin-result-label {
+  font-size: 10px;
+  color: #7e7e7e;
+  letter-spacing: 1px;
+  margin-bottom: 6px;
+}
+
+.vin-result-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* FORM */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7e7e7e;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.form-error {
+  font-size: 12px;
+  color: #e22718;
+  font-weight: 300;
+}
+
+/* RADIO */
+.radio-group {
+  display: flex;
+  gap: 12px;
+}
+
+.radio-option {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  padding: 14px 16px;
+  cursor: pointer;
+  font-size: 13px;
+  color: #bbbbbb;
+  transition: all 0.2s;
+}
+
+.radio-option input {
+  accent-color: #C9A84C;
+}
+
+.radio-option:hover {
+  border-color: #C9A84C;
+}
+
+.radio-active {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.08);
+  color: #fff;
+}
+
+/* PHOTOS */
+.photos-count {
+  font-size: 12px;
+  font-weight: 700;
+  color: #e22718;
+  background: rgba(226, 39, 24, 0.1);
+  border: 1px solid #e22718;
+  padding: 4px 10px;
+}
+
+.photos-count-ok {
+  color: #0fa336;
+  background: rgba(15, 163, 54, 0.1);
+  border-color: #0fa336;
+}
+
+.angles-requis {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.angle-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #7e7e7e;
+  border: 1px solid #2a2a2a;
+  background: #111;
+  letter-spacing: 0.5px;
+}
+
+.angle-done {
+  color: #0fa336;
+  border-color: #0fa336;
+  background: rgba(15, 163, 54, 0.08);
+}
+
+.angle-required {
+  border-style: dashed;
+}
+
+/* UPLOAD */
+.upload-angles-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.upload-angle-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.upload-angle-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7e7e7e;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.upload-zone {
+  height: 100px;
+  border: 1px dashed #2a2a2a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s;
+  background: #0a0a0a;
+}
+
+.upload-zone:hover {
+  border-color: #C9A84C;
+}
+
+.upload-preview {
+  height: 100px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #1a1a1a;
+}
+
+.upload-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.upload-loading {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #111;
+}
+
+.photo-remove {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(0,0,0,0.8);
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+/* ÉQUIPEMENTS */
+.equipements-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.equipement-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  cursor: pointer;
+  font-size: 13px;
+  color: #bbbbbb;
+  transition: all 0.2s;
+}
+
+.equipement-option:hover {
+  border-color: #C9A84C;
+}
+
+.equipement-active {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.08);
+  color: #fff;
+}
+
+.equipement-checkbox {
+  width: 18px;
+  height: 18px;
+  border: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #C9A84C;
+  flex-shrink: 0;
+}
+
+.published-success {
+  background: #0a0a0a;
+  border: 1px solid #0fa336;
+  padding: 48px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.checked {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.15);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .vin-group {
+    flex-direction: column;
+  }
+
+  .upload-angles-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .equipements-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .vin-result-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}

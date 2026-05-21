@@ -83,9 +83,9 @@ export class AuthService {
 
 
   logout(): void {
-    this.http.post(`${this.API_URL}/auth/logout`, {}).subscribe({
-      complete: () => this.clearSession()
-    });
+    this.clearSession();
+    this.http.post(`${this.API_URL}/auth/logout`, {}).subscribe();
+    window.location.href = '/auth/login';
   }
 
   getToken(): string | null {
