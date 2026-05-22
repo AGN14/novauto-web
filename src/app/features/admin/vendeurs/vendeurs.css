@@ -1,0 +1,121 @@
+.search-input {
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 12px 16px 12px 42px;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #C9A84C;
+}
+
+.search-input::placeholder {
+  color: #3a3a3a;
+}
+
+.table-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  overflow: hidden;
+}
+
+.table-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 14px 20px;
+  background: #050505;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 10px;
+  font-weight: 700;
+  color: #7e7e7e;
+  letter-spacing: 1.5px;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr;
+  padding: 16px 20px;
+  border-bottom: 1px solid #0d0d0d;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background: #0d0d0d;
+}
+
+.vendeur-avatar {
+  width: 36px;
+  height: 36px;
+  background: #C9A84C;
+  color: #000;
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.action-btn {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  padding: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.action-btn.certifier:hover {
+  border-color: #0fa336;
+  background: rgba(15, 163, 54, 0.1);
+}
+
+.action-btn.suspendre:hover {
+  border-color: #e22718;
+  background: rgba(226, 39, 24, 0.1);
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: 32px 0;
+}
+
+.page-btn {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #C9A84C;
+  color: #C9A84C;
+}
+
+.page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.page-info {
+  font-size: 13px;
+  color: #7e7e7e;
+}

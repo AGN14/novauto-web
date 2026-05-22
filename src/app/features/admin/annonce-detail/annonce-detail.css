@@ -3,7 +3,7 @@
   height: 480px;
   overflow: hidden;
   margin-bottom: 12px;
-  background: var(--color-surface-card);
+  background: #0a0a0a;
 }
 
 .photo-main img {
@@ -29,8 +29,8 @@
   transition: border-color 0.2s;
 }
 
-.photo-thumb:hover { border-color: var(--color-gold); }
-.photo-thumb-active { border-color: var(--color-gold); }
+.photo-thumb:hover { border-color: #C9A84C; }
+.photo-thumb-active { border-color: #C9A84C; }
 
 .photo-thumb img {
   width: 100%;
@@ -43,11 +43,11 @@
 .specs-title {
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-gold);
+  color: #C9A84C;
   letter-spacing: 2px;
   margin-bottom: 16px;
   padding-bottom: 12px;
-  border-bottom: 1px solid var(--color-hairline);
+  border-bottom: 1px solid #1a1a1a;
 }
 
 .specs-grid {
@@ -60,21 +60,21 @@
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  background: var(--color-surface-card);
+  background: #0a0a0a;
   padding: 16px;
-  border: 1px solid var(--color-hairline);
+  border: 1px solid #1a1a1a;
 }
 
 .spec-label {
   font-size: 11px;
-  color: var(--color-muted);
+  color: #7e7e7e;
   margin-bottom: 4px;
 }
 
 .spec-value {
   font-size: 14px;
   font-weight: 700;
-  color: var(--color-ink);
+  color: #fff;
 }
 
 .equipements-list {
@@ -85,16 +85,16 @@
 
 .equipement-tag {
   font-size: 12px;
-  color: var(--color-body);
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-hairline);
+  color: #bbbbbb;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   padding: 6px 12px;
   font-weight: 300;
 }
 
 .vin-box {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-hairline);
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -104,35 +104,23 @@
 .vin-number {
   font-size: 16px;
   font-weight: 700;
-  color: var(--color-ink);
+  color: #fff;
   letter-spacing: 2px;
   font-family: monospace;
 }
 
-.copy-btn {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  padding: 8px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  transition: border-color 0.2s;
-}
-
-.copy-btn:hover { border-color: var(--color-gold); }
-
 .sidebar { position: sticky; top: 80px; }
 
 .sidebar-card {
-  background: var(--color-surface-card);
-  border: 1px solid var(--color-hairline);
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   padding: 24px;
 }
 
 .sidebar-marque {
   font-size: 11px;
   font-weight: 700;
-  color: var(--color-gold);
+  color: #C9A84C;
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 8px;
@@ -141,14 +129,14 @@
 .sidebar-titre {
   font-size: 20px;
   font-weight: 700;
-  color: var(--color-ink);
+  color: #fff;
   text-transform: uppercase;
   line-height: 1.3;
 }
 
 .sidebar-prix-label {
   font-size: 10px;
-  color: var(--color-muted);
+  color: #7e7e7e;
   letter-spacing: 1.5px;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -157,29 +145,56 @@
 .sidebar-prix {
   font-size: 28px;
   font-weight: 700;
-  color: var(--color-gold);
+  color: #C9A84C;
 }
 
 .sidebar-prix span {
   font-size: 14px;
-  color: var(--color-muted);
+  color: #7e7e7e;
   font-weight: 300;
 }
 
-.btn-danger {
-  background: #e22718;
-  color: var(--color-ink);
-  border: none;
-  padding: 12px 24px;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: background 0.2s;
+.vendeur-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+  background: #111;
+  border: 1px solid #1a1a1a;
 }
 
-.btn-danger:hover { background: #c41f12; }
-.btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }
+.vendeur-avatar {
+  width: 40px;
+  height: 40px;
+  background: #C9A84C;
+  color: #000;
+  font-size: 16px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btn-danger-sm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(226, 39, 24, 0.1);
+  border: 1px solid #e22718;
+  color: #e22718;
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-danger-sm:hover {
+  background: #e22718;
+  color: #fff;
+}
 
 .modal-overlay {
   position: fixed;
@@ -192,9 +207,24 @@
 }
 
 .modal-card {
-  background: var(--color-surface-elevated);
-  border: 1px solid var(--color-border);
+  background: #111;
+  border: 1px solid #2a2a2a;
   padding: 32px;
   max-width: 400px;
   width: 100%;
 }
+
+.btn-danger {
+  background: #e22718;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-danger:hover { background: #c41f12; }
+.btn-danger:disabled { opacity: 0.6; cursor: not-allowed; }

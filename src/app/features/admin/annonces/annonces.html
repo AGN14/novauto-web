@@ -1,1 +1,122 @@
-<p>annonces works!</p>
+<main style="background: #000; min-height: 100vh; padding-top: 64px;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">Administration</p>
+        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">GESTION DES ANNONCES</h1>
+      </div>
+      <span style="font-size: 13px; color: #7e7e7e;">{{ total() }} annonce(s)</span>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+
+    <!-- SEARCH -->
+    <div style="position: relative; max-width: 400px; margin-bottom: 24px;">
+      <lucide-icon [img]="Search" [size]="16" color="#7e7e7e"
+        style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%);"></lucide-icon>
+      <input type="text" class="search-input"
+             placeholder="Rechercher une annonce..."
+             [ngModel]="searchQuery()"
+             (ngModelChange)="searchQuery.set($event)"/>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <span>ANNONCE</span>
+        <span>VENDEUR</span>
+        <span>PRIX</span>
+        <span>DATE</span>
+        <span>STATUT</span>
+        <span>ACTIONS</span>
+      </div>
+
+      @if (isLoading()) {
+        <div style="padding: 60px; text-align: center; color: #7e7e7e;">
+          <p>Chargement...</p>
+        </div>
+      } @else if (filteredAnnonces().length === 0) {
+        <div style="padding: 60px; text-align: center; color: #7e7e7e;">
+          <p>Aucune annonce trouvée</p>
+        </div>
+      } @else {
+        @for (annonce of filteredAnnonces(); track annonce.id) {
+          <div class="table-row">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <img [src]="annonce.photos?.[0]"
+                   style="width: 60px; height: 45px; object-fit: cover; border: 1px solid #1a1a1a; flex-shrink: 0;"/>
+              <div>
+                <p style="font-size: 13px; font-weight: 700; color: #fff; max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  {{ annonce.titre }}
+                </p>
+                <p style="font-size: 11px; color: #7e7e7e;">{{ annonce.vehicule?.annee }}</p>
+              </div>
+            </div>
+            <p style="font-size: 13px; color: #bbbbbb;">{{ annonce.vendeur?.user?.nom }}</p>
+            <p style="font-size: 13px; font-weight: 700; color: #C9A84C;">
+              {{ formatPrix(annonce.prix) }} FCFA
+            </p>
+            <p style="font-size: 12px; color: #7e7e7e;">{{ annonce.created_at | date:'dd/MM/yyyy' }}</p>
+            <div>
+              <span [class]="getStatutClass(annonce.statut)"
+                    style="font-size: 10px; padding: 4px 10px; font-weight: 700; letter-spacing: 1px; white-space: nowrap;">
+                {{ annonce.statut }}
+              </span>
+            </div>
+            <div style="display: flex; gap: 8px;">
+              <a [routerLink]="['/admin/annonces', annonce.id]" style="text-decoration: none;">
+                <button class="action-btn" title="Voir l'annonce">
+                    <lucide-icon [img]="Eye" [size]="14" color="#7e7e7e"></lucide-icon>
+                </button>
+             </a>
+              <button class="action-btn danger" (click)="deleteConfirm.set(annonce.id)"
+                      title="Supprimer l'annonce suspecte">
+                <lucide-icon [img]="Trash2" [size]="14" color="#e22718"></lucide-icon>
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- PAGINATION -->
+    @if (lastPage() > 1) {
+      <div class="pagination">
+        <button class="page-btn" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
+          ← Précédent
+        </button>
+        <span class="page-info">Page {{ currentPage() }} / {{ lastPage() }}</span>
+        <button class="page-btn" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === lastPage()">
+          Suivant →
+        </button>
+      </div>
+    }
+
+  </div>
+
+  <!-- MODAL SUPPRESSION -->
+  @if (deleteConfirm()) {
+    <div class="modal-overlay" (click)="deleteConfirm.set(null)">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3 style="font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 12px;">
+          Supprimer cette annonce ?
+        </h3>
+        <p style="font-size: 14px; color: #7e7e7e; margin-bottom: 24px; font-weight: 300;">
+          Cette action est irréversible. L'annonce sera définitivement supprimée.
+        </p>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn-ghost" style="flex: 1;" (click)="deleteConfirm.set(null)">ANNULER</button>
+          <button class="btn-danger" style="flex: 1;" (click)="deleteAnnonce(deleteConfirm()!)"
+                  [disabled]="isDeleting()">
+            @if (isDeleting()) { SUPPRESSION... } @else { SUPPRIMER }
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+</main>

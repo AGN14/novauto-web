@@ -1,1 +1,104 @@
-<p>vendeurs works!</p>
+<main style="background: #000; min-height: 100vh; padding-top: 64px;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">Administration</p>
+        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">
+          GESTION DES VENDEURS
+        </h1>
+      </div>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 13px; color: #7e7e7e;">{{ total() }} vendeur(s)</span>
+      </div>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+
+    <!-- SEARCH -->
+    <div style="position: relative; max-width: 400px; margin-bottom: 24px;">
+      <lucide-icon [img]="Search" [size]="16" color="#7e7e7e"
+        style="position: absolute; left: 14px; top: 50%; transform: translateY(-50%);"></lucide-icon>
+      <input type="text" class="search-input"
+             placeholder="Rechercher un vendeur..."
+             [ngModel]="searchQuery()"
+             (ngModelChange)="searchQuery.set($event)"/>
+    </div>
+
+    <!-- TABLE -->
+    <div class="table-card">
+      <div class="table-header">
+        <span>VENDEUR</span>
+        <span>TYPE</span>
+        <span>TÉLÉPHONE</span>
+        <span>INSCRIPTION</span>
+        <span>STATUT</span>
+        <span>ACTIONS</span>
+      </div>
+
+      @if (isLoading()) {
+        <div style="padding: 60px; text-align: center; color: #7e7e7e;">
+          <p>Chargement...</p>
+        </div>
+      } @else if (filteredVendeurs().length === 0) {
+        <div style="padding: 60px; text-align: center; color: #7e7e7e;">
+          <p>Aucun vendeur trouvé</p>
+        </div>
+      } @else {
+        @for (vendeur of filteredVendeurs(); track vendeur.id) {
+          <div class="table-row">
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <div class="vendeur-avatar">
+                {{ vendeur.user?.nom?.charAt(0)?.toUpperCase() }}
+              </div>
+              <div>
+                <p style="font-size: 14px; font-weight: 700; color: #fff;">{{ vendeur.user?.nom }}</p>
+                <p style="font-size: 12px; color: #7e7e7e;">{{ vendeur.user?.email }}</p>
+              </div>
+            </div>
+            <p style="font-size: 13px; color: #bbbbbb;">{{ vendeur.type_compte || 'PARTICULIER' }}</p>
+            <p style="font-size: 13px; color: #bbbbbb;">{{ vendeur.user?.tel || '-' }}</p>
+            <p style="font-size: 12px; color: #7e7e7e;">{{ vendeur.created_at | date:'dd/MM/yyyy' }}</p>
+            <div>
+              @if (vendeur.certifie) {
+                <span class="badge-success" style="font-size: 10px; padding: 4px 10px;">CERTIFIÉ</span>
+              } @else {
+                <span class="badge-muted" style="font-size: 10px; padding: 4px 10px;">EN ATTENTE</span>
+              }
+            </div>
+            <div style="display: flex; gap: 8px;">
+              @if (!vendeur.certifie) {
+                <button class="action-btn certifier" (click)="certifierVendeur(vendeur.id)"
+                        title="Certifier ce vendeur">
+                  <lucide-icon [img]="ShieldCheck" [size]="14" color="#0fa336"></lucide-icon>
+                </button>
+              } @else {
+                <button class="action-btn suspendre" (click)="suspendreVendeur(vendeur.id)"
+                        title="Suspendre ce vendeur">
+                  <lucide-icon [img]="ShieldX" [size]="14" color="#e22718"></lucide-icon>
+                </button>
+              }
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- PAGINATION -->
+    @if (lastPage() > 1) {
+      <div class="pagination">
+        <button class="page-btn" (click)="goToPage(currentPage() - 1)" [disabled]="currentPage() === 1">
+          ← Précédent
+        </button>
+        <span class="page-info">Page {{ currentPage() }} / {{ lastPage() }}</span>
+        <button class="page-btn" (click)="goToPage(currentPage() + 1)" [disabled]="currentPage() === lastPage()">
+          Suivant →
+        </button>
+      </div>
+    }
+
+  </div>
+</main>

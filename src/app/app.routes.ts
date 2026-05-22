@@ -115,6 +115,11 @@ export const routes: Routes = [
             path: 'garages',
             loadComponent: () =>
               import('./features/admin/garages/garages').then(m => m.Garages)
+          },
+          {
+            path: 'annonces/:id',
+            loadComponent: () =>
+              import('./features/admin/annonce-detail/annonce-detail').then(m => m.AdminAnnonceDetail)
           }
         ]
       },
@@ -142,7 +147,12 @@ export const routes: Routes = [
         path: 'reset-password',
         loadComponent: () =>
           import('./features/auth/reset-password/reset-password').then(m => m.ResetPassword)
-      }
+      },
+      {
+        path: 'admin-login',
+        loadComponent: () =>
+          import('./features/auth/admin-login/admin-login').then(m => m.AdminLogin)
+      },
     ]
   },
   {

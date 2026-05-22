@@ -1,6 +1,6 @@
 .empty-state {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
   padding: 80px;
   text-align: center;
   display: flex;
@@ -15,14 +15,14 @@
 }
 
 .annonce-card {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
   overflow: hidden;
   transition: border-color 0.3s;
 }
 
 .annonce-card:hover {
-  border-color: #C9A84C;
+  border-color: var(--color-gold);
 }
 
 .annonce-image {
@@ -44,19 +44,19 @@
 .annonce-titre {
   font-size: 15px;
   font-weight: 700;
-  color: #fff;
+  color: var(--color-ink);
 }
 
 .annonce-prix {
   font-size: 18px;
   font-weight: 700;
-  color: #C9A84C;
+  color: var(--color-gold);
   margin-bottom: 16px;
 }
 
 .annonce-prix span {
   font-size: 11px;
-  color: #7e7e7e;
+  color: var(--color-muted);
   font-weight: 300;
 }
 
@@ -67,9 +67,9 @@
 
 .action-btn-full {
   width: 100%;
-  background: #111;
-  border: 1px solid #2a2a2a;
-  color: #fff;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-ink);
   padding: 8px;
   font-size: 11px;
   font-weight: 700;
@@ -83,13 +83,13 @@
 }
 
 .action-btn-full:hover {
-  border-color: #C9A84C;
-  color: #C9A84C;
+  border-color: var(--color-gold);
+  color: var(--color-gold);
 }
 
 .action-btn-danger {
-  background: #111;
-  border: 1px solid #2a2a2a;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
   color: #e22718;
   padding: 8px 12px;
   cursor: pointer;
@@ -116,8 +116,8 @@
 }
 
 .modal-card {
-  background: #111;
-  border: 1px solid #2a2a2a;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
   padding: 32px;
   max-width: 400px;
   width: 100%;
@@ -125,7 +125,7 @@
 
 .btn-danger {
   background: #e22718;
-  color: #fff;
+  color: var(--color-ink);
   border: none;
   padding: 12px 24px;
   font-size: 12px;
@@ -170,9 +170,9 @@
 }
 
 .action-btn-edit {
-  background: #111;
-  border: 1px solid #2a2a2a;
-  color: #C9A84C;
+  background: var(--color-surface-elevated);
+  border: 1px solid var(--color-border);
+  color: var(--color-gold);
   padding: 8px 12px;
   cursor: pointer;
   display: flex;
@@ -182,7 +182,7 @@
 }
 
 .action-btn-edit:hover {
-  border-color: #C9A84C;
+  border-color: var(--color-gold);
   background: rgba(201, 168, 76, 0.1);
 }
 
@@ -193,7 +193,7 @@
 .form-label {
   font-size: 11px;
   font-weight: 700;
-  color: #7e7e7e;
+  color: var(--color-muted);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   display: block;

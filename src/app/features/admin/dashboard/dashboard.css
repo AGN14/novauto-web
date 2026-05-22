@@ -1,0 +1,93 @@
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.stat-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
+  padding: 20px;
+  position: relative;
+}
+
+.stat-icon {
+  margin-bottom: 12px;
+}
+
+.stat-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--color-muted);
+  letter-spacing: 1.5px;
+  margin-bottom: 8px;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: var(--color-gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stat-link {
+  font-size: 11px;
+  color: var(--color-muted);
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+a.stat-link:hover {
+  color: var(--color-gold);
+}
+
+.section-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-ink);
+  letter-spacing: 2px;
+}
+
+.voir-tout {
+  font-size: 11px;
+  color: var(--color-gold);
+  text-decoration: none;
+  letter-spacing: 1px;
+}
+
+.table-card {
+  background: var(--color-surface-card);
+  border: 1px solid var(--color-hairline);
+  overflow: hidden;
+}
+
+.table-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--color-surface-soft);
+  transition: background 0.2s;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background: var(--color-surface-soft);
+}
+
+.vendeur-avatar {
+  width: 36px;
+  height: 36px;
+  background: var(--color-gold);
+  color: var(--color-canvas);
+  font-size: 14px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
