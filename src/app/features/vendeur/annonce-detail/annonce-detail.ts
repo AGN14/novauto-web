@@ -2,7 +2,8 @@ import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AnnonceService } from '../../../core/services/annonce';
-import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin } from 'lucide-angular';
+import { InspectionService } from '../../../core/services/inspection.service';
+import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin, ShieldCheck } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendeur-annonce-detail',
@@ -23,6 +24,7 @@ export class VendeurAnnonceDetail implements OnInit {
   readonly CheckCircle = CheckCircle;
   readonly Copy = Copy;
   readonly MapPin = MapPin;
+  readonly ShieldCheck = ShieldCheck;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
@@ -31,21 +33,61 @@ export class VendeurAnnonceDetail implements OnInit {
   deleteConfirm = signal(false);
   isDeleting = signal(false);
 
+  // Certification
+  inspections = signal<any[]>([]);
+  isLoadingInspections = signal(true);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private annonceService: AnnonceService
+    private annonceService: AnnonceService,
+    private inspectionService: InspectionService
   ) {}
 
   ngOnInit(): void {
     const id = this.route.snapshot.params['id'];
+
+    // Charger l'annonce
     this.annonceService.getById(+id).subscribe({
       next: (data) => {
         this.annonce.set(data);
         this.isLoading.set(false);
+
+        // Charger les inspections pour ce véhicule
+        if (data.vehicule?.id) {
+          this.loadInspections(data.vehicule.id);
+        }
       },
       error: () => this.isLoading.set(false)
     });
+  }
+
+  loadInspections(vehiculeId: number): void {
+    this.inspectionService.getMesInspections().subscribe({
+      next: (data) => {
+        // Filtrer par vehicule_id de l'annonce courante
+        const inspectionsVehicule = data.filter((i: any) => i.vehicule_id === vehiculeId);
+        this.inspections.set(inspectionsVehicule);
+        this.isLoadingInspections.set(false);
+      },
+      error: () => this.isLoadingInspections.set(false)
+    });
+  }
+
+  getInspectionActive(): any {
+    return this.inspections().find((i: any) =>
+      i.statut === 'EN_ATTENTE' || i.statut === 'EN_COURS' || i.statut === 'VALIDEE'
+    );
+  }
+
+  hasInspectionEnCours(): boolean {
+    const inspection = this.getInspectionActive();
+    return inspection?.statut === 'EN_ATTENTE' || inspection?.statut === 'EN_COURS';
+  }
+
+  hasInspectionValidee(): boolean {
+    const inspection = this.getInspectionActive();
+    return inspection?.statut === 'VALIDEE';
   }
 
   formatPrix(prix: number): string {

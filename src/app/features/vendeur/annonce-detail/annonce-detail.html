@@ -134,12 +134,37 @@
 
             <!-- ACTIONS VENDEUR -->
             <div style="margin-top: 24px; display: flex; flex-direction: column; gap: 10px;">
-              <a [routerLink]="['/vendeur/mes-annonces']" style="text-decoration: none;">
+              <a [routerLink]="['/vendeur/mes-annonces', annonce().id, 'modifier']" style="text-decoration: none;">
                 <button class="btn-outline" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;">
                   <lucide-icon [img]="Edit" [size]="14"></lucide-icon>
                   MODIFIER L'ANNONCE
                 </button>
               </a>
+
+              <!-- Bouton certification selon statut inspection -->
+              @if (isLoadingInspections()) {
+                <div style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 12px; border: 1px solid #2a2a2a; border-radius: 4px;">
+                  <span style="font-size: 12px; font-weight: 700; color: #7e7e7e; letter-spacing: 1px;">CHARGEMENT...</span>
+                </div>
+              } @else if (hasInspectionValidee()) {
+                <div class="btn-certif-validated">
+                  <lucide-icon [img]="CheckCircle" [size]="14" color="#0fa336"></lucide-icon>
+                  <span>✓ VÉHICULE CERTIFIÉ</span>
+                </div>
+              } @else if (hasInspectionEnCours()) {
+                <button class="btn-certif-pending" disabled>
+                  <lucide-icon [img]="ShieldCheck" [size]="14"></lucide-icon>
+                  CERTIFICATION EN COURS...
+                </button>
+              } @else {
+                <a [routerLink]="['/vendeur/mes-annonces', annonce().id, 'certification']" style="text-decoration: none;">
+                  <button class="btn-certif">
+                    <lucide-icon [img]="ShieldCheck" [size]="14"></lucide-icon>
+                    FAIRE CERTIFIER CE VÉHICULE
+                  </button>
+                </a>
+              }
+
               <button class="btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;"
                       (click)="deleteConfirm.set(true)">
                 <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>
@@ -192,4 +217,5 @@
     }
 
   }
+
 </main>

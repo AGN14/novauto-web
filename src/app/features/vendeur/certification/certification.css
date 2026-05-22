@@ -1,0 +1,143 @@
+/* GARAGES GRID */
+.garages-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.garage-card {
+  background: #0a0a0a;
+  border: 2px solid #1a1a1a;
+  padding: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.garage-card:hover {
+  border-color: #2a2a2a;
+}
+
+.garage-selected {
+  border-color: #C9A84C;
+  background: rgba(201, 168, 76, 0.05);
+}
+
+.garage-name {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.garage-info {
+  font-size: 13px;
+  color: #7e7e7e;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.radio-indicator {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #2a2a2a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: border-color 0.2s;
+}
+
+.radio-checked {
+  border-color: #C9A84C;
+}
+
+.radio-dot {
+  width: 10px;
+  height: 10px;
+  background: #C9A84C;
+  border-radius: 50%;
+}
+
+/* ACTIVE INSPECTION CARD */
+.inspection-active-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 32px;
+}
+
+.inspection-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding: 20px;
+  background: #000;
+  border: 1px solid #1a1a1a;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #7e7e7e;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.info-value {
+  font-size: 14px;
+  color: #fff;
+  font-weight: 700;
+  text-align: right;
+}
+
+/* SUCCESS CARD */
+.success-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 48px 32px;
+}
+
+/* ALERTS */
+.alert-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid #C9A84C;
+  padding: 12px 16px;
+}
+
+.alert-success {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(15, 163, 54, 0.1);
+  border: 1px solid #0fa336;
+  padding: 12px 16px;
+}
+
+.alert-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(226, 39, 24, 0.1);
+  border: 1px solid #e22718;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #e22718;
+  margin-bottom: 24px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .garages-grid {
+    grid-template-columns: 1fr;
+  }
+}

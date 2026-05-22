@@ -121,11 +121,12 @@ export class Reservation implements OnInit {
     this.errorMessage.set('');
 
     this.reservationService.create({
-      annonce_id: this.annonce().id,
-      montant: this.typeReservation() === 'ACOMPTE' ? this.acompte : 0,
-      message: this.message(),
-      type: this.typeReservation(),
-      date_visite: this.selectedDate() || null,
+        annonce_id: this.annonce().id,
+        montant: this.typeReservation() === 'ACOMPTE' ? this.acompte : 0,
+        message: this.message(),
+        type_reservation: this.typeReservation(),         
+        date_visite: this.selectedDate() || null,
+
     }).subscribe({
       next: () => {
         this.isSubmitting.set(false);
