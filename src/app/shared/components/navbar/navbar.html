@@ -1,73 +1,86 @@
-<nav class="navbar">
+<nav class="navbar" [class.navbar-scrolled]="isScrolled()">
   <div class="navbar-container">
 
+    <!-- Logo premium -->
     <a [routerLink]="authService.isVendeur() ? '/vendeur/dashboard' : authService.isAdmin() ? '/admin/dashboard' : '/'"
       (click)="fermerMenu()" class="navbar-logo">
-      NOV<span>AUTO</span>
+      <span class="logo-text">
+        <span class="logo-nova">NOVA</span><span class="logo-auto">UTO</span>
+      </span>
     </a>
 
+    <!-- Navigation links subtiles -->
     <div class="navbar-links">
       @if (!authService.isVendeur() && !authService.isAdmin()) {
-        <a routerLink="/catalogue" routerLinkActive="nav-link-active" class="nav-link">CATALOGUE</a>
-        <a routerLink="/vin-decoder" routerLinkActive="nav-link-active" class="nav-link">DÉCODEUR VIN</a>
-        <a routerLink="/simulateur" routerLinkActive="nav-link-active" class="nav-link">SIMULATEUR</a>
+        <a routerLink="/catalogue" routerLinkActive="nav-link-active" class="nav-link">Catalogue</a>
+        <a routerLink="/vin-decoder" routerLinkActive="nav-link-active" class="nav-link">Décodeur VIN</a>
+        <a routerLink="/simulateur" routerLinkActive="nav-link-active" class="nav-link">Simulateur</a>
       }
       @if (authService.isVendeur()) {
-        <a routerLink="/vendeur/dashboard" routerLinkActive="nav-link-active" class="nav-link">DASHBOARD</a>
-        <a routerLink="/vendeur/mes-annonces" routerLinkActive="nav-link-active" class="nav-link">MES ANNONCES</a>
-        <a routerLink="/vendeur/disponibilites" routerLinkActive="nav-link-active" class="nav-link">DISPONIBILITÉS</a>
+        <a routerLink="/vendeur/dashboard" routerLinkActive="nav-link-active" class="nav-link">Dashboard</a>
+        <a routerLink="/vendeur/mes-annonces" routerLinkActive="nav-link-active" class="nav-link">Mes annonces</a>
+        <a routerLink="/vendeur/disponibilites" routerLinkActive="nav-link-active" class="nav-link">Disponibilités</a>
       }
       @if (authService.isAdmin()) {
-        <a routerLink="/admin/dashboard" routerLinkActive="nav-link-active" class="nav-link">DASHBOARD</a>
-        <a routerLink="/admin/vendeurs" routerLinkActive="nav-link-active" class="nav-link">VENDEURS</a>
-        <a routerLink="/admin/annonces" routerLinkActive="nav-link-active" class="nav-link">ANNONCES</a>
-        <a routerLink="/admin/transactions" routerLinkActive="nav-link-active" class="nav-link">TRANSACTIONS</a>
+        <a routerLink="/admin/dashboard" routerLinkActive="nav-link-active" class="nav-link">Dashboard</a>
+        <a routerLink="/admin/vendeurs" routerLinkActive="nav-link-active" class="nav-link">Vendeurs</a>
+        <a routerLink="/admin/annonces" routerLinkActive="nav-link-active" class="nav-link">Annonces</a>
+        <a routerLink="/admin/transactions" routerLinkActive="nav-link-active" class="nav-link">Transactions</a>
       }
     </div>
 
+    <!-- Actions -->
     <div class="navbar-actions">
 
       @if (authService.isLoggedIn()) {
 
+        <!-- Bouton PUBLIER pill/capsule -->
         @if (authService.isVendeur()) {
           <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
-            <button class="btn-outline" style="padding: 10px 16px; font-size: 11px; display: flex; align-items: center; gap: 6px;">
-              <lucide-icon [img]="PlusCircle" [size]="14"></lucide-icon>
-              PUBLIER
+            <button class="btn-publish">
+              <lucide-icon [img]="PlusCircle" [size]="16"></lucide-icon>
+              Publier
             </button>
           </a>
         }
 
+        <!-- Avatar utilisateur amélioré -->
         <div class="user-menu-wrapper">
           <button class="user-btn" (click)="toggleUserMenu()">
             <div class="user-avatar">
-              {{ authService.currentUser()?.nom?.charAt(0)?.toUpperCase() }}
+              <span>{{ authService.currentUser()?.nom?.charAt(0)?.toUpperCase() }}</span>
             </div>
-            <span class="user-name">
-              {{ authService.currentUser()?.nom }}
-            </span>
           </button>
 
           @if (menuUserOuvert()) {
             <div class="user-dropdown">
               <div class="user-dropdown-header">
-                <p class="user-dropdown-name">{{ authService.currentUser()?.nom }}</p>
-                <p class="user-dropdown-email">{{ authService.currentUser()?.email }}</p>
-                <span class="user-dropdown-role">{{ authService.currentUser()?.role }}</span>
+                <div class="user-dropdown-avatar">
+                  {{ authService.currentUser()?.nom?.charAt(0)?.toUpperCase() }}
+                </div>
+                <div class="user-dropdown-info">
+                  <p class="user-dropdown-name">{{ authService.currentUser()?.nom }}</p>
+                  <p class="user-dropdown-email">{{ authService.currentUser()?.email }}</p>
+                </div>
               </div>
+
+              <div class="user-dropdown-role-badge">
+                <span>{{ authService.currentUser()?.role }}</span>
+              </div>
+
               <div class="user-dropdown-divider"></div>
 
               @for (link of menuLinks; track link.route) {
                 <a [routerLink]="link.route" (click)="menuUserOuvert.set(false)" class="user-dropdown-item">
-                  <lucide-icon [img]="LayoutDashboard" [size]="15"></lucide-icon>
-                  {{ link.label }}
+                  <lucide-icon [img]="LayoutDashboard" [size]="16"></lucide-icon>
+                  <span>{{ link.label }}</span>
                 </a>
               }
 
               <div class="user-dropdown-divider"></div>
               <button class="user-dropdown-logout" (click)="logout()">
-                <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
-                Se déconnecter
+                <lucide-icon [img]="LogOut" [size]="16"></lucide-icon>
+                <span>Se déconnecter</span>
               </button>
             </div>
           }
@@ -75,14 +88,15 @@
 
       } @else {
 
+        <!-- Boutons visiteur -->
         <a routerLink="/auth/login" style="text-decoration: none;">
-          <button class="btn-ghost" style="padding: 10px 20px; font-size: 12px;">
-            CONNEXION
+          <button class="btn-secondary">
+            Connexion
           </button>
         </a>
         <a routerLink="/auth/register" style="text-decoration: none;">
-          <button class="btn-primary" style="padding: 10px 20px; font-size: 12px;">
-            S'INSCRIRE
+          <button class="btn-publish">
+            S'inscrire
           </button>
         </a>
 
@@ -90,47 +104,48 @@
 
     </div>
 
+    <!-- Menu toggle mobile -->
     <button class="menu-toggle" (click)="toggleMenu()">
       @if (menuOuvert()) {
-        <lucide-icon [img]="X" [size]="22" color="#fff"></lucide-icon>
+        <lucide-icon [img]="X" [size]="24" color="#fff"></lucide-icon>
       } @else {
-        <lucide-icon [img]="Menu" [size]="22" color="#fff"></lucide-icon>
+        <lucide-icon [img]="Menu" [size]="24" color="#fff"></lucide-icon>
       }
     </button>
 
   </div>
 
+  <!-- Mobile menu -->
   @if (menuOuvert()) {
     <div class="mobile-menu">
-      <div class="mobile-stripe"></div>
       @if (!authService.isVendeur() && !authService.isAdmin()) {
-        <a routerLink="/catalogue" (click)="fermerMenu()" class="nav-link">CATALOGUE</a>
-        <a routerLink="/vin-decoder" (click)="fermerMenu()" class="nav-link">DÉCODEUR VIN</a>
-        <a routerLink="/simulateur" (click)="fermerMenu()" class="nav-link">SIMULATEUR</a>
+        <a routerLink="/catalogue" (click)="fermerMenu()" class="mobile-link">Catalogue</a>
+        <a routerLink="/vin-decoder" (click)="fermerMenu()" class="mobile-link">Décodeur VIN</a>
+        <a routerLink="/simulateur" (click)="fermerMenu()" class="mobile-link">Simulateur</a>
       }
       @if (authService.isVendeur()) {
-        <a routerLink="/vendeur/dashboard" (click)="fermerMenu()" class="nav-link">DASHBOARD</a>
-        <a routerLink="/vendeur/mes-annonces" (click)="fermerMenu()" class="nav-link">MES ANNONCES</a>
-        <a routerLink="/vendeur/nouvelle-annonce" (click)="fermerMenu()" class="nav-link">PUBLIER</a>
+        <a routerLink="/vendeur/dashboard" (click)="fermerMenu()" class="mobile-link">Dashboard</a>
+        <a routerLink="/vendeur/mes-annonces" (click)="fermerMenu()" class="mobile-link">Mes annonces</a>
+        <a routerLink="/vendeur/nouvelle-annonce" (click)="fermerMenu()" class="mobile-link">Publier</a>
       }
       @if (authService.isAdmin()) {
-        <a routerLink="/admin/dashboard" (click)="fermerMenu()" class="nav-link">DASHBOARD</a>
-        <a routerLink="/admin/vendeurs" (click)="fermerMenu()" class="nav-link">VENDEURS</a>
-        <a routerLink="/admin/annonces" (click)="fermerMenu()" class="nav-link">ANNONCES</a>
+        <a routerLink="/admin/dashboard" (click)="fermerMenu()" class="mobile-link">Dashboard</a>
+        <a routerLink="/admin/vendeurs" (click)="fermerMenu()" class="mobile-link">Vendeurs</a>
+        <a routerLink="/admin/annonces" (click)="fermerMenu()" class="mobile-link">Annonces</a>
       }
       <div class="mobile-menu-divider"></div>
       @if (authService.isLoggedIn()) {
-        <button class="user-dropdown-logout" style="width: 100%; text-align: left;" (click)="logout()">
-          <lucide-icon [img]="LogOut" [size]="15"></lucide-icon>
-          SE DÉCONNECTER
+        <button class="mobile-logout" (click)="logout(); fermerMenu()">
+          <lucide-icon [img]="LogOut" [size]="18"></lucide-icon>
+          <span>Se déconnecter</span>
         </button>
       } @else {
-        <div style="display: flex; gap: 12px; margin-top: 8px;">
-          <a routerLink="/auth/login" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
-            <button class="btn-ghost" style="width: 100%; padding: 10px; font-size: 12px;">CONNEXION</button>
+        <div class="mobile-auth-actions">
+          <a routerLink="/auth/login" (click)="fermerMenu()" style="text-decoration: none;">
+            <button class="btn-secondary" style="width: 100%;">Connexion</button>
           </a>
-          <a routerLink="/auth/register" (click)="fermerMenu()" style="text-decoration: none; flex: 1;">
-            <button class="btn-primary" style="width: 100%; padding: 10px; font-size: 12px;">S'INSCRIRE</button>
+          <a routerLink="/auth/register" (click)="fermerMenu()" style="text-decoration: none;">
+            <button class="btn-publish" style="width: 100%;">S'inscrire</button>
           </a>
         </div>
       }

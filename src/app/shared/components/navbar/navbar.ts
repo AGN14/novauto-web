@@ -1,4 +1,4 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, OnInit, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../.././../core/services/auth.service';
@@ -11,7 +11,7 @@ import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusC
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
-export class Navbar {
+export class Navbar implements OnInit {
 
   readonly Menu = Menu;
   readonly X = X;
@@ -24,6 +24,20 @@ export class Navbar {
   authService = inject(AuthService);
   menuOuvert = signal(false);
   menuUserOuvert = signal(false);
+  isScrolled = signal(false);
+
+  ngOnInit() {
+    this.checkScroll();
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.checkScroll();
+  }
+
+  private checkScroll() {
+    this.isScrolled.set(window.scrollY > 20);
+  }
 
   toggleMenu() { this.menuOuvert.update(v => !v); }
   toggleUserMenu() { this.menuUserOuvert.update(v => !v); }

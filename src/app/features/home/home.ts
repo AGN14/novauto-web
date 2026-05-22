@@ -1,13 +1,14 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../core/services/annonce';
 import { MarqueService } from '../../core/services/marque';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -41,7 +42,8 @@ export class Home implements OnInit {
 
   constructor(
     private annonceService: AnnonceService,
-    private marqueService: MarqueService
+    private marqueService: MarqueService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -75,10 +77,11 @@ export class Home implements OnInit {
   }
 
   onSearch(): void {
-    const filters: any = {};
-    if (this.selectedMarque()) filters.marque_id = this.selectedMarque();
-    if (this.selectedBudget()) filters.prix_max = this.selectedBudget();
-    if (this.selectedStatut()) filters.statut_douanier = this.selectedStatut();
-    // Rediriger vers catalogue avec filtres
+    const queryParams: any = {};
+    if (this.selectedMarque()) queryParams.marque_id = this.selectedMarque();
+    if (this.selectedBudget()) queryParams.prix_max = this.selectedBudget();
+    if (this.selectedStatut()) queryParams.statut_douanier = this.selectedStatut();
+
+    this.router.navigate(['/catalogue'], { queryParams });
   }
 }

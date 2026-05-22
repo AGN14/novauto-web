@@ -87,30 +87,82 @@
       } @else {
         <div class="annonces-grid">
           @for (annonce of annonces(); track annonce.id) {
-            <div class="annonce-card" [routerLink]="['/catalogue', annonce.id]">
-              <div class="annonce-image">
+            <div class="vehicle-card" [routerLink]="['/catalogue', annonce.id]">
+              <!-- Photo sans badges -->
+              <div class="vehicle-image">
                 <img [src]="annonce.photos[0]" [alt]="annonce.titre" loading="lazy"/>
-                @if (annonce.vehicule?.vin_verifie) {
-                  <span class="badge-gold badge-top-left">VIN ✓</span>
-                }
-                <span class="badge-top-right"
-                      [class]="annonce.vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
-                  {{ getStatutDouanier(annonce) }}
-                </span>
               </div>
-              <div class="annonce-body">
-                <div class="annonce-header">
-                  <h3 class="annonce-titre">
-                    {{ annonce.titre }}
-                  </h3>
-                  <span class="annonce-annee">{{ annonce.vehicule?.annee }}</span>
+
+              <!-- Corps de la carte -->
+              <div class="vehicle-body">
+                <!-- Ligne 1: Marque+Modèle | Année -->
+                <div class="vehicle-header">
+                  <h3 class="vehicle-title">{{ annonce.titre }}</h3>
+                  <span class="vehicle-year">{{ annonce.vehicule?.annee }}</span>
                 </div>
-                <p class="annonce-meta">⊙ {{ annonce.vehicule?.kilometrage | number }} KM · Cotonou</p>
-                <hr class="annonce-divider"/>
-                <p class="annonce-prix-label">Prix clé en main</p>
-                <div class="annonce-footer">
-                  <p class="annonce-prix">{{ formatPrix(annonce.prix) }} <span>FCFA</span></p>
-                  <button class="btn-outline" style="padding: 8px 14px; font-size: 11px;">VOIR →</button>
+
+                <!-- Ligne 2: Kilométrage | Ville -->
+                <div class="vehicle-meta">
+                  <span class="vehicle-meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 6v6l4 2"/>
+                    </svg>
+                    {{ annonce.vehicule?.kilometrage | number }} km
+                  </span>
+                  <span class="vehicle-meta-divider">•</span>
+                  <span class="vehicle-meta-item">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                      <circle cx="12" cy="10" r="3"/>
+                    </svg>
+                    Cotonou
+                  </span>
+                </div>
+
+                <!-- Ligne 3: Chips/Tags -->
+                <div class="vehicle-tags">
+                  @if (annonce.vehicule?.statut_douanier === 'DEDOUANE') {
+                    <span class="vehicle-chip vehicle-chip-success">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="20 6 9 17 4 12"/>
+                      </svg>
+                      DÉDOUANÉ
+                    </span>
+                  } @else {
+                    <span class="vehicle-chip vehicle-chip-muted">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 6v6l4 2"/>
+                      </svg>
+                      EN TRANSIT
+                    </span>
+                  }
+
+                  @if (annonce.vehicule?.vin_verifie) {
+                    <span class="vehicle-chip vehicle-chip-gold">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                      </svg>
+                      VIN VÉRIFIÉ
+                    </span>
+                  }
+                </div>
+
+                <!-- Ligne 4: Prix + Bouton -->
+                <div class="vehicle-footer">
+                  <div class="vehicle-price-block">
+                    <p class="vehicle-price-label">Prix clé en main</p>
+                    <p class="vehicle-price">{{ formatPrix(annonce.prix) }} <span>FCFA</span></p>
+                  </div>
+                  <button class="vehicle-btn">
+                    VOIR
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>

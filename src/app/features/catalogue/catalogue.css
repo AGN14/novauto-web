@@ -72,107 +72,250 @@
 .annonces-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 40px;
 }
 
-.annonce-card {
-  background: #0d0d0d;
+/* ══════════════════════════
+   VEHICLE CARD PREMIUM
+══════════════════════════ */
+.vehicle-card {
+  background: #0a0a0a;
   border: 1px solid #1a1a1a;
+  border-radius: 2px;
   cursor: pointer;
   overflow: hidden;
-  transition: border-color 0.3s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
-.annonce-card:hover {
+.vehicle-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(201, 168, 76, 0.2), transparent);
+  border-radius: 2px;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.vehicle-card:hover {
   border-color: #C9A84C;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
-.annonce-image {
-  height: 200px;
+.vehicle-card:hover::before {
+  opacity: 1;
+}
+
+/* Photo */
+.vehicle-image {
+  height: 220px;
   position: relative;
   overflow: hidden;
+  background: #111;
 }
 
-.annonce-image img {
+.vehicle-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.badge-top-left {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  z-index: 1;
+.vehicle-card:hover .vehicle-image img {
+  transform: scale(1.05);
 }
 
-.badge-top-right {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  z-index: 1;
-}
-
-.annonce-body {
+/* Corps de la carte */
+.vehicle-body {
   padding: 20px;
+  position: relative;
+  z-index: 1;
 }
 
-.annonce-header {
+/* Ligne 1: Marque+Modèle | Année */
+.vehicle-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 6px;
-}
-
-.annonce-titre {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-}
-
-.annonce-annee {
-  font-size: 13px;
-  color: #C9A84C;
-  font-weight: 700;
-}
-
-.annonce-meta {
-  font-size: 12px;
-  color: #7e7e7e;
-  margin-bottom: 16px;
-}
-
-.annonce-divider {
-  border: none;
-  border-top: 1px solid #1a1a1a;
+  gap: 12px;
   margin-bottom: 12px;
 }
 
-.annonce-prix-label {
-  font-size: 10px;
-  color: #7e7e7e;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-
-.annonce-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.annonce-prix {
-  font-size: 18px;
+.vehicle-title {
+  font-size: 16px;
   font-weight: 700;
-  color: #C9A84C;
+  color: #fff;
+  line-height: 1.3;
+  flex: 1;
+  letter-spacing: 0.2px;
 }
 
-.annonce-prix span {
-  font-size: 11px;
+.vehicle-year {
+  font-size: 14px;
+  color: #C9A84C;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+}
+
+/* Ligne 2: Kilométrage | Ville */
+.vehicle-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
   color: #7e7e7e;
   font-weight: 300;
+}
+
+.vehicle-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.vehicle-meta-item svg {
+  color: #7e7e7e;
+  flex-shrink: 0;
+}
+
+.vehicle-meta-divider {
+  color: #2a2a2a;
+  font-weight: 400;
+}
+
+/* Ligne 3: Chips/Tags */
+.vehicle-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 20px;
+  min-height: 26px;
+}
+
+.vehicle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.2s ease;
+}
+
+.vehicle-chip svg {
+  flex-shrink: 0;
+}
+
+.vehicle-chip-success {
+  background: rgba(15, 163, 54, 0.12);
+  color: #0fa336;
+  border: 1px solid rgba(15, 163, 54, 0.2);
+}
+
+.vehicle-chip-success svg {
+  stroke: #0fa336;
+}
+
+.vehicle-chip-gold {
+  background: rgba(201, 168, 76, 0.12);
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.vehicle-chip-gold svg {
+  stroke: #C9A84C;
+}
+
+.vehicle-chip-muted {
+  background: rgba(126, 126, 126, 0.08);
+  color: #7e7e7e;
+  border: 1px solid rgba(126, 126, 126, 0.15);
+}
+
+.vehicle-chip-muted svg {
+  stroke: #7e7e7e;
+}
+
+/* Ligne 4: Prix + Bouton */
+.vehicle-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #1a1a1a;
+}
+
+.vehicle-price-block {
+  flex: 1;
+}
+
+.vehicle-price-label {
+  font-size: 9px;
+  color: #7e7e7e;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.vehicle-price {
+  font-size: 22px;
+  font-weight: 700;
+  color: #C9A84C;
+  line-height: 1;
+  letter-spacing: -0.5px;
+}
+
+.vehicle-price span {
+  font-size: 13px;
+  color: #7e7e7e;
+  font-weight: 400;
+  margin-left: 4px;
+}
+
+.vehicle-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 16px;
+  background: transparent;
+  border: 1px solid #C9A84C;
+  color: #C9A84C;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+
+.vehicle-btn svg {
+  width: 14px;
+  height: 14px;
+  transition: transform 0.3s ease;
+}
+
+.vehicle-btn:hover {
+  background: #C9A84C;
+  color: #000;
+  transform: translateX(2px);
+}
+
+.vehicle-btn:hover svg {
+  transform: translateX(2px);
 }
 
 /* PAGINATION */
