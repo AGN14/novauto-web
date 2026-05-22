@@ -1,13 +1,16 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../../core/services/annonce';
-import { LucideAngularModule, ArrowLeft, MapPin, Calendar, Gauge, Shield, CheckCircle, Phone, Copy } from 'lucide-angular';
+import { ReservationService } from '../../../core/services/reservation.service';
+import { AuthService } from '../../../core/services/auth.service';
+import { LucideAngularModule, ArrowLeft, MapPin, Calendar, Gauge, Shield, CheckCircle, Copy, AlertTriangle } from 'lucide-angular';
 
 @Component({
   selector: 'app-annonce-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, RouterLink, FormsModule, LucideAngularModule],
   templateUrl: './annonce-detail.html',
   styleUrl: './annonce-detail.css'
 })
@@ -19,17 +22,26 @@ export class AnnonceDetail implements OnInit {
   readonly Gauge = Gauge;
   readonly Shield = Shield;
   readonly CheckCircle = CheckCircle;
-  readonly Phone = Phone;
   readonly Copy = Copy;
+  readonly AlertTriangle = AlertTriangle;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
   photoActive = signal(0);
   vinCopied = signal(false);
 
+  // Réservation
+  showReservationModal = signal(false);
+  reservationMessage = signal('');
+  isReserving = signal(false);
+  reservationSuccess = signal(false);
+  reservationError = signal('');
+
   constructor(
     private route: ActivatedRoute,
-    private annonceService: AnnonceService
+    private annonceService: AnnonceService,
+    private reservationService: ReservationService,
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -62,5 +74,35 @@ export class AnnonceDetail implements OnInit {
       this.vinCopied.set(true);
       setTimeout(() => this.vinCopied.set(false), 2000);
     }
+  }
+
+  get acompte(): number {
+    return Math.round(this.annonce()?.prix * 0.1);
+  }
+
+  reserver(): void {
+    if (!this.authService.isLoggedIn()) {
+      window.location.href = '/auth/login';
+      return;
+    }
+
+    this.isReserving.set(true);
+    this.reservationError.set('');
+
+    this.reservationService.create({
+      annonce_id: this.annonce().id,
+      montant: this.acompte,
+      message: this.reservationMessage(),
+    }).subscribe({
+      next: () => {
+        this.isReserving.set(false);
+        this.reservationSuccess.set(true);
+        this.annonce.update(a => ({ ...a, statut: 'RESERVEE' }));
+      },
+      error: (err) => {
+        this.isReserving.set(false);
+        this.reservationError.set(err.error?.message || 'Une erreur est survenue.');
+      }
+    });
   }
 }

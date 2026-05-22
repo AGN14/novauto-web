@@ -9,8 +9,16 @@ import { Footer } from '../footer/footer';
   imports: [RouterOutlet, Navbar, Footer],
   template: `
     <app-navbar />
-    <router-outlet />
+    <div class="layout-content">
+      <router-outlet />
+    </div>
     <app-footer />
-  `
+  `,
+  styles: [`
+    .layout-content {
+      padding-top: 64px;
+      min-height: 100vh;
+    }
+  `]
 })
 export class Layout {}

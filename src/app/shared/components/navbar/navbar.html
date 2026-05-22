@@ -19,6 +19,7 @@
       @if (authService.isVendeur()) {
         <a routerLink="/vendeur/dashboard" routerLinkActive="nav-link-active" class="nav-link">Dashboard</a>
         <a routerLink="/vendeur/mes-annonces" routerLinkActive="nav-link-active" class="nav-link">Mes annonces</a>
+        <a routerLink="/vendeur/reservations" routerLinkActive="nav-link-active" class="nav-link">Réservations</a>
         <a routerLink="/vendeur/disponibilites" routerLinkActive="nav-link-active" class="nav-link">Disponibilités</a>
       }
       @if (authService.isAdmin()) {

@@ -105,26 +105,26 @@
           <div class="vin-section">
             <p class="specs-title">NUMÉRO VIN</p>
             <div class="vin-box">
-                <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
-                <div style="display: flex; align-items: center; gap: 10px;">
+              <p class="vin-number">{{ annonce().vehicule?.vin }}</p>
+              <div style="display: flex; align-items: center; gap: 10px;">
                 @if (annonce().vehicule?.vin_verifie) {
-                    <span class="badge-gold">VÉRIFIÉ ✓</span>
+                  <span class="badge-gold">VÉRIFIÉ ✓</span>
                 }
                 <button class="copy-btn" (click)="copyVin()" [title]="vinCopied() ? 'Copié !' : 'Copier le VIN'">
-                    @if (vinCopied()) {
+                  @if (vinCopied()) {
                     <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
-                    } @else {
+                  } @else {
                     <lucide-icon [img]="Copy" [size]="16" color="#7e7e7e"></lucide-icon>
-                    }
+                  }
                 </button>
-                </div>
+              </div>
             </div>
             @if (vinCopied()) {
-                <p style="font-size: 11px; color: #0fa336; margin-top: 6px; letter-spacing: 0.5px;">
+              <p style="font-size: 11px; color: #0fa336; margin-top: 6px; letter-spacing: 0.5px;">
                 ✓ VIN copié dans le presse-papiers
-                </p>
+              </p>
             }
-         </div>
+          </div>
 
         </div>
 
@@ -142,14 +142,29 @@
             <p class="sidebar-prix-label">Prix clé en main</p>
             <p class="sidebar-prix">{{ formatPrix(annonce().prix) }} <span>FCFA</span></p>
 
-            <div style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px;">
-              <button class="btn-primary" style="width: 100%;">
-                RÉSERVER CE VÉHICULE →
-              </button>
-              <button class="btn-outline" style="width: 100%;">
-                PLANIFIER UNE VISITE
-              </button>
-            </div>
+            @if (!authService.isVendeur() && !authService.isAdmin()) {
+              <div style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px;">
+                @if (annonce().statut === 'DISPONIBLE') {
+                  <a [routerLink]="['/acheteur/reservation', annonce().id]"
+                     style="text-decoration: none; width: 100%;">
+                    <button class="btn-primary" style="width: 100%;">
+                      RÉSERVER CE VÉHICULE →
+                    </button>
+                  </a>
+                } @else {
+                  <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>
+                    VÉHICULE RÉSERVÉ
+                  </button>
+                }
+                <a [routerLink]="['/acheteur/reservation', annonce().id]"
+                   [queryParams]="{type: 'visite'}"
+                   style="text-decoration: none; width: 100%;">
+                  <button class="btn-outline" style="width: 100%;">
+                    PLANIFIER UNE VISITE
+                  </button>
+                </a>
+              </div>
+            }
 
             <div class="vendeur-card">
               <div class="vendeur-avatar">
@@ -173,11 +188,11 @@
             <p style="font-size: 13px; color: #7e7e7e; font-weight: 300; line-height: 1.6; margin-bottom: 16px;">
               Estimez votre coût de revient total incluant les frais de douane, CNCB, PVI et ANaTT.
             </p>
-           <a [routerLink]="['/simulateur']" [queryParams]="{prix: annonce().prix}" style="text-decoration: none;">
-            <button class="btn-ghost" style="width: 100%; font-size: 11px;">
+            <a [routerLink]="['/simulateur']" [queryParams]="{prix: annonce().prix}" style="text-decoration: none;">
+              <button class="btn-ghost" style="width: 100%; font-size: 11px;">
                 LANCER LE SIMULATEUR →
-            </button>
-           </a>
+              </button>
+            </a>
           </div>
 
         </div>

@@ -50,6 +50,11 @@ export const routes: Routes = [
               import('./features/acheteur/reservations/reservations').then(m => m.Reservations)
           },
           {
+            path: 'reservation/:id',
+            loadComponent: () =>
+              import('./features/acheteur/reservation/reservation').then(m => m.Reservation)
+          },
+          {
             path: 'rendez-vous',
             loadComponent: () =>
               import('./features/acheteur/rendez-vous/rendez-vous').then(m => m.RendezVous)
@@ -84,6 +89,11 @@ export const routes: Routes = [
             path: 'disponibilites',
             loadComponent: () =>
               import('./features/vendeur/disponibilites/disponibilites').then(m => m.Disponibilites)
+          },
+          {
+            path: 'reservations',
+            loadComponent: () =>
+              import('./features/vendeur/reservations/reservations').then(m => m.VendeurReservations)
           }
         ]
       },

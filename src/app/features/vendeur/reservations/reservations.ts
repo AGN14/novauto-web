@@ -2,27 +2,25 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReservationService } from '../../../core/services/reservation.service';
-import { LucideAngularModule, Car, Eye, XCircle, CheckCircle, Clock } from 'lucide-angular';
+import { LucideAngularModule, Eye, CheckCircle, Clock, XCircle } from 'lucide-angular';
 
 @Component({
-  selector: 'app-reservations',
+  selector: 'app-vendeur-reservations',
   standalone: true,
   imports: [CommonModule, RouterLink, LucideAngularModule],
   templateUrl: './reservations.html',
   styleUrl: './reservations.css'
 })
-export class Reservations implements OnInit {
+export class VendeurReservations implements OnInit {
 
-  readonly Car = Car;
   readonly Eye = Eye;
-  readonly XCircle = XCircle;
   readonly CheckCircle = CheckCircle;
   readonly Clock = Clock;
+  readonly XCircle = XCircle;
 
   reservations = signal<any[]>([]);
   isLoading = signal(true);
-  cancelConfirm = signal<number | null>(null);
-  isCancelling = signal(false);
+  isConfirming = signal<number | null>(null);
 
   constructor(private reservationService: ReservationService) {}
 
@@ -31,7 +29,7 @@ export class Reservations implements OnInit {
   }
 
   loadReservations(): void {
-    this.reservationService.getMesReservations().subscribe({
+    this.reservationService.getVendeurReservations().subscribe({
       next: (data) => {
         this.reservations.set(data);
         this.isLoading.set(false);
@@ -40,17 +38,16 @@ export class Reservations implements OnInit {
     });
   }
 
-  annulerReservation(id: number): void {
-    this.isCancelling.set(true);
-    this.reservationService.annuler(id).subscribe({
+  confirmerReservation(id: number): void {
+    this.isConfirming.set(id);
+    this.reservationService.confirmer(id).subscribe({
       next: () => {
         this.reservations.update(list =>
-          list.map(r => r.id === id ? { ...r, statut: 'ANNULEE' } : r)
+          list.map(r => r.id === id ? { ...r, statut: 'CONFIRMEE' } : r)
         );
-        this.cancelConfirm.set(null);
-        this.isCancelling.set(false);
+        this.isConfirming.set(null);
       },
-      error: () => this.isCancelling.set(false)
+      error: () => this.isConfirming.set(null)
     });
   }
 
@@ -60,15 +57,6 @@ export class Reservations implements OnInit {
       case 'CONFIRMEE':  return 'badge-success';
       case 'ANNULEE':    return 'badge-muted';
       default:           return 'badge-muted';
-    }
-  }
-
-  getStatutIcon(statut: string): any {
-    switch (statut) {
-      case 'EN_ATTENTE': return this.Clock;
-      case 'CONFIRMEE':  return this.CheckCircle;
-      case 'ANNULEE':    return this.XCircle;
-      default:           return this.Clock;
     }
   }
 
