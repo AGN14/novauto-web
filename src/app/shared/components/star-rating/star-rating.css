@@ -1,0 +1,25 @@
+.stars-container {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.star-filled {
+  color: #C9A84C;
+  fill: #C9A84C;
+}
+
+.star-empty {
+  color: #2a2a2a;
+  fill: none;
+  stroke: #2a2a2a;
+}
+
+.star-interactive {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.star-interactive:hover {
+  transform: scale(1.1);
+}

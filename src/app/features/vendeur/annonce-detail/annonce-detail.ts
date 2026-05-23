@@ -1,14 +1,17 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../../core/services/annonce';
 import { InspectionService } from '../../../core/services/inspection.service';
-import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin, ShieldCheck } from 'lucide-angular';
+import { AvisService } from '../../../core/services/avis.service';
+import { StarRating } from '../../../shared/components/star-rating/star-rating';
+import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin, ShieldCheck, AlertTriangle } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendeur-annonce-detail',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule, StarRating],
   templateUrl: './annonce-detail.html',
   styleUrl: './annonce-detail.css'
 })
@@ -25,6 +28,7 @@ export class VendeurAnnonceDetail implements OnInit {
   readonly Copy = Copy;
   readonly MapPin = MapPin;
   readonly ShieldCheck = ShieldCheck;
+  readonly AlertTriangle = AlertTriangle;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
@@ -37,37 +41,60 @@ export class VendeurAnnonceDetail implements OnInit {
   inspections = signal<any[]>([]);
   isLoadingInspections = signal(true);
 
+  // Avis
+  avis = signal<any[]>([]);
+  isLoadingAvis = signal(true);
+  signalementModal = signal<{ visible: boolean, avisId: number | null, raison: string }>({
+    visible: false,
+    avisId: null,
+    raison: ''
+  });
+  isSubmittingSignalement = signal(false);
+  signalementMessage = signal<{ type: 'success' | 'error', text: string } | null>(null);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private annonceService: AnnonceService,
-    private inspectionService: InspectionService
+    private inspectionService: InspectionService,
+    private avisService: AvisService
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.params['id'];
-
-    // Charger l'annonce
-    this.annonceService.getById(+id).subscribe({
-      next: (data) => {
-        this.annonce.set(data);
-        this.isLoading.set(false);
-
-        // Charger les inspections pour ce véhicule
-        if (data.vehicule?.id) {
-          this.loadInspections(data.vehicule.id);
-        }
-      },
-      error: () => this.isLoading.set(false)
+    // Écouter les changements de paramètres pour recharger les données
+    this.route.params.subscribe(params => {
+      const id = +params['id'];
+      this.loadData(id);
     });
   }
 
-  loadInspections(vehiculeId: number): void {
+  loadData(id: number): void {
+    this.isLoading.set(true);
+    this.isLoadingInspections.set(true);
+    this.isLoadingAvis.set(true);
+
+    // Charger l'annonce
+    this.annonceService.getById(id).subscribe({
+      next: (data) => {
+        this.annonce.set(data);
+        this.isLoading.set(false);
+      },
+      error: () => this.isLoading.set(false)
+    });
+
+    // Charger les inspections pour cette annonce
+    this.loadInspections(id);
+
+    // Charger les avis pour cette annonce
+    this.loadAvis(id);
+  }
+
+  loadInspections(annonceId: number): void {
     this.inspectionService.getMesInspections().subscribe({
       next: (data) => {
-        // Filtrer par vehicule_id de l'annonce courante
-        const inspectionsVehicule = data.filter((i: any) => i.vehicule_id === vehiculeId);
-        this.inspections.set(inspectionsVehicule);
+        // Filtrer par annonce_id (pas vehicule_id)
+        const inspectionsAnnonce = data.filter((i: any) => i.annonce_id === annonceId);
+        this.inspections.set(inspectionsAnnonce);
         this.isLoadingInspections.set(false);
       },
       error: () => this.isLoadingInspections.set(false)
@@ -125,6 +152,61 @@ export class VendeurAnnonceDetail implements OnInit {
     this.annonceService.delete(this.annonce().id).subscribe({
       next: () => this.router.navigate(['/vendeur/mes-annonces']),
       error: () => this.isDeleting.set(false)
+    });
+  }
+
+  loadAvis(annonceId: number): void {
+    this.avisService.getAvisByAnnonce(annonceId).subscribe({
+      next: (data) => {
+        this.avis.set(data);
+        this.isLoadingAvis.set(false);
+      },
+      error: () => this.isLoadingAvis.set(false)
+    });
+  }
+
+  getNoteMoyenne(): number {
+    const avisList = this.avis();
+    if (avisList.length === 0) return 0;
+    const sum = avisList.reduce((acc: number, a: any) => acc + a.note, 0);
+    return Math.round((sum / avisList.length) * 10) / 10;
+  }
+
+  openSignalementModal(avisId: number): void {
+    this.signalementModal.set({ visible: true, avisId, raison: '' });
+  }
+
+  closeSignalementModal(): void {
+    this.signalementModal.set({ visible: false, avisId: null, raison: '' });
+    this.signalementMessage.set(null);
+  }
+
+  soumettreSignalement(): void {
+    const modal = this.signalementModal();
+    if (!modal.avisId || !modal.raison.trim()) return;
+
+    this.isSubmittingSignalement.set(true);
+    this.avisService.signalerAvis(modal.avisId, modal.raison).subscribe({
+      next: () => {
+        this.isSubmittingSignalement.set(false);
+        this.signalementMessage.set({ type: 'success', text: 'Avis signalé avec succès. L\'administrateur examinera votre demande.' });
+        // Recharger les avis pour mettre à jour l'affichage
+        this.loadAvis(this.annonce().id);
+        setTimeout(() => this.closeSignalementModal(), 2000);
+      },
+      error: (err) => {
+        this.isSubmittingSignalement.set(false);
+        this.signalementMessage.set({ type: 'error', text: err.error?.message || 'Erreur lors du signalement' });
+      }
+    });
+  }
+
+  formatDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     });
   }
 }

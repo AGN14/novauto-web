@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { InspectionService } from '../../../core/services/inspection.service';
 import { AnnonceService } from '../../../core/services/annonce';
@@ -8,7 +8,7 @@ import { LucideAngularModule, ArrowLeft, ShieldCheck, CheckCircle, Clock, AlertT
 @Component({
   selector: 'app-certification',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './certification.html',
   styleUrl: './certification.css'
 })

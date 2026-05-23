@@ -55,9 +55,19 @@ export const routes: Routes = [
               import('./features/acheteur/reservation/reservation').then(m => m.Reservation)
           },
           {
+            path: 'visite/:id',
+            loadComponent: () =>
+              import('./features/acheteur/visite/visite').then(m => m.Visite)
+          },
+          {
             path: 'rendez-vous',
             loadComponent: () =>
               import('./features/acheteur/rendez-vous/rendez-vous').then(m => m.RendezVous)
+          },
+          {
+            path: 'mes-avis',
+            loadComponent: () =>
+              import('./features/acheteur/mes-avis/mes-avis').then(m => m.MesAvis)
           }
         ]
       },
@@ -135,6 +145,11 @@ export const routes: Routes = [
             path: 'annonces/:id',
             loadComponent: () =>
               import('./features/admin/annonce-detail/annonce-detail').then(m => m.AdminAnnonceDetail)
+          },
+          {
+            path: 'avis-signales',
+            loadComponent: () =>
+              import('./features/admin/avis-signales/avis-signales').then(m => m.AvisSignalesComponent)
           }
         ]
       },

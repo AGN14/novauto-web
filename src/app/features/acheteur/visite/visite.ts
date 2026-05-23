@@ -5,23 +5,23 @@ import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../../core/services/annonce';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { AuthService } from '../../../core/services/auth.service';
-import { LucideAngularModule, ArrowLeft, Shield, Calendar, CheckCircle, AlertTriangle, Phone } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Calendar, CheckCircle, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-angular';
 
 @Component({
-  selector: 'app-reservation',
+  selector: 'app-visite',
   standalone: true,
   imports: [CommonModule, RouterLink, FormsModule, LucideAngularModule],
-  templateUrl: './reservation.html',
-  styleUrl: './reservation.css'
+  templateUrl: './visite.html',
+  styleUrl: './visite.css'
 })
-export class Reservation implements OnInit {
+export class Visite implements OnInit {
 
   readonly ArrowLeft = ArrowLeft;
-  readonly Shield = Shield;
   readonly Calendar = Calendar;
   readonly CheckCircle = CheckCircle;
   readonly AlertTriangle = AlertTriangle;
-  readonly Phone = Phone;
+  readonly ChevronLeft = ChevronLeft;
+  readonly ChevronRight = ChevronRight;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
@@ -29,16 +29,9 @@ export class Reservation implements OnInit {
   success = signal(false);
   errorMessage = signal('');
 
-  typeReservation = signal<'VISITE' | 'ACOMPTE'>('ACOMPTE');
   message = signal('');
-
   selectedDate = signal<string>('');
   currentMonth = signal(new Date());
-
-  get acompte(): number {
-    if (!this.annonce()) return 0;
-    return Math.round(this.annonce().prix * 0.1);
-  }
 
   get joursCalendrier(): any[] {
     const date = this.currentMonth();
@@ -112,7 +105,7 @@ export class Reservation implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.typeReservation() === 'VISITE' && !this.selectedDate()) {
+    if (!this.selectedDate()) {
       this.errorMessage.set('Veuillez sélectionner une date de visite.');
       return;
     }
@@ -121,12 +114,11 @@ export class Reservation implements OnInit {
     this.errorMessage.set('');
 
     this.reservationService.create({
-        annonce_id: this.annonce().id,
-        montant: this.typeReservation() === 'ACOMPTE' ? this.acompte : 0,
-        message: this.message(),
-        type_reservation: this.typeReservation(),         
-        date_visite: this.selectedDate() || null,
-
+      annonce_id: this.annonce().id,
+      montant: 0,
+      message: this.message(),
+      type_reservation: 'VISITE',
+      date_visite: this.selectedDate(),
     }).subscribe({
       next: () => {
         this.isSubmitting.set(false);

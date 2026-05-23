@@ -143,26 +143,43 @@
             <p class="sidebar-prix">{{ formatPrix(annonce().prix) }} <span>FCFA</span></p>
 
             @if (!authService.isVendeur() && !authService.isAdmin()) {
-              <div style="margin: 24px 0; display: flex; flex-direction: column; gap: 12px;">
-                @if (annonce().statut === 'DISPONIBLE') {
-                  <a [routerLink]="['/acheteur/reservation', annonce().id]"
-                     style="text-decoration: none; width: 100%;">
-                    <button class="btn-primary" style="width: 100%;">
-                      RÉSERVER CE VÉHICULE →
-                    </button>
-                  </a>
+              <div style="margin: 24px 0;">
+                @if (isLoadingReservation()) {
+                  <button class="btn-primary" style="width: 100%; opacity: 0.5;" disabled>
+                    CHARGEMENT...
+                  </button>
+                } @else if (isVehiculeNonDisponible()) {
+                  <button class="btn-disabled" style="width: 100%;" disabled>
+                    VÉHICULE NON DISPONIBLE
+                  </button>
+                } @else if (!hasReservationActive()) {
+                  <!-- Aucune réservation active -->
+                  <div style="display: grid; gap: 12px;">
+                    <a [routerLink]="['/acheteur/reservation', annonce().id]" style="text-decoration: none;">
+                      <button class="btn-primary" style="width: 100%;">
+                        RÉSERVER AVEC ACOMPTE →
+                      </button>
+                    </a>
+                    <a [routerLink]="['/acheteur/visite', annonce().id]" style="text-decoration: none;">
+                      <button class="btn-ghost" style="width: 100%;">
+                        PLANIFIER UNE VISITE
+                      </button>
+                    </a>
+                  </div>
                 } @else {
-                  <button class="btn-primary" style="width: 100%; opacity: 0.5; cursor: not-allowed;" disabled>
-                    VÉHICULE RÉSERVÉ
-                  </button>
+                  <!-- Réservation active - boutons grisés -->
+                  <div style="display: grid; gap: 12px;">
+                    <button class="btn-disabled" style="width: 100%;" disabled>
+                      RÉSERVER AVEC ACOMPTE
+                    </button>
+                    <button class="btn-disabled" style="width: 100%;" disabled>
+                      PLANIFIER UNE VISITE
+                    </button>
+                    <p style="font-size: 13px; color: #7e7e7e; text-align: center; margin: 8px 0 0 0; line-height: 1.5;">
+                      Vous avez déjà une réservation active sur ce véhicule
+                    </p>
+                  </div>
                 }
-                <a [routerLink]="['/acheteur/reservation', annonce().id]"
-                   [queryParams]="{type: 'visite'}"
-                   style="text-decoration: none; width: 100%;">
-                  <button class="btn-outline" style="width: 100%;">
-                    PLANIFIER UNE VISITE
-                  </button>
-                </a>
               </div>
             }
 
@@ -198,6 +215,111 @@
         </div>
 
       </div>
+
+      <!-- SECTION AVIS -->
+      <div style="margin-top: 60px; border-top: 1px solid #1a1a1a; padding-top: 40px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px;">
+          <div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">
+              AVIS CLIENTS
+            </h3>
+            @if (avis().length > 0) {
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <app-star-rating [note]="getNoteMoyenne()" [interactive]="false"></app-star-rating>
+                <span style="font-size: 14px; color: #7e7e7e;">
+                  {{ getNoteMoyenne() }} / 5 · {{ avis().length }} avis
+                </span>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- FORMULAIRE AVIS (si acheteur connecté avec réservation confirmée) -->
+        @if (authService.isAcheteur() && !avisSuccess()) {
+          <div class="avis-form-card">
+            <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">
+              Laisser un avis
+            </h4>
+
+            <div style="margin-bottom: 16px;">
+              <label style="font-size: 12px; color: #7e7e7e; margin-bottom: 8px; display: block;">NOTE</label>
+              <app-star-rating
+                [note]="noteFormulaire()"
+                [interactive]="true"
+                (noteChange)="onNoteChange($event)">
+              </app-star-rating>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+              <label style="font-size: 12px; color: #7e7e7e; margin-bottom: 8px; display: block;">COMMENTAIRE (OPTIONNEL)</label>
+              <textarea
+                [(ngModel)]="commentaireFormulaire"
+                placeholder="Partagez votre expérience avec ce véhicule..."
+                style="width: 100%; min-height: 100px; background: #000; border: 1px solid #1a1a1a; padding: 12px; color: #fff; font-size: 14px; resize: vertical;"
+                maxlength="1000">
+              </textarea>
+            </div>
+
+            @if (avisError()) {
+              <div class="alert-error" style="margin-bottom: 16px;">
+                <lucide-icon [img]="AlertTriangle" [size]="16" color="#e53935"></lucide-icon>
+                <span>{{ avisError() }}</span>
+              </div>
+            }
+
+            <button
+              class="btn-primary"
+              (click)="soumettreAvis()"
+              [disabled]="isSubmittingAvis() || noteFormulaire() === 0">
+              @if (isSubmittingAvis()) {
+                ENVOI EN COURS...
+              } @else {
+                SOUMETTRE L'AVIS
+              }
+            </button>
+          </div>
+        }
+
+        @if (avisSuccess()) {
+          <div class="avis-success-card">
+            <lucide-icon [img]="CheckCircle" [size]="32" color="#0fa336" style="margin-bottom: 12px;"></lucide-icon>
+            <p style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">Avis publié !</p>
+            <p style="font-size: 14px; color: #7e7e7e;">
+              Votre avis a été publié avec succès.
+            </p>
+          </div>
+        }
+
+        <!-- LISTE DES AVIS APPROUVÉS -->
+        @if (isLoadingAvis()) {
+          <div style="text-align: center; padding: 40px; color: #7e7e7e;">
+            <p style="font-size: 14px;">Chargement des avis...</p>
+          </div>
+        } @else if (avis().length === 0) {
+          <div class="avis-empty">
+            <lucide-icon [img]="MessageCircle" [size]="32" color="#7e7e7e" style="margin-bottom: 12px;"></lucide-icon>
+            <p style="font-size: 14px; color: #7e7e7e;">Aucun avis pour le moment</p>
+          </div>
+        } @else {
+          <div class="avis-list">
+            @for (item of avis(); track item.id) {
+              <div class="avis-item">
+                <div class="avis-item-header">
+                  <div>
+                    <p class="avis-author">{{ item.acheteur.user.prenom }} {{ item.acheteur.user.nom }}</p>
+                    <app-star-rating [note]="item.note" [interactive]="false"></app-star-rating>
+                  </div>
+                  <span class="avis-date">{{ item.created_at | date:'dd/MM/yyyy' }}</span>
+                </div>
+                @if (item.commentaire) {
+                  <p class="avis-commentaire-text">{{ item.commentaire }}</p>
+                }
+              </div>
+            }
+          </div>
+        }
+      </div>
+
     </div>
 
   }

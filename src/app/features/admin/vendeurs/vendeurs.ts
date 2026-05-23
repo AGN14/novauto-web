@@ -1,6 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LucideAngularModule, ShieldCheck, ShieldX, Eye, Search } from 'lucide-angular';
 import { FormsModule } from '@angular/forms';
@@ -8,7 +7,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-vendeurs',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule, FormsModule],
+  imports: [CommonModule, LucideAngularModule, FormsModule],
   templateUrl: './vendeurs.html',
   styleUrl: './vendeurs.css'
 })

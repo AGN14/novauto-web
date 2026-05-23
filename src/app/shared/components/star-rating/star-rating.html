@@ -1,0 +1,12 @@
+<div class="stars-container">
+  @for (star of stars; track star) {
+    <lucide-icon
+      [img]="Star"
+      [size]="20"
+      [class.star-filled]="isStarFilled(star)"
+      [class.star-empty]="!isStarFilled(star)"
+      [class.star-interactive]="interactive"
+      (click)="onStarClick(star)"
+    ></lucide-icon>
+  }
+</div>

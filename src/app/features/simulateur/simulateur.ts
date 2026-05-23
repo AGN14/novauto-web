@@ -1,13 +1,13 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { LucideAngularModule, Calculator, Info, Download, RotateCcw } from 'lucide-angular';
 
 @Component({
   selector: 'app-simulateur',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule],
   templateUrl: './simulateur.html',
   styleUrl: './simulateur.css'
 })

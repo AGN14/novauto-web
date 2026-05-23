@@ -27,6 +27,7 @@
         <a routerLink="/admin/vendeurs" routerLinkActive="nav-link-active" class="nav-link">Vendeurs</a>
         <a routerLink="/admin/annonces" routerLinkActive="nav-link-active" class="nav-link">Annonces</a>
         <a routerLink="/admin/transactions" routerLinkActive="nav-link-active" class="nav-link">Transactions</a>
+        <a routerLink="/admin/avis-signales" routerLinkActive="nav-link-active" class="nav-link">Avis signalés</a>
       }
     </div>
 
@@ -133,6 +134,7 @@
         <a routerLink="/admin/dashboard" (click)="fermerMenu()" class="mobile-link">Dashboard</a>
         <a routerLink="/admin/vendeurs" (click)="fermerMenu()" class="mobile-link">Vendeurs</a>
         <a routerLink="/admin/annonces" (click)="fermerMenu()" class="mobile-link">Annonces</a>
+        <a routerLink="/admin/avis-signales" (click)="fermerMenu()" class="mobile-link">Avis signalés</a>
       }
       <div class="mobile-menu-divider"></div>
       @if (authService.isLoggedIn()) {

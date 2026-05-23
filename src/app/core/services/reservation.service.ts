@@ -23,6 +23,14 @@ export class ReservationService {
     return this.http.post<any>(`${this.API_URL}/acheteur/reservations/${id}/annuler`, {});
   }
 
+  convertirEnAcompte(id: number): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/acheteur/reservations/${id}/convertir-acompte`, {});
+  }
+
+  convertirEnVisite(id: number): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/acheteur/reservations/${id}/convertir-visite`, {});
+  }
+
   getVendeurReservations(): Observable<any[]> {
     return this.http.get<any[]>(`${this.API_URL}/vendeur/reservations`);
   }

@@ -1,0 +1,76 @@
+<div class="admin-container">
+  <div class="admin-header">
+    <h1>Avis signalés</h1>
+    <p class="subtitle">Gérer les avis signalés par les vendeurs</p>
+  </div>
+
+  @if (message()) {
+    <div class="message" [class.success]="message()!.type === 'success'" [class.error]="message()!.type === 'error'">
+      {{ message()!.text }}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Chargement des avis signalés...</p>
+    </div>
+  } @else if (avisSignales().length === 0) {
+    <div class="empty-state">
+      <p>Aucun avis signalé pour le moment.</p>
+    </div>
+  } @else {
+    <div class="avis-grid">
+      @for (avis of avisSignales(); track avis.id) {
+        <div class="avis-card">
+          <div class="avis-header">
+            <div class="vehicule-info">
+              <h3>{{ getVehiculeLabel(avis) }}</h3>
+              <p class="annonce-id">Annonce #{{ avis.annonce_id }}</p>
+            </div>
+            <div class="rating">
+              <app-star-rating [note]="avis.note" [interactive]="false"></app-star-rating>
+            </div>
+          </div>
+
+          <div class="avis-body">
+            <div class="info-row">
+              <span class="label">Acheteur:</span>
+              <span class="value">{{ avis.acheteur?.user?.nom || 'N/A' }} {{ avis.acheteur?.user?.prenom || '' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Vendeur:</span>
+              <span class="value">{{ avis.vendeur?.user?.nom || 'N/A' }} {{ avis.vendeur?.user?.prenom || '' }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Date de l'avis:</span>
+              <span class="value">{{ formatDate(avis.created_at) }}</span>
+            </div>
+
+            @if (avis.commentaire) {
+              <div class="commentaire-section">
+                <p class="label">Commentaire de l'acheteur:</p>
+                <p class="commentaire">{{ avis.commentaire }}</p>
+              </div>
+            }
+
+            <div class="signalement-section">
+              <p class="label">Raison du signalement:</p>
+              <p class="raison">{{ avis.raison_signalement }}</p>
+              <p class="date-signalement">Signalé le {{ formatDate(avis.updated_at) }}</p>
+            </div>
+          </div>
+
+          <div class="avis-actions">
+            <button class="btn-danger" (click)="supprimerAvis(avis.id)">
+              SUPPRIMER L'AVIS
+            </button>
+            <button class="btn-secondary" (click)="rejeterSignalement(avis.id)">
+              REJETER LE SIGNALEMENT
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

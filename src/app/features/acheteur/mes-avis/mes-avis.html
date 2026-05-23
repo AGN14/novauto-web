@@ -1,0 +1,56 @@
+<main style="background: #000; min-height: 100vh; padding: 40px 80px;">
+  <div style="max-width: 1200px; margin: 0 auto;">
+
+    <!-- HEADER -->
+    <div style="margin-bottom: 40px;">
+      <h1 style="font-size: 32px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px;">
+        MES AVIS
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e;">
+        Tous les avis que vous avez soumis sur les véhicules
+      </p>
+    </div>
+
+    @if (isLoading()) {
+      <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+        <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
+      </div>
+    } @else if (avis().length === 0) {
+      <div class="empty-state">
+        <lucide-icon [img]="MessageCircle" [size]="48" color="#7e7e7e" style="margin-bottom: 16px;"></lucide-icon>
+        <p style="font-size: 16px; color: #fff; margin-bottom: 8px;">Aucun avis pour le moment</p>
+        <p style="font-size: 14px; color: #7e7e7e;">
+          Vos avis apparaîtront ici après vos réservations confirmées.
+        </p>
+      </div>
+    } @else {
+      <div class="avis-grid">
+        @for (item of avis(); track item.id) {
+          <div class="avis-card">
+            <div class="avis-header">
+              <div>
+                <p class="avis-annonce-marque">{{ item.annonce.vehicule.modele.marque.nom }}</p>
+                <p class="avis-annonce-titre">{{ item.annonce.titre }}</p>
+              </div>
+            </div>
+
+            <div class="avis-rating">
+              <app-star-rating [note]="item.note" [interactive]="false"></app-star-rating>
+            </div>
+
+            @if (item.commentaire) {
+              <div class="avis-commentaire">
+                <p>{{ item.commentaire }}</p>
+              </div>
+            }
+
+            <div class="avis-footer">
+              <span class="avis-date">Publié le {{ item.created_at | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+  </div>
+</main>
