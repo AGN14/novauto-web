@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { AnnonceService } from '../../../core/services/annonce';
+import { PaiementService } from '../../../core/services/paiement.service';
 import { LucideAngularModule, ArrowLeft, CreditCard, AlertCircle, CheckCircle } from 'lucide-angular';
 
 @Component({
@@ -32,7 +33,8 @@ export class NouvelleReservation implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
-    private annonceService: AnnonceService
+    private annonceService: AnnonceService,
+    private paiementService: PaiementService
   ) {}
 
   ngOnInit(): void {
@@ -72,13 +74,30 @@ export class NouvelleReservation implements OnInit {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
+    // Étape 1: Créer la réservation
     this.reservationService.creerReservation(this.annonceId()).subscribe({
-      next: () => {
-        this.router.navigate(['/acheteur/mes-reservations']);
+      next: (reservation) => {
+        console.log('Réservation créée:', reservation);
+
+        // Étape 2: Initier le paiement FedaPay
+        this.paiementService.initierPaiement(reservation.id).subscribe({
+          next: (paiement) => {
+            console.log('Paiement initié:', paiement);
+
+            // Rediriger vers FedaPay
+            window.location.href = paiement.payment_url;
+          },
+          error: (err) => {
+            console.error('Erreur initiation paiement:', err);
+            this.isSubmitting.set(false);
+            this.errorMessage.set('Erreur lors de l\'initialisation du paiement. Veuillez réessayer.');
+          }
+        });
       },
       error: (err) => {
+        console.error('Erreur création réservation:', err);
         this.isSubmitting.set(false);
-        this.errorMessage.set(err.error?.message || 'Une erreur est survenue.');
+        this.errorMessage.set(err.error?.message || 'Une erreur est survenue lors de la création de la réservation.');
       }
     });
   }

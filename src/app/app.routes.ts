@@ -36,6 +36,12 @@ export const routes: Routes = [
           import('./features/simulateur/simulateur').then(m => m.Simulateur)
       },
       {
+        path: 'notifications',
+        canActivate: [authGuard],
+        loadComponent: () =>
+          import('./features/notifications/notifications').then(m => m.Notifications)
+      },
+      {
         path: 'acheteur',
         canActivate: [acheteurGuard],
         children: [
@@ -68,6 +74,11 @@ export const routes: Routes = [
             path: 'mes-avis',
             loadComponent: () =>
               import('./features/acheteur/mes-avis/mes-avis').then(m => m.MesAvis)
+          },
+          {
+            path: 'paiement-retour',
+            loadComponent: () =>
+              import('./features/acheteur/paiement-retour/paiement-retour').then(m => m.PaiementRetour)
           }
         ]
       },

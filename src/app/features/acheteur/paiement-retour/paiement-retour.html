@@ -1,0 +1,36 @@
+<div class="page-container">
+  <div class="retour-card">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <lucide-icon [img]="Loader2" [size]="48" class="spinner-icon"></lucide-icon>
+        <h2 class="loading-title">⏳ Vérification en cours...</h2>
+        <p class="loading-text">Nous vérifions le statut de votre paiement. Veuillez patienter quelques instants.</p>
+      </div>
+    } @else {
+      @if (statut() === 'APPROUVE') {
+        <div class="success-state">
+          <lucide-icon [img]="CheckCircle" [size]="64" color="#0fa336"></lucide-icon>
+          <h1 class="success-title">✅ Paiement réussi !</h1>
+          <p class="success-text">Votre réservation a été confirmée. Le véhicule est maintenant bloqué pour vous.</p>
+          <button (click)="allerMesReservations()" class="btn-primary">
+            Voir mes réservations
+          </button>
+        </div>
+      } @else {
+        <div class="error-state">
+          <lucide-icon [img]="XCircle" [size]="64" color="#e53935"></lucide-icon>
+          <h1 class="error-title">❌ Paiement échoué</h1>
+          <p class="error-text">Une erreur est survenue lors du paiement. Veuillez réessayer.</p>
+          <div class="error-actions">
+            <button (click)="retenterPaiement()" class="btn-primary">
+              Réessayer
+            </button>
+            <button (click)="allerMesReservations()" class="btn-secondary">
+              Retour à mes réservations
+            </button>
+          </div>
+        </div>
+      }
+    }
+  </div>
+</div>

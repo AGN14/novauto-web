@@ -106,17 +106,24 @@
         </div>
 
         <button
-          disabled
-          class="reservation-btn-disabled"
+          (click)="confirmerReservation()"
+          [disabled]="isSubmitting() || !selectedDate()"
+          class="reservation-btn"
+          [class.reservation-btn-disabled]="isSubmitting() || !selectedDate()"
         >
-          <lucide-icon [img]="AlertCircle" [size]="20"></lucide-icon>
-          🔒 PAIEMENT NON DISPONIBLE
+          @if (isSubmitting()) {
+            <span class="spinner-small"></span>
+            Redirection vers le paiement...
+          } @else {
+            <lucide-icon [img]="CreditCard" [size]="20"></lucide-icon>
+            Payer {{formatPrix(getMontantReservation())}} FCFA
+          }
         </button>
 
         <div class="note-section">
           <p class="note-text">
-            <strong>Cette fonctionnalité sera disponible prochainement.</strong><br>
-            Le paiement en ligne sera intégré prochainement. Contactez directement le vendeur pour finaliser votre réservation.
+            <strong>Paiement sécurisé via FedaPay</strong><br>
+            Vous serez redirigé vers notre partenaire de paiement pour finaliser votre réservation en toute sécurité.
           </p>
         </div>
       </div>

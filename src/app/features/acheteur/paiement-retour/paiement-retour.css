@@ -1,0 +1,107 @@
+.page-container {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+.retour-card {
+  max-width: 500px;
+  width: 100%;
+  background: #0a0a0a;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.loading-state,
+.success-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.spinner-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-title,
+.success-title,
+.error-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0;
+}
+
+.loading-text,
+.success-text,
+.error-text {
+  font-size: 1rem;
+  color: #7e7e7e;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.error-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.btn-primary {
+  width: 100%;
+  background: #C9A84C;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-primary:hover {
+  background: #d4b35c;
+}
+
+.btn-secondary {
+  width: 100%;
+  background: transparent;
+  color: #C9A84C;
+  border: 1px solid #C9A84C;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: rgba(201, 168, 76, 0.1);
+}
+
+@media (max-width: 768px) {
+  .retour-card {
+    padding: 2rem 1.5rem;
+  }
+
+  .loading-title,
+  .success-title,
+  .error-title {
+    font-size: 1.5rem;
+  }
+}

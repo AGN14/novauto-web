@@ -3,11 +3,12 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../.././../core/services/auth.service';
 import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusCircle } from 'lucide-angular';
+import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive, CommonModule, LucideAngularModule],
+  imports: [RouterLink, RouterLinkActive, CommonModule, LucideAngularModule, NotificationBell],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css'
 })
