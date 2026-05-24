@@ -84,7 +84,10 @@ export class NouvelleReservation implements OnInit {
           next: (paiement) => {
             console.log('Paiement initié:', paiement);
 
-            // Rediriger vers FedaPay
+            // Sauvegarder l'ID de réservation pour retour
+            sessionStorage.setItem('pending_reservation_id', reservation.id.toString());
+
+            // Rediriger vers FedaPay (redirection complète pour meilleure compatibilité mobile)
             window.location.href = paiement.payment_url;
           },
           error: (err) => {

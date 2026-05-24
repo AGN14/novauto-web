@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 export interface AnnonceFilters {
+  marque?: string;
   marque_id?: number;
   modele_id?: number;
   statut_douanier?: string;

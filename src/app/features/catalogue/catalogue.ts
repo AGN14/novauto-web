@@ -1,5 +1,5 @@
 import { Component, OnInit, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../core/services/annonce';
@@ -21,6 +21,7 @@ export class Catalogue implements OnInit {
   totalAnnonces = signal(0);
   currentPage = signal(1);
   lastPage = signal(1);
+  filtreMarque = signal<string | null>(null);
 
   filtres = {
     marque_id: '',
@@ -40,12 +41,19 @@ export class Catalogue implements OnInit {
 
   constructor(
     private annonceService: AnnonceService,
-    private marqueService: MarqueService
+    private marqueService: MarqueService,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
     this.loadMarques();
-    this.loadAnnonces();
+
+    // Lire le query param marque depuis l'URL
+    this.route.queryParams.subscribe(params => {
+      const marque = params['marque'] || null;
+      this.filtreMarque.set(marque);
+      this.loadAnnonces();
+    });
   }
 
   loadMarques(): void {
@@ -57,6 +65,9 @@ export class Catalogue implements OnInit {
   loadAnnonces(page: number = 1): void {
     this.isLoading.set(true);
     const filters: any = { page, per_page: 12 };
+
+    // Filtre par nom de marque (depuis carrousel)
+    if (this.filtreMarque()) filters.marque = this.filtreMarque();
 
     if (this.filtres.marque_id) filters.marque_id = this.filtres.marque_id;
     if (this.filtres.modele_id) filters.modele_id = this.filtres.modele_id;

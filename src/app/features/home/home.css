@@ -802,3 +802,54 @@
     flex-direction: column;
   }
 }
+
+/* ══════════════════════════
+   CARROUSEL DE MARQUES - DÉFILEMENT CONTINU
+══════════════════════════ */
+.marquee-container {
+  overflow: hidden;
+  width: 100%;
+  background: #0a0a0a;
+  border-top: 1px solid #1a1a1a;
+  border-bottom: 1px solid #1a1a1a;
+  padding: 32px 0;
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: marquee 25s linear infinite;
+  will-change: transform;
+}
+
+.marquee-container:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+.marquee-group {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  padding-right: 80px;
+  flex-shrink: 0;
+}
+
+.marquee-group img,
+.marquee-group svg {
+  height: 40px;
+  width: auto;
+  flex-shrink: 0;
+  transition: opacity 0.3s;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.marquee-group img:hover,
+.marquee-group svg:hover {
+  opacity: 1 !important;
+}
+
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}

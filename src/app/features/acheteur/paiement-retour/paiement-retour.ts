@@ -7,7 +7,7 @@ import { LucideAngularModule, CheckCircle, XCircle, Loader2 } from 'lucide-angul
 @Component({
   selector: 'app-paiement-retour',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './paiement-retour.html',
   styleUrl: './paiement-retour.css'
 })
@@ -31,7 +31,16 @@ export class PaiementRetour implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      const resId = params['reservation_id'];
+      let resId = params['reservation_id'];
+
+      // Si pas dans l'URL, chercher dans sessionStorage
+      if (!resId) {
+        const pendingId = sessionStorage.getItem('pending_reservation_id');
+        if (pendingId) {
+          resId = pendingId;
+          sessionStorage.removeItem('pending_reservation_id');
+        }
+      }
 
       if (resId) {
         this.reservationId.set(+resId);

@@ -75,6 +75,19 @@
 
     <!-- LISTE ANNONCES -->
     <div>
+      <!-- Badge filtre actif -->
+      @if (filtreMarque()) {
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 24px;">
+          <span style="font-size: 13px; color: #7e7e7e;">Filtré par marque :</span>
+          <span style="background: #C9A84C; color: #000; padding: 4px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">
+            {{ filtreMarque() }}
+          </span>
+          <a [routerLink]="['/catalogue']" style="font-size: 12px; color: #7e7e7e; text-decoration: none; cursor: pointer;">
+            ✕ Effacer le filtre
+          </a>
+        </div>
+      }
+
       @if (isLoading()) {
         <div style="text-align: center; padding: 80px; color: #7e7e7e;">
           <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
