@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { filter, Subscription } from 'rxjs';
 import { AnnonceService } from '../../../core/services/annonce';
 import { ReservationService } from '../../../core/services/reservation.service';
+import { RendezVousService } from '../../../core/services/rendez-vous.service';
 import { AvisService } from '../../../core/services/avis.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
@@ -35,9 +36,10 @@ export class AnnonceDetail implements OnInit, OnDestroy {
   photoActive = signal(0);
   vinCopied = signal(false);
 
-  // Réservation
+  // Réservation et Rendez-vous
   reservationActive = signal<any | null>(null);
-  isLoadingReservation = signal(true);
+  rendezVousActif = signal<any | null>(null);
+  isLoadingActions = signal(true);
 
   // Avis
   avis = signal<any[]>([]);
@@ -55,6 +57,7 @@ export class AnnonceDetail implements OnInit, OnDestroy {
     private router: Router,
     private annonceService: AnnonceService,
     private reservationService: ReservationService,
+    private rendezVousService: RendezVousService,
     private avisService: AvisService,
     public authService: AuthService
   ) {}
@@ -63,15 +66,14 @@ export class AnnonceDetail implements OnInit, OnDestroy {
     const id = this.route.snapshot.params['id'];
     this.loadAnnonce(+id);
     this.loadAvis(+id);
-    this.loadReservation(+id);
+    this.loadActionsAcheteur(+id);
 
-    // Écouter les événements de navigation pour recharger les réservations
+    // Écouter les événements de navigation pour recharger les actions
     this.routerSubscription = this.router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((event: any) => {
-        // Si on revient sur cette page, recharger les réservations
         if (event.url.includes(`/catalogue/${id}`)) {
-          this.loadReservation(+id);
+          this.loadActionsAcheteur(+id);
         }
       });
   }
@@ -100,24 +102,51 @@ export class AnnonceDetail implements OnInit, OnDestroy {
     });
   }
 
-  private loadReservation(id: number): void {
-    if (this.authService.isAcheteur()) {
-      this.isLoadingReservation.set(true);
-      this.reservationService.getMesReservations().subscribe({
-        next: (data) => {
-          // Trouver la réservation active pour cette annonce (EN_ATTENTE ou CONFIRMEE, pas ANNULEE)
-          const reservation = data.find((r: any) =>
-            r.annonce_id === id &&
-            (r.statut === 'EN_ATTENTE' || r.statut === 'CONFIRMEE')
-          );
-          this.reservationActive.set(reservation || null);
-          this.isLoadingReservation.set(false);
-        },
-        error: () => this.isLoadingReservation.set(false)
-      });
-    } else {
-      this.isLoadingReservation.set(false);
+  private loadActionsAcheteur(id: number): void {
+    if (!this.authService.isAcheteur()) {
+      this.isLoadingActions.set(false);
+      return;
     }
+
+    this.isLoadingActions.set(true);
+    let reservationLoaded = false;
+    let rendezVousLoaded = false;
+
+    const checkComplete = () => {
+      if (reservationLoaded && rendezVousLoaded) {
+        this.isLoadingActions.set(false);
+      }
+    };
+
+    this.reservationService.getMesReservations().subscribe({
+      next: (data) => {
+        const reservation = data.find((r: any) =>
+          r.annonce_id === id && (r.statut === 'EN_ATTENTE' || r.statut === 'CONFIRMEE')
+        );
+        this.reservationActive.set(reservation || null);
+        reservationLoaded = true;
+        checkComplete();
+      },
+      error: () => {
+        reservationLoaded = true;
+        checkComplete();
+      }
+    });
+
+    this.rendezVousService.getMesRendezVous().subscribe({
+      next: (data) => {
+        const rdv = data.find((r: any) =>
+          r.annonce_id === id && (r.statut === 'EN_ATTENTE' || r.statut === 'CONFIRME' || r.statut === 'AUTRE_DATE_PROPOSEE')
+        );
+        this.rendezVousActif.set(rdv || null);
+        rendezVousLoaded = true;
+        checkComplete();
+      },
+      error: () => {
+        rendezVousLoaded = true;
+        checkComplete();
+      }
+    });
   }
 
   formatPrix(prix: number): string {
@@ -141,14 +170,22 @@ export class AnnonceDetail implements OnInit, OnDestroy {
     }
   }
 
-  // États de la réservation
-  hasReservationActive(): boolean {
-    return !!this.reservationActive();
+  // États des actions
+  hasActionActive(): boolean {
+    return !!this.reservationActive() || !!this.rendezVousActif();
   }
 
   isVehiculeNonDisponible(): boolean {
     const annonce = this.annonce();
     return annonce && (annonce.statut === 'RESERVEE' || annonce.statut === 'VENDUE');
+  }
+
+  showActionButtons(): boolean {
+    return !this.isLoadingActions() && this.authService.isAcheteur() && !this.isVehiculeNonDisponible();
+  }
+
+  canTakeAction(): boolean {
+    return !this.hasActionActive();
   }
 
   onNoteChange(note: number): void {

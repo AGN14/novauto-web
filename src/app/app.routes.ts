@@ -45,24 +45,24 @@ export const routes: Routes = [
               import('./features/acheteur/dashboard/dashboard').then(m => m.Dashboard)
           },
           {
-            path: 'reservations',
+            path: 'nouveau-rendez-vous/:id',
             loadComponent: () =>
-              import('./features/acheteur/reservations/reservations').then(m => m.Reservations)
+              import('./features/acheteur/nouveau-rendez-vous/nouveau-rendez-vous').then(m => m.NouveauRendezVous)
           },
           {
-            path: 'reservation/:id',
+            path: 'nouvelle-reservation/:id',
             loadComponent: () =>
-              import('./features/acheteur/reservation/reservation').then(m => m.Reservation)
+              import('./features/acheteur/nouvelle-reservation/nouvelle-reservation').then(m => m.NouvelleReservation)
           },
           {
-            path: 'visite/:id',
+            path: 'mes-rendez-vous',
             loadComponent: () =>
-              import('./features/acheteur/visite/visite').then(m => m.Visite)
+              import('./features/acheteur/mes-rendez-vous/mes-rendez-vous').then(m => m.MesRendezVous)
           },
           {
-            path: 'rendez-vous',
+            path: 'mes-reservations',
             loadComponent: () =>
-              import('./features/acheteur/rendez-vous/rendez-vous').then(m => m.RendezVous)
+              import('./features/acheteur/mes-reservations/mes-reservations').then(m => m.MesReservations)
           },
           {
             path: 'mes-avis',

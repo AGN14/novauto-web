@@ -1,0 +1,102 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Mes Réservations</h1>
+    <p class="page-subtitle">Véhicules réservés avec acompte</p>
+  </div>
+
+  @if (actionMessage()) {
+    <div class="message-banner" [class.success]="actionMessage()?.type === 'success'" [class.error]="actionMessage()?.type === 'error'">
+      {{actionMessage()?.text}}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement de vos réservations...</p>
+    </div>
+  } @else if (reservations().length === 0) {
+    <div class="empty-state">
+      <lucide-icon [img]="CreditCard" [size]="48" color="#666"></lucide-icon>
+      <h2 class="empty-title">Aucune réservation</h2>
+      <p class="empty-text">Vous n'avez pas encore réservé de véhicule.</p>
+      <a routerLink="/catalogue" class="empty-cta">Parcourir le catalogue</a>
+    </div>
+  } @else {
+    <div class="reservation-grid">
+      @for (reservation of reservations(); track reservation.id) {
+        <div class="reservation-card">
+          <div class="reservation-header">
+            <span class="badge" [ngClass]="getStatutClass(reservation.statut)">
+              <lucide-icon [img]="getStatutIcon(reservation.statut)" [size]="14"></lucide-icon>
+              {{getStatutLabel(reservation.statut)}}
+            </span>
+          </div>
+
+          <div class="reservation-vehicle">
+            <img [src]="reservation.annonce?.photos?.[0]" [alt]="reservation.annonce?.titre" class="vehicle-image">
+            <div class="vehicle-info">
+              <h3 class="vehicle-title">{{reservation.annonce?.vehicule?.modele?.marque?.nom}} {{reservation.annonce?.vehicule?.modele?.nom}}</h3>
+              <p class="vehicle-prix">{{formatPrix(reservation.annonce?.prix)}} FCFA</p>
+            </div>
+          </div>
+
+          <div class="reservation-montant">
+            <span class="montant-label">Acompte payé :</span>
+            <span class="montant-value">{{formatPrix(reservation.montant_paye)}} FCFA</span>
+          </div>
+
+          <div class="reservation-vendeur">
+            <span class="vendeur-label">Vendeur :</span>
+            <span class="vendeur-nom">{{reservation.annonce?.vendeur?.user?.name}}</span>
+          </div>
+
+          <div class="reservation-actions">
+            <a [routerLink]="['/catalogue', reservation.annonce_id]" class="action-btn view-btn">
+              <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
+              Voir l'annonce
+            </a>
+
+            @if (canCancel(reservation)) {
+              @if (cancelConfirm() === reservation.id) {
+                <div class="confirm-box">
+                  <p>Annuler cette réservation ?</p>
+                  <div class="confirm-actions">
+                    <button (click)="annulerReservation(reservation.id)" [disabled]="isCancelling()" class="confirm-yes">
+                      Oui
+                    </button>
+                    <button (click)="cancelConfirm.set(null)" class="confirm-no">Non</button>
+                  </div>
+                </div>
+              } @else {
+                <button (click)="cancelConfirm.set(reservation.id)" class="action-btn cancel-btn">
+                  <lucide-icon [img]="XCircle" [size]="16"></lucide-icon>
+                  Annuler
+                </button>
+              }
+            }
+
+            @if (canDelete(reservation)) {
+              @if (deleteConfirm() === reservation.id) {
+                <div class="confirm-box">
+                  <p>Supprimer définitivement ?</p>
+                  <div class="confirm-actions">
+                    <button (click)="supprimerReservation(reservation.id)" [disabled]="isDeleting()" class="confirm-yes">
+                      Oui
+                    </button>
+                    <button (click)="deleteConfirm.set(null)" class="confirm-no">Non</button>
+                  </div>
+                </div>
+              } @else {
+                <button (click)="deleteConfirm.set(reservation.id)" class="action-btn delete-btn">
+                  <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+                  Supprimer
+                </button>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

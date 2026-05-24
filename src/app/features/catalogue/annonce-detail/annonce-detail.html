@@ -144,7 +144,7 @@
 
             @if (!authService.isVendeur() && !authService.isAdmin()) {
               <div style="margin: 24px 0;">
-                @if (isLoadingReservation()) {
+                @if (isLoadingActions()) {
                   <button class="btn-primary" style="width: 100%; opacity: 0.5;" disabled>
                     CHARGEMENT...
                   </button>
@@ -152,31 +152,41 @@
                   <button class="btn-disabled" style="width: 100%;" disabled>
                     VÉHICULE NON DISPONIBLE
                   </button>
-                } @else if (!hasReservationActive()) {
-                  <!-- Aucune réservation active -->
+                } @else if (!authService.isAcheteur()) {
+                  <a routerLink="/auth/login" style="text-decoration: none;">
+                    <button class="btn-primary" style="width: 100%;">
+                      SE CONNECTER POUR RÉSERVER
+                    </button>
+                  </a>
+                } @else if (canTakeAction()) {
+                  <!-- Aucune action active -->
                   <div style="display: grid; gap: 12px;">
-                    <a [routerLink]="['/acheteur/reservation', annonce().id]" style="text-decoration: none;">
-                      <button class="btn-primary" style="width: 100%;">
-                        RÉSERVER AVEC ACOMPTE →
+                    <a [routerLink]="['/acheteur/nouveau-rendez-vous', annonce().id]" style="text-decoration: none;">
+                      <button class="btn-ghost" style="width: 100%;">
+                        PRENDRE UN RENDEZ-VOUS
                       </button>
                     </a>
-                    <a [routerLink]="['/acheteur/visite', annonce().id]" style="text-decoration: none;">
-                      <button class="btn-ghost" style="width: 100%;">
-                        PLANIFIER UNE VISITE
+                    <a [routerLink]="['/acheteur/nouvelle-reservation', annonce().id]" style="text-decoration: none;">
+                      <button class="btn-primary" style="width: 100%;">
+                        RÉSERVER CE VÉHICULE →
                       </button>
                     </a>
                   </div>
                 } @else {
-                  <!-- Réservation active - boutons grisés -->
+                  <!-- Action active - boutons grisés -->
                   <div style="display: grid; gap: 12px;">
                     <button class="btn-disabled" style="width: 100%;" disabled>
-                      RÉSERVER AVEC ACOMPTE
+                      PRENDRE UN RENDEZ-VOUS
                     </button>
                     <button class="btn-disabled" style="width: 100%;" disabled>
-                      PLANIFIER UNE VISITE
+                      RÉSERVER CE VÉHICULE
                     </button>
                     <p style="font-size: 13px; color: #7e7e7e; text-align: center; margin: 8px 0 0 0; line-height: 1.5;">
-                      Vous avez déjà une réservation active sur ce véhicule
+                      @if (reservationActive()) {
+                        Vous avez déjà une réservation active pour ce véhicule
+                      } @else {
+                        Vous avez déjà un rendez-vous pour ce véhicule
+                      }
                     </p>
                   </div>
                 }

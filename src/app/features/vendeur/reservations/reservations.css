@@ -1,3 +1,40 @@
+.tabs-container {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.tab-btn {
+  background: none;
+  border: none;
+  color: #7e7e7e;
+  padding: 1rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+}
+
+.tab-btn:hover {
+  color: #C9A84C;
+}
+
+.tab-active {
+  color: #C9A84C;
+  border-bottom-color: #C9A84C;
+}
+
+.badge-warning {
+  background: rgba(255, 152, 0, 0.15);
+  color: #ff9800;
+  border: 1px solid rgba(255, 152, 0, 0.3);
+}
+
 .empty-state {
   background: #0a0a0a;
   border: 1px solid #1a1a1a;

@@ -1,0 +1,396 @@
+.page-container {
+  min-height: 100vh;
+  background: #000;
+  padding: 2rem 1rem;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1rem;
+  color: #C9A84C;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 168, 76, 0.2);
+  border-top-color: #C9A84C;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.reservation-wrapper {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.reservation-header {
+  margin-bottom: 2rem;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #C9A84C;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.page-title {
+  font-size: 2rem;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: #999;
+  font-size: 1rem;
+}
+
+.vehicle-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 1rem;
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.vehicle-image {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #222;
+}
+
+.vehicle-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.vehicle-title {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+
+.vehicle-prix {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #C9A84C;
+}
+
+.error-banner {
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid #e53935;
+  color: #ff6b6b;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.reservation-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 8px;
+  padding: 2rem;
+}
+
+.info-section {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(15, 163, 54, 0.05);
+  border: 1px solid rgba(15, 163, 54, 0.2);
+  border-radius: 8px;
+}
+
+.info-icon {
+  flex-shrink: 0;
+}
+
+.info-content {
+  flex: 1;
+}
+
+.info-title {
+  font-size: 1.1rem;
+  color: #fff;
+  margin-bottom: 0.75rem;
+}
+
+.info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.info-list li {
+  color: #bbb;
+  font-size: 0.95rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.info-list li::before {
+  content: '✓';
+  position: absolute;
+  left: 0;
+  color: #0fa336;
+  font-weight: bold;
+}
+
+.montant-section {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 8px;
+}
+
+.montant-label {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 0.5rem;
+}
+
+.montant-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #C9A84C;
+  margin-bottom: 0.5rem;
+}
+
+.montant-note {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.reservation-btn {
+  width: 100%;
+  background: #C9A84C;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  min-height: 52px;
+}
+
+.reservation-btn:hover:not(:disabled) {
+  background: #d4b35c;
+}
+
+.reservation-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reservation-btn-disabled {
+  width: 100%;
+  background: #2a2a2a;
+  color: #7e7e7e;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: not-allowed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  min-height: 52px;
+}
+
+.date-section {
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+}
+
+.date-section-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.date-section-subtitle {
+  font-size: 0.9rem;
+  color: #999;
+  margin-bottom: 1.5rem;
+}
+
+.calendar-container {
+  background: #000;
+  border: 1px solid #333;
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.calendar-month {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: capitalize;
+}
+
+.calendar-nav {
+  background: none;
+  border: none;
+  color: #C9A84C;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.75rem;
+}
+
+.calendar-nav:hover {
+  color: #d4b35c;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.calendar-weekdays span {
+  font-size: 0.85rem;
+  color: #999;
+  font-weight: 500;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+}
+
+.calendar-day {
+  aspect-ratio: 1;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.calendar-day:hover:not(:disabled) {
+  background: #222;
+  border-color: #C9A84C;
+}
+
+.calendar-day-empty {
+  background: transparent;
+  border: none;
+  cursor: default;
+}
+
+.calendar-day-past {
+  background: #0a0a0a;
+  color: #555;
+  cursor: not-allowed;
+}
+
+.calendar-day-selected {
+  background: #C9A84C;
+  border-color: #C9A84C;
+  color: #000;
+  font-weight: 700;
+}
+
+.date-selected {
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  color: #C9A84C;
+  font-weight: 500;
+}
+
+.note-section {
+  padding: 1rem;
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 6px;
+}
+
+.note-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #aaa;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .page-title {
+    font-size: 1.5rem;
+  }
+
+  .vehicle-card {
+    flex-direction: column;
+  }
+
+  .vehicle-image {
+    width: 100%;
+    height: 150px;
+  }
+
+  .info-section {
+    flex-direction: column;
+  }
+
+  .montant-value {
+    font-size: 1.75rem;
+  }
+}

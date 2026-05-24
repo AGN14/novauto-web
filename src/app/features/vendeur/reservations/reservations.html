@@ -5,102 +5,217 @@
     <div style="max-width: 1440px; margin: 0 auto;">
       <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
       <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">Espace Vendeur</p>
-      <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">RÉSERVATIONS REÇUES</h1>
+      <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">DEMANDES REÇUES</h1>
     </div>
   </section>
 
   <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
 
+    <!-- TABS -->
+    <div class="tabs-container">
+      <button
+        class="tab-btn"
+        [class.tab-active]="activeTab() === 'reservations'"
+        (click)="activeTab.set('reservations')"
+      >
+        <lucide-icon [img]="CreditCard" [size]="16"></lucide-icon>
+        Réservations ({{reservations().length}})
+      </button>
+      <button
+        class="tab-btn"
+        [class.tab-active]="activeTab() === 'rendez-vous'"
+        (click)="activeTab.set('rendez-vous')"
+      >
+        <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+        Rendez-vous ({{rendezVous().length}})
+      </button>
+    </div>
+
     @if (isLoading()) {
       <div style="text-align: center; padding: 80px; color: #7e7e7e;">
         <p>Chargement...</p>
       </div>
-    } @else if (reservations().length === 0) {
-      <div class="empty-state">
-        <lucide-icon [img]="Clock" [size]="48" color="#2a2a2a"></lucide-icon>
-        <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
-          Aucune réservation reçue
-        </p>
-        <p style="font-size: 13px; color: #7e7e7e;">
-          Vos réservations apparaîtront ici.
-        </p>
-      </div>
     } @else {
-      <div class="reservations-list">
-        @for (reservation of reservations(); track reservation.id) {
-          <div class="reservation-card">
 
-            <div class="reservation-image">
-              <img [src]="reservation.annonce?.photos?.[0]" [alt]="reservation.annonce?.titre"/>
-            </div>
+      <!-- RÉSERVATIONS -->
+      @if (activeTab() === 'reservations') {
+        @if (reservations().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="CreditCard" [size]="48" color="#2a2a2a"></lucide-icon>
+            <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
+              Aucune réservation reçue
+            </p>
+            <p style="font-size: 13px; color: #7e7e7e;">
+              Les réservations avec acompte apparaîtront ici.
+            </p>
+          </div>
+        } @else {
+          <div class="reservations-list">
+            @for (reservation of reservations(); track reservation.id) {
+              <div class="reservation-card">
 
-            <div class="reservation-info">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
-                <div>
-                  <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">
-                    {{ reservation.annonce?.titre }}
-                  </h3>
-                  <p style="font-size: 12px; color: #7e7e7e;">
-                    Réservé le {{ reservation.created_at | date:'dd/MM/yyyy à HH:mm' }}
-                  </p>
+                <div class="reservation-image">
+                  <img [src]="reservation.annonce?.photos?.[0]" [alt]="reservation.annonce?.titre"/>
                 </div>
-                <span [class]="getStatutClass(reservation.statut)"
-                      style="font-size: 10px; padding: 4px 10px; font-weight: 700; white-space: nowrap; margin-left: 12px;">
-                  {{ reservation.statut }}
-                </span>
+
+                <div class="reservation-info">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                      <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                        {{ reservation.annonce?.titre }}
+                      </h3>
+                      <p style="font-size: 12px; color: #7e7e7e;">
+                        Réservé le {{ reservation.created_at | date:'dd/MM/yyyy à HH:mm' }}
+                      </p>
+                    </div>
+                    <span [class]="getStatutClass(reservation.statut)"
+                          style="font-size: 10px; padding: 4px 10px; font-weight: 700; white-space: nowrap; margin-left: 12px;">
+                      {{getStatutLabel(reservation.statut)}}
+                    </span>
+                  </div>
+
+                  <div style="display: flex; gap: 32px; margin-bottom: 16px; padding: 16px; background: #111; border: 1px solid #1a1a1a;">
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACHETEUR</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ reservation.acheteur?.user?.nom }}
+                      </p>
+                      <p style="font-size: 12px; color: #7e7e7e;">{{ reservation.acheteur?.user?.email }}</p>
+                    </div>
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACOMPTE PAYÉ</p>
+                      <p style="font-size: 16px; font-weight: 700; color: #C9A84C;">
+                        {{ formatPrix(reservation.montant_paye) }} FCFA
+                      </p>
+                    </div>
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">PRIX VÉHICULE</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ formatPrix(reservation.annonce?.prix) }} FCFA
+                      </p>
+                    </div>
+                  </div>
+
+                  <div style="display: flex; gap: 10px;">
+                    <a [routerLink]="['/vendeur/mes-annonces', reservation.annonce?.id]"
+                       style="text-decoration: none;">
+                      <button class="btn-outline" style="font-size: 11px; padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
+                        <lucide-icon [img]="Eye" [size]="14"></lucide-icon>
+                        VOIR L'ANNONCE
+                      </button>
+                    </a>
+                    @if (reservation.statut === 'EN_ATTENTE') {
+                      <button class="btn-confirm"
+                              (click)="confirmerReservation(reservation.id)"
+                              [disabled]="isConfirmingItem('reservation', reservation.id)">
+                        <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
+                        @if (isConfirmingItem('reservation', reservation.id)) { CONFIRMATION... }
+                        @else { CONFIRMER }
+                      </button>
+                    }
+                  </div>
+                </div>
+
               </div>
-
-              <div style="display: flex; gap: 32px; margin-bottom: 16px; padding: 16px; background: #111; border: 1px solid #1a1a1a;">
-                <div>
-                  <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACHETEUR</p>
-                  <p style="font-size: 14px; font-weight: 700; color: #fff;">
-                    {{ reservation.acheteur?.user?.nom }}
-                  </p>
-                  <p style="font-size: 12px; color: #7e7e7e;">{{ reservation.acheteur?.user?.tel }}</p>
-                </div>
-                <div>
-                  <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACOMPTE</p>
-                  <p style="font-size: 16px; font-weight: 700; color: #C9A84C;">
-                    {{ formatPrix(reservation.montant) }} FCFA
-                  </p>
-                </div>
-                <div>
-                  <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">TYPE</p>
-                  <p style="font-size: 14px; font-weight: 700; color: #fff;">
-                    {{ reservation.type === 'VISITE' ? 'Visite' : 'Acompte' }}
-                  </p>
-                </div>
-              </div>
-
-              @if (reservation.message) {
-                <p style="font-size: 13px; color: #7e7e7e; font-style: italic; margin-bottom: 16px;">
-                  "{{ reservation.message }}"
-                </p>
-              }
-
-              <div style="display: flex; gap: 10px;">
-                <a [routerLink]="['/vendeur/mes-annonces', reservation.annonce?.id]"
-                   style="text-decoration: none;">
-                  <button class="btn-outline" style="font-size: 11px; padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
-                    <lucide-icon [img]="Eye" [size]="14"></lucide-icon>
-                    VOIR L'ANNONCE
-                  </button>
-                </a>
-                @if (reservation.statut === 'EN_ATTENTE') {
-                  <button class="btn-confirm"
-                          (click)="confirmerReservation(reservation.id)"
-                          [disabled]="isConfirming() === reservation.id">
-                    <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
-                    @if (isConfirming() === reservation.id) { CONFIRMATION... }
-                    @else { CONFIRMER }
-                  </button>
-                }
-              </div>
-            </div>
-
+            }
           </div>
         }
-      </div>
+      }
+
+      <!-- RENDEZ-VOUS -->
+      @if (activeTab() === 'rendez-vous') {
+        @if (rendezVous().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="Calendar" [size]="48" color="#2a2a2a"></lucide-icon>
+            <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
+              Aucun rendez-vous reçu
+            </p>
+            <p style="font-size: 13px; color: #7e7e7e;">
+              Les demandes de visite gratuite apparaîtront ici.
+            </p>
+          </div>
+        } @else {
+          <div class="reservations-list">
+            @for (rdv of rendezVous(); track rdv.id) {
+              <div class="reservation-card">
+
+                <div class="reservation-image">
+                  <img [src]="rdv.annonce?.photos?.[0]" [alt]="rdv.annonce?.titre"/>
+                </div>
+
+                <div class="reservation-info">
+                  <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                    <div>
+                      <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 4px;">
+                        {{ rdv.annonce?.titre }}
+                      </h3>
+                      <p style="font-size: 12px; color: #7e7e7e;">
+                        Demandé le {{ rdv.created_at | date:'dd/MM/yyyy à HH:mm' }}
+                      </p>
+                    </div>
+                    <span [class]="getStatutClass(rdv.statut)"
+                          style="font-size: 10px; padding: 4px 10px; font-weight: 700; white-space: nowrap; margin-left: 12px;">
+                      {{getStatutLabel(rdv.statut)}}
+                    </span>
+                  </div>
+
+                  <div style="display: flex; gap: 32px; margin-bottom: 16px; padding: 16px; background: #111; border: 1px solid #1a1a1a;">
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACHETEUR</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ rdv.acheteur?.user?.nom }}
+                      </p>
+                      <p style="font-size: 12px; color: #7e7e7e;">{{ rdv.acheteur?.user?.email }}</p>
+                    </div>
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">DATE SOUHAITÉE</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ formatDate(rdv.date_rdv) }}
+                      </p>
+                    </div>
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">HEURE</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ formatHeure(rdv.heure_rdv) }}
+                      </p>
+                    </div>
+                  </div>
+
+                  @if (rdv.message) {
+                    <div style="padding: 12px; background: rgba(201, 168, 76, 0.05); border: 1px solid rgba(201, 168, 76, 0.2); border-radius: 6px; margin-bottom: 16px;">
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">MESSAGE DE L'ACHETEUR</p>
+                      <p style="font-size: 13px; color: #ddd;">
+                        {{ rdv.message }}
+                      </p>
+                    </div>
+                  }
+
+                  <div style="display: flex; gap: 10px;">
+                    <a [routerLink]="['/vendeur/mes-annonces', rdv.annonce?.id]"
+                       style="text-decoration: none;">
+                      <button class="btn-outline" style="font-size: 11px; padding: 8px 16px; display: flex; align-items: center; gap: 6px;">
+                        <lucide-icon [img]="Eye" [size]="14"></lucide-icon>
+                        VOIR L'ANNONCE
+                      </button>
+                    </a>
+                    @if (rdv.statut === 'EN_ATTENTE') {
+                      <button class="btn-confirm"
+                              (click)="confirmerRendezVous(rdv.id)"
+                              [disabled]="isConfirmingItem('rendez-vous', rdv.id)">
+                        <lucide-icon [img]="CheckCircle" [size]="14"></lucide-icon>
+                        @if (isConfirmingItem('rendez-vous', rdv.id)) { CONFIRMATION... }
+                        @else { CONFIRMER }
+                      </button>
+                    }
+                  </div>
+                </div>
+
+              </div>
+            }
+          </div>
+        }
+      }
+
     }
 
   </div>

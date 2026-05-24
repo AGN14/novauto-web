@@ -68,8 +68,9 @@ export class Navbar implements OnInit {
 get menuAcheteurLinks() {
   return [
     { label: 'Mon Dashboard', route: '/acheteur/dashboard' },
-    { label: 'Mes Réservations', route: '/acheteur/reservations' },
-    { label: 'Mes Rendez-Vous', route: '/acheteur/rendez-vous' },
+    { label: 'Mes Rendez-Vous', route: '/acheteur/mes-rendez-vous' },
+    { label: 'Mes Réservations', route: '/acheteur/mes-reservations' },
+    { label: 'Mes Avis', route: '/acheteur/mes-avis' },
   ];
 }
 

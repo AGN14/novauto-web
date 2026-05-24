@@ -1,0 +1,122 @@
+<div class="page-container">
+  <div class="page-header">
+    <h1 class="page-title">Mes Rendez-Vous</h1>
+    <p class="page-subtitle">Gérez vos demandes de visite</p>
+  </div>
+
+  @if (actionMessage()) {
+    <div class="message-banner" [class.success]="actionMessage()?.type === 'success'" [class.error]="actionMessage()?.type === 'error'">
+      {{actionMessage()?.text}}
+    </div>
+  }
+
+  @if (isLoading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Chargement de vos rendez-vous...</p>
+    </div>
+  } @else if (rendezVous().length === 0) {
+    <div class="empty-state">
+      <lucide-icon [img]="Calendar" [size]="48" color="#666"></lucide-icon>
+      <h2 class="empty-title">Aucun rendez-vous</h2>
+      <p class="empty-text">Vous n'avez pas encore pris de rendez-vous.</p>
+      <a routerLink="/catalogue" class="empty-cta">Parcourir le catalogue</a>
+    </div>
+  } @else {
+    <div class="rdv-grid">
+      @for (rdv of rendezVous(); track rdv.id) {
+        <div class="rdv-card">
+          <div class="rdv-header">
+            <span class="badge" [ngClass]="getStatutClass(rdv.statut)">
+              <lucide-icon [img]="getStatutIcon(rdv.statut)" [size]="14"></lucide-icon>
+              {{getStatutLabel(rdv.statut)}}
+            </span>
+          </div>
+
+          <div class="rdv-vehicle">
+            <img [src]="rdv.annonce?.photos?.[0]" [alt]="rdv.annonce?.titre" class="vehicle-image">
+            <div class="vehicle-info">
+              <h3 class="vehicle-title">{{rdv.annonce?.vehicule?.modele?.marque?.nom}} {{rdv.annonce?.vehicule?.modele?.nom}}</h3>
+              <p class="vehicle-prix">{{formatPrix(rdv.annonce?.prix)}} FCFA</p>
+            </div>
+          </div>
+
+          <div class="rdv-details">
+            <div class="detail-row">
+              <lucide-icon [img]="Calendar" [size]="16" color="#C9A84C"></lucide-icon>
+              <span>{{formatDate(rdv.date_rdv)}}</span>
+            </div>
+            <div class="detail-row">
+              <lucide-icon [img]="Clock" [size]="16" color="#C9A84C"></lucide-icon>
+              <span>{{formatHeure(rdv.heure_rdv)}}</span>
+            </div>
+          </div>
+
+          @if (rdv.message) {
+            <div class="rdv-message">
+              <strong>Votre message :</strong>
+              <p>{{rdv.message}}</p>
+            </div>
+          }
+
+          @if (rdv.statut === 'AUTRE_DATE_PROPOSEE' && rdv.message_vendeur) {
+            <div class="rdv-vendeur-message">
+              <strong>Message du vendeur :</strong>
+              <p>{{rdv.message_vendeur}}</p>
+            </div>
+          }
+
+          <div class="rdv-vendeur">
+            <span class="vendeur-label">Vendeur :</span>
+            <span class="vendeur-nom">{{rdv.annonce?.vendeur?.user?.name}}</span>
+          </div>
+
+          <div class="rdv-actions">
+            <a [routerLink]="['/catalogue', rdv.annonce_id]" class="action-btn view-btn">
+              <lucide-icon [img]="Eye" [size]="16"></lucide-icon>
+              Voir l'annonce
+            </a>
+
+            @if (canCancel(rdv)) {
+              @if (cancelConfirm() === rdv.id) {
+                <div class="confirm-box">
+                  <p>Annuler ce rendez-vous ?</p>
+                  <div class="confirm-actions">
+                    <button (click)="annulerRendezVous(rdv.id)" [disabled]="isCancelling()" class="confirm-yes">
+                      Oui
+                    </button>
+                    <button (click)="cancelConfirm.set(null)" class="confirm-no">Non</button>
+                  </div>
+                </div>
+              } @else {
+                <button (click)="cancelConfirm.set(rdv.id)" class="action-btn cancel-btn">
+                  <lucide-icon [img]="XCircle" [size]="16"></lucide-icon>
+                  Annuler
+                </button>
+              }
+            }
+
+            @if (canDelete(rdv)) {
+              @if (deleteConfirm() === rdv.id) {
+                <div class="confirm-box">
+                  <p>Supprimer définitivement ?</p>
+                  <div class="confirm-actions">
+                    <button (click)="supprimerRendezVous(rdv.id)" [disabled]="isDeleting()" class="confirm-yes">
+                      Oui
+                    </button>
+                    <button (click)="deleteConfirm.set(null)" class="confirm-no">Non</button>
+                  </div>
+                </div>
+              } @else {
+                <button (click)="deleteConfirm.set(rdv.id)" class="action-btn delete-btn">
+                  <lucide-icon [img]="Trash2" [size]="16"></lucide-icon>
+                  Supprimer
+                </button>
+              }
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>
