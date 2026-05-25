@@ -1,0 +1,21 @@
+@if (isVisible()) {
+  <div class="splash" [class.fading]="isFading()">
+
+    <!-- Logo NOVAUTO -->
+    <div class="logo">
+      <span class="logo-nova">NOV</span><span class="logo-auto">AUTO</span>
+    </div>
+
+    <!-- Compteur -->
+    <div class="counter">{{ progress() }}%</div>
+
+    <!-- Barre de progression -->
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="progress()"></div>
+    </div>
+
+    <!-- Tagline -->
+    <p class="tagline">PLATEFORME AUTOMOBILE PREMIUM DU BÉNIN</p>
+
+  </div>
+}

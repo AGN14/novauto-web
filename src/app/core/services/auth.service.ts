@@ -9,6 +9,7 @@ import {
   UserProfile,
   ApiError
 } from '../models/auth.model';
+import { SplashService } from './splash.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,8 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    private splashService: SplashService
   ) {}
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
@@ -44,7 +46,12 @@ export class AuthService {
         this.storeUser(response.user);
         this._currentUser.set(response.user);
         this._isLoading.set(false);
-        this.redirectAfterLogin(response.user);
+
+        // Afficher le splash screen avant la redirection
+        this.splashService.show();
+        setTimeout(() => {
+          this.redirectAfterLogin(response.user);
+        }, 3800); // Attendre la fin du splash (3s animation + 0.8s fade)
       }),
       catchError(error => {
         this._isLoading.set(false);

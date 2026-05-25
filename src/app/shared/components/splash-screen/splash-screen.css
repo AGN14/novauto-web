@@ -1,0 +1,62 @@
+.splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  transition: opacity 0.8s ease;
+}
+
+.splash.fading {
+  opacity: 0;
+}
+
+.logo {
+  font-size: 72px;
+  font-weight: 900;
+  letter-spacing: 4px;
+  margin-bottom: 48px;
+}
+
+.logo-nova {
+  color: #ffffff;
+}
+
+.logo-auto {
+  color: #C9A84C;
+}
+
+.counter {
+  font-size: 14px;
+  font-weight: 700;
+  color: #C9A84C;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+  font-family: monospace;
+}
+
+.progress-bar-container {
+  width: 200px;
+  height: 1px;
+  background: #1a1a1a;
+  margin-bottom: 48px;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #C9A84C;
+  transition: width 0.03s linear;
+}
+
+.tagline {
+  font-size: 10px;
+  color: #333;
+  letter-spacing: 3px;
+  font-weight: 400;
+}
