@@ -42,19 +42,19 @@
           <div class="form-row">
             <div class="form-group">
               <label class="form-label">Année du véhicule</label>
-              <select class="select-field" [ngModel]="anneeVehicule()" (ngModelChange)="anneeVehicule.set($event)">
-                @for (annee of annees(); track annee) {
-                  <option [value]="annee">{{ annee }}</option>
-                }
-              </select>
+              <app-custom-select
+                [options]="anneeOptions()"
+                [value]="anneeVehicule().toString()"
+                (valueChange)="onAnneeChange($event)">
+              </app-custom-select>
             </div>
             <div class="form-group">
               <label class="form-label">Type de véhicule</label>
-              <select class="select-field" [ngModel]="typeVehicule()" (ngModelChange)="typeVehicule.set($event)">
-                <option value="tourisme">Tourisme</option>
-                <option value="utilitaire">Utilitaire</option>
-                <option value="pickup">Pick-up</option>
-              </select>
+              <app-custom-select
+                [options]="typeOptions"
+                [value]="typeVehicule()"
+                (valueChange)="onTypeChange($event)">
+              </app-custom-select>
             </div>
           </div>
 

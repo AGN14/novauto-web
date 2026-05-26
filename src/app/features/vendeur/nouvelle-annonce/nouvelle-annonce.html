@@ -77,15 +77,15 @@
             <div class="vin-result-grid">
               <div class="vin-result-item">
                 <p class="vin-result-label">MARQUE</p>
-                <p class="vin-result-value">{{ vinData().marque }}</p>
+                <p class="vin-result-value">{{ vinData().marque || 'N/A' }}</p>
               </div>
               <div class="vin-result-item">
                 <p class="vin-result-label">MODÈLE</p>
-                <p class="vin-result-value">{{ vinData().modele }}</p>
+                <p class="vin-result-value">{{ vinData().modele || 'N/A' }}</p>
               </div>
               <div class="vin-result-item">
                 <p class="vin-result-label">ANNÉE</p>
-                <p class="vin-result-value">{{ vinData().annee }}</p>
+                <p class="vin-result-value">{{ vinData().annee || 'N/A' }}</p>
               </div>
               @if (vinData().carburant) {
                 <div class="vin-result-item">
@@ -105,7 +105,44 @@
                   <p class="vin-result-value">{{ vinData().transmission }}</p>
                 </div>
               }
+              @if (vinData().pays_origine) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">PAYS D'ORIGINE</p>
+                  <p class="vin-result-value">{{ vinData().pays_origine }}</p>
+                </div>
+              }
+              @if (vinData().fabricant) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">FABRICANT</p>
+                  <p class="vin-result-value">{{ vinData().fabricant }}</p>
+                </div>
+              }
+              @if (vinData().cylindres) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">CYLINDRES</p>
+                  <p class="vin-result-value">{{ vinData().cylindres }}</p>
+                </div>
+              }
+              @if (vinData().portes) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">PORTES</p>
+                  <p class="vin-result-value">{{ vinData().portes }}</p>
+                </div>
+              }
+              @if (vinData().places) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">PLACES</p>
+                  <p class="vin-result-value">{{ vinData().places }}</p>
+                </div>
+              }
+              @if (vinData().type_vehicule) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">TYPE</p>
+                  <p class="vin-result-value">{{ vinData().type_vehicule }}</p>
+                </div>
+              }
             </div>
+
           </div>
         }
       </div>
@@ -119,16 +156,56 @@
 
         <div class="form-row">
           <div class="form-group">
+            <label class="form-label">Année du véhicule *</label>
+            <select class="select-field" formControlName="annee"
+                    [class.input-error]="form.get('annee')?.invalid && form.get('annee')?.touched">
+              <option value="" disabled>Sélectionner l'année</option>
+              @for (annee of annees; track annee) {
+                <option [value]="annee">{{ annee }}</option>
+              }
+            </select>
+            @if (form.get('annee')?.invalid && form.get('annee')?.touched) {
+              <p style="font-size: 12px; color: #e22718; margin-top: 8px;">Année requise</p>
+            }
+          </div>
+          <div class="form-group">
             <label class="form-label">Kilométrage (KM) *</label>
             <input type="number" class="input-field" formControlName="kilometrage"
-                   placeholder="Ex: 45000"/>
+                   placeholder="Ex: 45000"
+                   [class.input-error]="form.get('kilometrage')?.invalid && form.get('kilometrage')?.touched"/>
+            @if (form.get('kilometrage')?.invalid && form.get('kilometrage')?.touched) {
+              <p style="font-size: 12px; color: #e22718; margin-top: 8px;">Kilométrage requis</p>
+            }
           </div>
+        </div>
+
+        <div class="form-row">
           <div class="form-group">
             <label class="form-label">Prix de vente (FCFA) *</label>
             <input type="number" class="input-field" formControlName="prix"
-                   placeholder="Ex: 25000000"/>
+                   placeholder="Ex: 25000000"
+                   [class.input-error]="form.get('prix')?.invalid && form.get('prix')?.touched"/>
+            @if (form.get('prix')?.invalid && form.get('prix')?.touched) {
+              <p style="font-size: 12px; color: #e22718; margin-top: 8px;">Prix requis (min. 1 FCFA)</p>
+            }
+          </div>
+          <div class="form-group">
+            <label class="form-label">Montant de la réservation (FCFA) *</label>
+            <input type="number" class="input-field" formControlName="montant_reservation"
+                   placeholder="Ex: 50000"
+                   [class.input-error]="form.get('montant_reservation')?.invalid && form.get('montant_reservation')?.touched"/>
+            @if (form.get('montant_reservation')?.invalid && form.get('montant_reservation')?.touched) {
+              <p style="font-size: 12px; color: #e22718; margin-top: 8px;">
+                Minimum 10,000 FCFA requis
+              </p>
+            }
           </div>
         </div>
+
+        <p style="font-size: 12px; color: #7e7e7e; margin-top: -8px; font-weight: 300;">
+          Le montant de réservation est la somme que l'acheteur devra verser pour réserver ce véhicule (non remboursable en cas d'annulation).
+        </p>
+
 
         <div class="form-group">
           <label class="form-label">État douanier *</label>
@@ -248,7 +325,11 @@
         <div class="form-group">
           <label class="form-label">Titre de l'annonce *</label>
           <input type="text" class="input-field" formControlName="titre"
-                 placeholder="Ex: Toyota Prado 2023 - Excellent état, dédouané"/>
+                 placeholder="Ex: Toyota Prado 2023 - Excellent état, dédouané"
+                 [class.input-error]="form.get('titre')?.invalid && form.get('titre')?.touched"/>
+          @if (form.get('titre')?.invalid && form.get('titre')?.touched) {
+            <p style="font-size: 12px; color: #e22718; margin-top: 8px;">Titre requis (min. 10 caractères)</p>
+          }
         </div>
       </div>
 

@@ -1,130 +1,202 @@
-<main style="background: #000; min-height: 100vh; ">
+<main style="background: #000; min-height: 100vh; padding: 40px 80px;">
+  <div style="max-width: 1440px; margin: 0 auto;">
 
-  <!-- HEADER -->
-  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
-    <div style="max-width: 1440px; margin: 0 auto;">
-      <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
-      <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">Administration</p>
-      <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">TABLEAU DE BORD</h1>
-    </div>
-  </section>
-
-  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
-
-    <!-- STATS -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="Users" [size]="20" color="#C9A84C"></lucide-icon>
-        </div>
-        <p class="stat-label">VENDEURS</p>
-        <p class="stat-value">{{ stats().totalVendeurs }}</p>
-        <a routerLink="/admin/vendeurs" class="stat-link">Voir tous →</a>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="Users" [size]="20" color="#0fa336"></lucide-icon>
-        </div>
-        <p class="stat-label">ACHETEURS</p>
-        <p class="stat-value" style="color: #0fa336;">{{ stats().totalAcheteurs }}</p>
-        <p class="stat-link">Utilisateurs actifs</p>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="Car" [size]="20" color="#C9A84C"></lucide-icon>
-        </div>
-        <p class="stat-label">TOTAL ANNONCES</p>
-        <p class="stat-value">{{ stats().totalAnnonces }}</p>
-        <a routerLink="/admin/annonces" class="stat-link">Voir toutes →</a>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="TrendingUp" [size]="20" color="#0fa336"></lucide-icon>
-        </div>
-        <p class="stat-label">DISPONIBLES</p>
-        <p class="stat-value" style="color: #0fa336;">{{ stats().annoncesDisponibles }}</p>
-        <p class="stat-link">En vente</p>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="ShieldCheck" [size]="20" color="#C9A84C"></lucide-icon>
-        </div>
-        <p class="stat-label">RÉSERVÉES</p>
-        <p class="stat-value" style="color: #C9A84C;">{{ stats().annoncesReservees }}</p>
-        <p class="stat-link">En cours</p>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">
-          <lucide-icon [img]="CheckCircle" [size]="20" color="#7e7e7e"></lucide-icon>
-        </div>
-        <p class="stat-label">VENDUES</p>
-        <p class="stat-value" style="color: #7e7e7e;">{{ stats().annoncesVendues }}</p>
-        <p class="stat-link">Transactions</p>
-      </div>
+    <!-- HEADER -->
+    <div style="margin-bottom: 40px;">
+      <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+      <h1 style="font-size: 36px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+        ADMINISTRATION
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e;">Tableau de bord administrateur</p>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 40px;">
+    <!-- STATS CARDS -->
+    <div class="stats-grid" style="grid-template-columns: repeat(6, 1fr);">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(201, 168, 76, 0.1);">
+          <lucide-icon [img]="Users" [size]="24" color="#C9A84C"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Vendeurs</p>
+          <p class="stat-value">{{ stats().totalVendeurs }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(15, 163, 54, 0.1);">
+          <lucide-icon [img]="Users" [size]="24" color="#0fa336"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Acheteurs</p>
+          <p class="stat-value">{{ stats().totalAcheteurs }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(201, 168, 76, 0.1);">
+          <lucide-icon [img]="Package" [size]="24" color="#C9A84C"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total annonces</p>
+          <p class="stat-value">{{ stats().totalAnnonces }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(15, 163, 54, 0.1);">
+          <lucide-icon [img]="CheckCircle" [size]="24" color="#0fa336"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Disponibles</p>
+          <p class="stat-value">{{ stats().annoncesDisponibles }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(255, 193, 7, 0.1);">
+          <lucide-icon [img]="ShieldCheck" [size]="24" color="#ffc107"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Réservées</p>
+          <p class="stat-value">{{ stats().annoncesReservees }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(126, 126, 126, 0.1);">
+          <lucide-icon [img]="Car" [size]="24" color="#7e7e7e"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Vendues</p>
+          <p class="stat-value">{{ stats().annoncesVendues }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
 
       <!-- DERNIÈRES ANNONCES -->
-      <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h2 class="section-title">DERNIÈRES ANNONCES</h2>
-          <a routerLink="/admin/annonces" class="voir-tout">VOIR TOUT →</a>
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Dernières Annonces</h2>
+            <p class="section-subtitle">Annonces récemment publiées</p>
+          </div>
+          <a [routerLink]="['/admin/annonces']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
+          </a>
         </div>
-        <div class="table-card">
-          @for (annonce of dernieresAnnonces(); track annonce.id) {
-            <div class="table-row">
-              <img [src]="annonce.photos?.[0]" style="width: 50px; height: 38px; object-fit: cover; border: 1px solid #1a1a1a; flex-shrink: 0;"/>
-              <div style="flex: 1; min-width: 0;">
-                <p style="font-size: 13px; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                  {{ annonce.titre }}
-                </p>
-                <p style="font-size: 11px; color: #7e7e7e;">{{ annonce.created_at | date:'dd/MM/yyyy' }}</p>
+
+        @if (isLoading()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (dernieresAnnonces().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="Car" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucune annonce</p>
+            <p class="empty-subtitle">Aucune annonce publiée pour le moment</p>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (annonce of dernieresAnnonces(); track annonce.id) {
+              <div class="list-item" [routerLink]="['/admin/annonces', annonce.id]">
+                <div class="list-item-left">
+                  @if (annonce.photos?.[0]) {
+                    <img [src]="annonce.photos[0]" [alt]="annonce.titre" class="list-item-image"/>
+                  } @else {
+                    <div class="list-item-image" style="background: #1a1a1a; display: flex; align-items: center; justify-content: center;">
+                      <lucide-icon [img]="Car" [size]="24" color="#333"></lucide-icon>
+                    </div>
+                  }
+                  <div>
+                    <p class="list-item-title">{{ annonce.titre }}</p>
+                    <p class="list-item-subtitle">{{ formatDate(annonce.created_at) }}</p>
+                  </div>
+                </div>
+                <span [class]="getStatutClass(annonce.statut)">
+                  {{ annonce.statut }}
+                </span>
               </div>
-              <span [class]="getStatutClass(annonce.statut)" style="font-size: 9px; padding: 3px 8px; white-space: nowrap;">
-                {{ annonce.statut }}
-              </span>
-            </div>
-          }
-          @if (dernieresAnnonces().length === 0) {
-            <div style="padding: 40px; text-align: center; color: #7e7e7e;">
-              <p>Aucune annonce</p>
-            </div>
-          }
-        </div>
-      </div>
+            }
+          </div>
+        }
+      </section>
 
       <!-- DERNIERS VENDEURS -->
-      <div>
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-          <h2 class="section-title">DERNIERS VENDEURS</h2>
-          <a routerLink="/admin/vendeurs" class="voir-tout">VOIR TOUT →</a>
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Derniers Vendeurs</h2>
+            <p class="section-subtitle">Vendeurs récemment inscrits</p>
+          </div>
+          <a [routerLink]="['/admin/vendeurs']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
+          </a>
         </div>
-        <div class="table-card">
-          @for (vendeur of derniersVendeurs(); track vendeur.id) {
-            <div class="table-row">
-              <div class="vendeur-avatar">
-                {{ vendeur.user?.nom?.charAt(0)?.toUpperCase() }}
+
+        @if (isLoading()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (derniersVendeurs().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="Users" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucun vendeur</p>
+            <p class="empty-subtitle">Aucun vendeur inscrit pour le moment</p>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (vendeur of derniersVendeurs(); track vendeur.id) {
+              <div class="list-item" [routerLink]="['/admin/vendeurs', vendeur.id]">
+                <div class="list-item-left">
+                  <div class="list-item-icon" style="background: rgba(201, 168, 76, 0.1); font-size: 18px; font-weight: 700; color: #C9A84C;">
+                    {{ vendeur.user?.nom?.charAt(0)?.toUpperCase() || '?' }}
+                  </div>
+                  <div>
+                    <p class="list-item-title">{{ vendeur.user?.nom }}</p>
+                    <p class="list-item-subtitle">{{ vendeur.user?.email }}</p>
+                  </div>
+                </div>
+                @if (vendeur.certifie) {
+                  <span class="badge badge-success">CERTIFIÉ</span>
+                } @else {
+                  <span class="badge badge-warning">EN ATTENTE</span>
+                }
               </div>
-              <div style="flex: 1;">
-                <p style="font-size: 13px; font-weight: 700; color: #fff;">{{ vendeur.user?.nom }}</p>
-                <p style="font-size: 11px; color: #7e7e7e;">{{ vendeur.user?.email }}</p>
-              </div>
-              @if (vendeur.certifie) {
-                <span class="badge-gold" style="font-size: 9px; padding: 3px 8px;">CERTIFIÉ</span>
-              } @else {
-                <span class="badge-muted" style="font-size: 9px; padding: 3px 8px;">EN ATTENTE</span>
-              }
-            </div>
-          }
-          @if (derniersVendeurs().length === 0) {
-            <div style="padding: 40px; text-align: center; color: #7e7e7e;">
-              <p>Aucun vendeur</p>
-            </div>
-          }
-        </div>
-      </div>
+            }
+          </div>
+        }
+      </section>
 
     </div>
+
+    <!-- ACTIONS RAPIDES -->
+    <section style="margin-top: 40px;">
+      <h2 class="section-title" style="margin-bottom: 24px;">Actions rapides</h2>
+      <div class="actions-grid">
+        <a [routerLink]="['/admin/vendeurs']" class="action-card">
+          <lucide-icon [img]="Users" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Gérer les vendeurs</p>
+          <p class="action-subtitle">Certifier et modérer</p>
+        </a>
+        <a [routerLink]="['/admin/annonces']" class="action-card">
+          <lucide-icon [img]="Package" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Gérer les annonces</p>
+          <p class="action-subtitle">Modérer le contenu</p>
+        </a>
+        <a [routerLink]="['/admin/stats']" class="action-card">
+          <lucide-icon [img]="TrendingUp" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Statistiques</p>
+          <p class="action-subtitle">Voir les rapports</p>
+        </a>
+      </div>
+    </section>
+
   </div>
 </main>

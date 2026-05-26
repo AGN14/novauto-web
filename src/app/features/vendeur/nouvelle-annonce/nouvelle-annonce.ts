@@ -91,15 +91,15 @@ export class NouvelleAnnonce implements OnInit {
     private router: Router
   ) {
     this.form = this.fb.group({
-      titre:           ['', [Validators.required, Validators.minLength(10)]],
-      prix:            ['', [Validators.required, Validators.min(1)]],
-      kilometrage:     ['', [Validators.required, Validators.min(0)]],
-      statut_douanier: ['DEDOUANE', [Validators.required]],
-      ville:           ['Cotonou', [Validators.required]],
-      description:     [''],
-      modele_id:       ['', [Validators.required]],
-      annee:           ['', [Validators.required]],
-      vin:             ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
+      titre:               ['', [Validators.required, Validators.minLength(10)]],
+      prix:                ['', [Validators.required, Validators.min(1)]],
+      montant_reservation: ['', [Validators.required, Validators.min(10000)]],
+      kilometrage:         ['', [Validators.required, Validators.min(0)]],
+      statut_douanier:     ['DEDOUANE', [Validators.required]],
+      ville:               ['Cotonou', [Validators.required]],
+      description:         [''],
+      annee:               ['', [Validators.required]],
+      vin:                 ['', [Validators.required, Validators.minLength(17), Validators.maxLength(17)]],
     });
   }
 
@@ -138,10 +138,35 @@ export class NouvelleAnnonce implements OnInit {
         this.vinVerifie.set(true);
         this.vinLoading.set(false);
 
-        if (data.marque && data.modele && data.annee) {
-          this.form.get('titre')?.setValue(`${data.marque} ${data.modele} ${data.annee} - `);
-          this.form.get('annee')?.setValue(data.annee);
-          this.form.get('modele_id')?.setValue(1);
+        if (data.marque && data.annee) {
+          // Construire un titre complet avec les infos disponibles
+          let titre = `${data.marque}`;
+
+          if (data.modele) {
+            titre += ` ${data.modele}`;
+          }
+
+          titre += ` ${data.annee}`;
+
+          if (data.carburant) {
+            titre += ` - ${data.carburant}`;
+          }
+
+          if (data.transmission) {
+            titre += ` - ${data.transmission}`;
+          }
+
+          titre += ' - Excellent état';
+
+          this.form.get('titre')?.setValue(titre);
+
+          // Remplir l'année (requis)
+          const anneeNumber = parseInt(data.annee, 10);
+          this.form.get('annee')?.setValue(anneeNumber);
+
+          // Marquer les champs comme touchés pour éviter les erreurs de validation
+          this.form.get('annee')?.markAsTouched();
+          this.form.get('titre')?.markAsTouched();
         }
       },
       error: () => {
@@ -212,7 +237,13 @@ export class NouvelleAnnonce implements OnInit {
 
   if (this.form.invalid) {
     this.form.markAllAsTouched();
-    this.errorMessage.set('Veuillez remplir tous les champs obligatoires.');
+
+    // Identifier les champs invalides
+    const invalidFields = Object.keys(this.form.controls)
+      .filter(key => this.form.get(key)?.invalid)
+      .map(key => key.replace('_', ' '));
+
+    this.errorMessage.set(`Champs invalides: ${invalidFields.join(', ')}`);
     return;
   }
 
@@ -238,9 +269,20 @@ export class NouvelleAnnonce implements OnInit {
     ...this.form.value,
     photos: this.photos().map(p => p.url),
     equipements: this.selectedEquipements(),
+    // Ajouter les données VIN si disponibles
+    ...(this.vinData() && {
+      marque: this.vinData().marque,
+      modele: this.vinData().modele,
+      carburant: this.vinData().carburant,
+      transmission: this.vinData().transmission,
+      pays_origine: this.vinData().pays_origine,
+    })
   };
 
   console.log('Payload envoyé:', payload);
+  console.log('Photos URLs:', this.photos().map(p => p.url));
+  console.log('VIN Data:', this.vinData());
+
   this.annonceService.create(payload).subscribe({
     next: () => {
       this.isLoading.set(false);
@@ -249,11 +291,19 @@ export class NouvelleAnnonce implements OnInit {
     },
     error: (err) => {
       this.isLoading.set(false);
-      console.log('Erreur complète:', err);
-      console.log('Erreur body:', err.error);
+      console.error('=== ERREUR DÉTAILLÉE ===');
+      console.error('Status:', err.status);
+      console.error('Message:', err.message);
+      console.error('Error object:', err.error);
+      console.error('Errors details:', err.error?.errors);
+      console.error('=======================');
+
       if (err.error?.errors) {
-        const firstError = Object.values(err.error.errors)[0] as string[];
-        this.errorMessage.set(firstError[0]);
+        // Afficher toutes les erreurs
+        const errorMessages = Object.entries(err.error.errors)
+          .map(([field, messages]: [string, any]) => `${field}: ${messages[0]}`)
+          .join('\n');
+        this.errorMessage.set(errorMessages);
       } else {
         this.errorMessage.set(err.error?.message || 'Une erreur est survenue. Réessayez.');
       }

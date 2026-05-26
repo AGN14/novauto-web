@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { LucideAngularModule, Calculator, Info, Download, RotateCcw } from 'lucide-angular';
+import { CustomSelect, SelectOption } from '../../shared/components/custom-select/custom-select';
 
 @Component({
   selector: 'app-simulateur',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule],
+  imports: [CommonModule, FormsModule, LucideAngularModule, CustomSelect],
   templateUrl: './simulateur.html',
   styleUrl: './simulateur.css'
 })
@@ -73,6 +74,19 @@ export class Simulateur implements OnInit {
     return annees;
   });
 
+  anneeOptions = computed<SelectOption[]>(() => {
+    return this.annees().map(annee => ({
+      value: annee.toString(),
+      label: annee.toString()
+    }));
+  });
+
+  typeOptions: SelectOption[] = [
+    { value: 'tourisme', label: 'Tourisme' },
+    { value: 'utilitaire', label: 'Utilitaire' },
+    { value: 'pickup', label: 'Pick-up' }
+  ];
+
   hasResult = computed(() => this.prixFOB() !== null && this.prixFOB()! > 0);
 
   constructor(private route: ActivatedRoute) {}
@@ -99,5 +113,13 @@ export class Simulateur implements OnInit {
   onPrixChange(event: any): void {
     const val = parseFloat(event.target.value);
     this.prixFOB.set(isNaN(val) ? null : val);
+  }
+
+  onAnneeChange(value: any): void {
+    this.anneeVehicule.set(parseInt(value));
+  }
+
+  onTypeChange(value: any): void {
+    this.typeVehicule.set(value);
   }
 }

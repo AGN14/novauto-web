@@ -1,7 +1,12 @@
+/* ══════════════════════════
+   NOUVELLE RESERVATION - STYLE ÉPURÉ
+   Inspiré du simulateur
+══════════════════════════ */
+
 .page-container {
   min-height: 100vh;
   background: #000;
-  padding: 2rem 1rem;
+  padding: 48px 80px;
 }
 
 .loading-state {
@@ -10,7 +15,7 @@
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  gap: 1rem;
+  gap: 16px;
   color: #C9A84C;
 }
 
@@ -38,55 +43,69 @@
 }
 
 .reservation-wrapper {
-  max-width: 700px;
+  max-width: 800px;
   margin: 0 auto;
 }
 
 .reservation-header {
-  margin-bottom: 2rem;
+  margin-bottom: 32px;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 8px;
   color: #C9A84C;
   text-decoration: none;
-  font-size: 0.9rem;
-  margin-bottom: 1rem;
+  font-size: 13px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
 }
 
 .back-link:hover {
-  text-decoration: underline;
+  color: #E8C97A;
 }
 
 .page-title {
-  font-size: 2rem;
+  font-size: 32px;
   color: #fff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 .page-subtitle {
-  color: #999;
-  font-size: 1rem;
+  color: #7e7e7e;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
 }
 
+/* VEHICLE CARD */
 .vehicle-card {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 8px;
-  padding: 1rem;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 20px;
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  gap: 16px;
+  margin-bottom: 32px;
+  transition: border-color 0.2s ease;
+}
+
+.vehicle-card:hover {
+  border-color: rgba(201, 168, 76, 0.3);
 }
 
 .vehicle-image {
-  width: 120px;
-  height: 80px;
+  width: 140px;
+  height: 100px;
   object-fit: cover;
-  border-radius: 6px;
-  background: #222;
+  background: #111;
+  flex-shrink: 0;
 }
 
 .vehicle-info {
@@ -94,48 +113,51 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
+  gap: 8px;
 }
 
 .vehicle-title {
-  font-size: 1.1rem;
+  font-size: 16px;
   color: #fff;
-  margin-bottom: 0.25rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .vehicle-prix {
-  font-size: 1.2rem;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   color: #C9A84C;
 }
 
+/* ERROR BANNER */
 .error-banner {
   background: rgba(229, 57, 53, 0.1);
   border: 1px solid #e53935;
   color: #ff6b6b;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-size: 0.95rem;
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 14px;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 12px;
+  line-height: 1.5;
 }
 
+/* RESERVATION CARD */
 .reservation-card {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 8px;
-  padding: 2rem;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 32px;
 }
 
+/* INFO SECTION */
 .info-section {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  gap: 16px;
+  margin-bottom: 32px;
+  padding: 20px;
   background: rgba(15, 163, 54, 0.05);
   border: 1px solid rgba(15, 163, 54, 0.2);
-  border-radius: 8px;
 }
 
 .info-icon {
@@ -147,9 +169,12 @@
 }
 
 .info-title {
-  font-size: 1.1rem;
+  font-size: 14px;
   color: #fff;
-  margin-bottom: 0.75rem;
+  margin-bottom: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .info-list {
@@ -158,14 +183,16 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .info-list li {
-  color: #bbb;
-  font-size: 0.95rem;
-  padding-left: 1.5rem;
+  color: #bbbbbb;
+  font-size: 14px;
+  padding-left: 24px;
   position: relative;
+  line-height: 1.5;
+  font-weight: 300;
 }
 
 .info-list li::before {
@@ -176,53 +203,61 @@
   font-weight: bold;
 }
 
+/* MONTANT SECTION */
 .montant-section {
   text-align: center;
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 32px;
+  padding: 24px;
   background: #000;
-  border: 1px solid #333;
-  border-radius: 8px;
+  border: 1px solid rgba(201, 168, 76, 0.3);
 }
 
 .montant-label {
-  font-size: 0.9rem;
-  color: #999;
-  margin-bottom: 0.5rem;
+  font-size: 11px;
+  color: #7e7e7e;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .montant-value {
-  font-size: 2rem;
+  font-size: 36px;
   font-weight: 700;
   color: #C9A84C;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
+  line-height: 1;
 }
 
 .montant-note {
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 13px;
+  color: #7e7e7e;
+  font-weight: 300;
 }
 
+/* BUTTONS */
 .reservation-btn {
   width: 100%;
   background: #C9A84C;
   color: #000;
   border: none;
-  border-radius: 6px;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 16px 24px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 24px;
   min-height: 52px;
+  transition: background 0.2s ease;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
 .reservation-btn:hover:not(:disabled) {
-  background: #d4b35c;
+  background: #E8C97A;
 }
 
 .reservation-btn:disabled {
@@ -235,110 +270,117 @@
   background: #2a2a2a;
   color: #7e7e7e;
   border: 1px solid #2a2a2a;
-  border-radius: 6px;
-  padding: 1rem 1.5rem;
-  font-size: 1rem;
-  font-weight: 600;
+  padding: 16px 24px;
+  font-size: 12px;
+  font-weight: 700;
   cursor: not-allowed;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  gap: 8px;
+  margin-bottom: 24px;
   min-height: 52px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
 }
 
+/* DATE SECTION */
 .date-section {
-  margin-bottom: 2rem;
-  padding: 1.5rem;
+  margin-bottom: 32px;
+  padding: 24px;
   background: rgba(201, 168, 76, 0.05);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  border-radius: 8px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
 }
 
 .date-section-title {
-  font-size: 1.1rem;
+  font-size: 14px;
   font-weight: 700;
   color: #fff;
-  margin-bottom: 0.5rem;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
 }
 
 .date-section-subtitle {
-  font-size: 0.9rem;
-  color: #999;
-  margin-bottom: 1.5rem;
+  font-size: 13px;
+  color: #7e7e7e;
+  margin-bottom: 20px;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .calendar-container {
   background: #000;
-  border: 1px solid #333;
-  border-radius: 6px;
-  padding: 1rem;
+  border: 1px solid #1a1a1a;
+  padding: 16px;
 }
 
 .calendar-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  margin-bottom: 16px;
 }
 
 .calendar-month {
-  font-size: 1rem;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
   color: #fff;
   text-transform: capitalize;
+  letter-spacing: 0.5px;
 }
 
 .calendar-nav {
   background: none;
   border: none;
   color: #C9A84C;
-  font-size: 1.5rem;
+  font-size: 20px;
   cursor: pointer;
-  padding: 0.25rem 0.75rem;
+  padding: 4px 12px;
+  transition: color 0.2s ease;
 }
 
 .calendar-nav:hover {
-  color: #d4b35c;
+  color: #E8C97A;
 }
 
 .calendar-weekdays {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 8px;
+  margin-bottom: 8px;
   text-align: center;
 }
 
 .calendar-weekdays span {
-  font-size: 0.85rem;
-  color: #999;
-  font-weight: 500;
+  font-size: 11px;
+  color: #7e7e7e;
+  font-weight: 700;
+  letter-spacing: 0.5px;
 }
 
 .calendar-days {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
+  gap: 8px;
 }
 
 .calendar-day {
   aspect-ratio: 1;
-  background: #1a1a1a;
-  border: 1px solid #2a2a2a;
-  border-radius: 6px;
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
   color: #fff;
-  font-size: 0.9rem;
+  font-size: 13px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.2s;
+  transition: all 0.2s ease;
+  font-weight: 600;
 }
 
 .calendar-day:hover:not(:disabled) {
-  background: #222;
+  background: #111;
   border-color: #C9A84C;
 }
 
@@ -350,7 +392,7 @@
 
 .calendar-day-past {
   background: #0a0a0a;
-  color: #555;
+  color: #333;
   cursor: not-allowed;
 }
 
@@ -362,29 +404,36 @@
 }
 
 .date-selected {
-  margin-top: 0.75rem;
-  font-size: 0.9rem;
+  margin-top: 12px;
+  font-size: 13px;
   color: #C9A84C;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
+/* NOTE SECTION */
 .note-section {
-  padding: 1rem;
+  padding: 16px;
   background: rgba(201, 168, 76, 0.05);
-  border: 1px solid rgba(201, 168, 76, 0.2);
-  border-radius: 6px;
+  border: 1px solid rgba(201, 168, 76, 0.15);
 }
 
 .note-text {
   margin: 0;
-  font-size: 0.9rem;
-  color: #aaa;
-  line-height: 1.5;
+  font-size: 13px;
+  color: #7e7e7e;
+  line-height: 1.6;
+  font-weight: 300;
 }
 
+/* RESPONSIVE */
 @media (max-width: 768px) {
+  .page-container {
+    padding: 32px 20px;
+  }
+
   .page-title {
-    font-size: 1.5rem;
+    font-size: 24px;
   }
 
   .vehicle-card {
@@ -401,6 +450,6 @@
   }
 
   .montant-value {
-    font-size: 1.75rem;
+    font-size: 28px;
   }
 }

@@ -1,0 +1,184 @@
+/* ══════════════════════════
+   RENDEZ-VOUS - STYLE ÉPURÉ
+   Inspiré du simulateur
+══════════════════════════ */
+
+.page-container {
+  min-height: 100vh;
+  background: #000;
+  padding: 48px 80px;
+}
+
+.rdv-wrapper {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* HEADER */
+.rdv-header {
+  margin-bottom: 32px;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #C9A84C;
+  text-decoration: none;
+  font-size: 13px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: color 0.2s ease;
+}
+
+.back-link:hover {
+  color: #E8C97A;
+}
+
+.page-title {
+  font-size: 32px;
+  color: #fff;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.page-subtitle {
+  color: #7e7e7e;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.6;
+  letter-spacing: 0.3px;
+}
+
+/* CARDS */
+.rdv-card {
+  background: #0a0a0a;
+  border: 1px solid #1a1a1a;
+  padding: 32px;
+  margin-bottom: 16px;
+  transition: border-color 0.2s ease;
+}
+
+.rdv-card:hover {
+  border-color: rgba(201, 168, 76, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.card-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #C9A84C;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* FORM */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7e7e7e;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.form-hint {
+  font-size: 11px;
+  color: #7e7e7e;
+  margin-top: 6px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* INFO SECTION */
+.info-card {
+  background: rgba(201, 168, 76, 0.05);
+  border: 1px solid rgba(201, 168, 76, 0.15);
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.info-card p {
+  font-size: 13px;
+  color: #bbbbbb;
+  line-height: 1.6;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* LOADING */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+  color: #C9A84C;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(201, 168, 76, 0.2);
+  border-top-color: #C9A84C;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ERROR */
+.error-banner {
+  background: rgba(229, 57, 53, 0.1);
+  border: 1px solid #e53935;
+  color: #ff6b6b;
+  padding: 16px;
+  margin-bottom: 24px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  line-height: 1.5;
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .page-container {
+    padding: 32px 20px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

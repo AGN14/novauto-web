@@ -1,19 +1,14 @@
-<main style="background: #000; min-height: 100vh; ">
+<main style="background: #000; min-height: 100vh; padding: 40px 80px;">
+  <div style="max-width: 1440px; margin: 0 auto;">
 
-  <!-- HEADER -->
-  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
-    <div style="max-width: 1440px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center;">
+    <!-- HEADER -->
+    <div style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: flex-start;">
       <div>
-        <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
-        <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">
-          Espace Vendeur
-        </p>
-        <div style="display: flex; align-items: center; gap: 12px;">
-        <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">
-            Bonjour, {{ authService.currentUser()?.nom }}
+        <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+        <h1 style="font-size: 36px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+          TABLEAU DE BORD
         </h1>
-        <lucide-icon [img]="Smile" [size]="28" color="#C9A84C"></lucide-icon>
-        </div>
+        <p style="font-size: 14px; color: #7e7e7e;">Bonjour, {{ authService.currentUser()?.nom }}</p>
       </div>
       <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
         <button class="btn-primary" style="display: flex; align-items: center; gap: 8px;">
@@ -22,94 +17,181 @@
         </button>
       </a>
     </div>
-  </section>
 
-  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
-
-    <!-- STATS -->
+    <!-- STATS CARDS -->
     <div class="stats-grid">
       <div class="stat-card">
-        <p class="stat-label">Total annonces</p>
-        <p class="stat-value">{{ totalAnnonces }}</p>
-        <lucide-icon [img]="Car" [size]="24" color="#C9A84C"></lucide-icon>
+        <div class="stat-icon" style="background: rgba(201, 168, 76, 0.1);">
+          <lucide-icon [img]="Package" [size]="24" color="#C9A84C"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total annonces</p>
+          <p class="stat-value">{{ totalAnnonces }}</p>
+        </div>
       </div>
+
       <div class="stat-card">
-        <p class="stat-label">Disponibles</p>
-        <p class="stat-value" style="color: #0fa336;">{{ annoncesDisponibles }}</p>
-        <lucide-icon [img]="TrendingUp" [size]="24" color="#0fa336"></lucide-icon>
+        <div class="stat-icon" style="background: rgba(15, 163, 54, 0.1);">
+          <lucide-icon [img]="CheckCircle" [size]="24" color="#0fa336"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Disponibles</p>
+          <p class="stat-value">{{ annoncesDisponibles }}</p>
+        </div>
       </div>
+
       <div class="stat-card">
-        <p class="stat-label">Réservées</p>
-        <p class="stat-value" style="color: #C9A84C;">{{ annoncesReservees }}</p>
-        <lucide-icon [img]="Eye" [size]="24" color="#C9A84C"></lucide-icon>
+        <div class="stat-icon" style="background: rgba(255, 193, 7, 0.1);">
+          <lucide-icon [img]="ShoppingCart" [size]="24" color="#ffc107"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Réservées</p>
+          <p class="stat-value">{{ annoncesReservees }}</p>
+        </div>
       </div>
+
       <div class="stat-card">
-        <p class="stat-label">Vendues</p>
-        <p class="stat-value" style="color: #7e7e7e;">{{ annoncesVendues }}</p>
-        <lucide-icon [img]="Car" [size]="24" color="#7e7e7e"></lucide-icon>
+        <div class="stat-icon" style="background: rgba(126, 126, 126, 0.1);">
+          <lucide-icon [img]="Car" [size]="24" color="#7e7e7e"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Vendues</p>
+          <p class="stat-value">{{ annoncesVendues }}</p>
+        </div>
       </div>
     </div>
 
-    <!-- MES ANNONCES -->
-    <div style="margin-top: 40px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-        <h2 style="font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px;">
-          MES ANNONCES RÉCENTES
-        </h2>
-        <a routerLink="/vendeur/mes-annonces" style="text-decoration: none; font-size: 12px; color: #C9A84C; letter-spacing: 1px;">
-          VOIR TOUT →
-        </a>
-      </div>
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
 
-      @if (isLoading()) {
-        <div style="text-align: center; padding: 60px; color: #7e7e7e;">
-          <p>Chargement...</p>
-        </div>
-      } @else if (annonces().length === 0) {
-        <div class="empty-state">
-          <lucide-icon [img]="Car" [size]="48" color="#2a2a2a"></lucide-icon>
-          <p style="font-size: 16px; font-weight: 700; color: #fff; margin: 16px 0 8px;">
-            Aucune annonce publiée
-          </p>
-          <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 24px;">
-            Publiez votre premier véhicule dès maintenant.
-          </p>
-          <a routerLink="/vendeur/nouvelle-annonce" style="text-decoration: none;">
-            <button class="btn-primary">PUBLIER UNE ANNONCE →</button>
+      <!-- MES ANNONCES -->
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Mes Annonces</h2>
+            <p class="section-subtitle">Dernières annonces publiées</p>
+          </div>
+          <a [routerLink]="['/vendeur/mes-annonces']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
           </a>
         </div>
-      } @else {
-        <div class="annonces-table">
-  <div class="table-header" style="grid-template-columns: 2fr 1fr 1fr 1fr;">
-    <span>VÉHICULE</span>
-    <span>PRIX</span>
-    <span>STATUT</span>
-    <span>DATE</span>
-  </div>
-  @for (annonce of annonces().slice(0, 5); track annonce.id) {
-    <div class="table-row" style="grid-template-columns: 2fr 1fr 1fr 1fr; cursor: pointer;"
-         [routerLink]="['/vendeur/mes-annonces', annonce.id]">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <img [src]="annonce.photos[0]" style="width: 60px; height: 45px; object-fit: cover; border: 1px solid #1a1a1a;"/>
-        <div>
-          <p style="font-size: 14px; font-weight: 700; color: #fff;">{{ annonce.titre }}</p>
-          <p style="font-size: 12px; color: #7e7e7e;">{{ annonce.vehicule?.annee }}</p>
+
+        @if (isLoadingAnnonces()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (annonces().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="Car" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucune annonce</p>
+            <p class="empty-subtitle">Publiez votre premier véhicule dès maintenant</p>
+            <a [routerLink]="['/vendeur/nouvelle-annonce']" class="btn-outline" style="margin-top: 16px;">
+              Publier une annonce
+            </a>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (annonce of annonces().slice(0, 3); track annonce.id) {
+              <div class="list-item" [routerLink]="['/vendeur/mes-annonces', annonce.id]">
+                <div class="list-item-left">
+                  @if (annonce.photos?.[0]) {
+                    <img [src]="annonce.photos[0]" [alt]="annonce.titre" class="list-item-image"/>
+                  } @else {
+                    <div class="list-item-image" style="background: #1a1a1a; display: flex; align-items: center; justify-content: center;">
+                      <lucide-icon [img]="Car" [size]="24" color="#333"></lucide-icon>
+                    </div>
+                  }
+                  <div>
+                    <p class="list-item-title">{{ annonce.titre }}</p>
+                    <p class="list-item-subtitle">{{ annonce.vehicule?.annee || 'N/A' }} • {{ formatDate(annonce.created_at) }}</p>
+                  </div>
+                </div>
+                <div class="list-item-right">
+                  <span [class]="getStatutClass(annonce.statut)">
+                    {{ annonce.statut }}
+                  </span>
+                  <p class="list-item-price">{{ formatPrix(annonce.prix) }} FCFA</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- RÉSERVATIONS REÇUES -->
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Réservations Reçues</h2>
+            <p class="section-subtitle">Demandes en attente</p>
+          </div>
+          <a [routerLink]="['/vendeur/reservations']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
+          </a>
         </div>
-      </div>
-      <p style="font-size: 14px; font-weight: 700; color: #C9A84C;">
-        {{ formatPrix(annonce.prix) }} FCFA
-      </p>
-      <span [class]="getStatutClass(annonce.statut)">{{ annonce.statut }}</span>
-      <p style="font-size: 12px; color: #7e7e7e;">
-        {{ annonce.created_at | date:'dd/MM/yyyy' }}
-      </p>
-    </div>
-  }
-</div>
-          }
-        </div>
-      
+
+        @if (isLoadingReservations()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (reservations().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="ShoppingCart" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucune réservation</p>
+            <p class="empty-subtitle">Vous n'avez pas encore reçu de réservations</p>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (reservation of reservations().slice(0, 3); track reservation.id) {
+              <div class="list-item" [routerLink]="['/vendeur/reservations', reservation.id]">
+                <div class="list-item-left">
+                  <div class="list-item-icon" style="background: rgba(255, 193, 7, 0.1);">
+                    <lucide-icon [img]="ShoppingCart" [size]="20" color="#ffc107"></lucide-icon>
+                  </div>
+                  <div>
+                    <p class="list-item-title">{{ reservation.annonce?.titre || 'Véhicule' }}</p>
+                    <p class="list-item-subtitle">{{ formatDate(reservation.created_at) }}</p>
+                  </div>
+                </div>
+                <div class="list-item-right">
+                  <span [class]="'badge ' + getStatutBadgeClass(reservation.statut)">
+                    {{ getStatutLabel(reservation.statut) }}
+                  </span>
+                  <p class="list-item-price">{{ formatPrix(reservation.montant_paye) }} FCFA</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
     </div>
 
- 
+    <!-- ACTIONS RAPIDES -->
+    <section style="margin-top: 40px;">
+      <h2 class="section-title" style="margin-bottom: 24px;">Actions rapides</h2>
+      <div class="actions-grid">
+        <a [routerLink]="['/vendeur/nouvelle-annonce']" class="action-card">
+          <lucide-icon [img]="Plus" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Nouvelle annonce</p>
+          <p class="action-subtitle">Publier un véhicule</p>
+        </a>
+        <a [routerLink]="['/vendeur/mes-annonces']" class="action-card">
+          <lucide-icon [img]="Package" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Mes annonces</p>
+          <p class="action-subtitle">Gérer mes publications</p>
+        </a>
+        <a [routerLink]="['/vendeur/reservations']" class="action-card">
+          <lucide-icon [img]="ShoppingCart" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Réservations</p>
+          <p class="action-subtitle">Gérer les demandes</p>
+        </a>
+      </div>
+    </section>
+
+  </div>
 </main>

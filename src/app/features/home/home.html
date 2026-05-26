@@ -1,12 +1,11 @@
-
-
-
 <main style="background: #000;">
 
   <!-- HERO PREMIUM -->
   <section class="hero-section">
-    <div class="hero-bg-photo"></div>
-    <div class="hero-overlay"></div>
+    <div class="hero-bg-container">
+      <div class="hero-bg-photo"></div>
+      <div class="hero-overlay"></div>
+    </div>
     <div class="hero-content">
       <div class="hero-inner">
         <div class="hero-stripe"></div>
@@ -24,28 +23,28 @@
           <div class="hero-search-grid">
             <div>
               <label class="search-label">Marque</label>
-              <select class="select-field" [(ngModel)]="selectedMarque">
-                <option [value]="null">Toutes les marques</option>
-                @for (marque of marques(); track marque.id) {
-                  <option [value]="marque.id">{{ marque.nom }}</option>
-                }
-              </select>
+              <app-custom-select
+                [options]="marqueOptions()"
+                placeholder="Toutes les marques"
+                [value]="selectedMarque"
+                (valueChange)="onMarqueChange($event)">
+              </app-custom-select>
             </div>
             <div>
               <label class="search-label">Modèle</label>
-              <select class="select-field">
-                <option value="">Tous les modèles</option>
-              </select>
+              <app-custom-select
+                [options]="modeleOptions"
+                placeholder="Tous les modèles">
+              </app-custom-select>
             </div>
             <div>
               <label class="search-label">Budget max (CFA)</label>
-              <select class="select-field" [(ngModel)]="selectedBudget">
-                <option [value]="null">Illimité</option>
-                <option [value]="10000000">10 000 000</option>
-                <option [value]="20000000">20 000 000</option>
-                <option [value]="30000000">30 000 000</option>
-                <option [value]="50000000">50 000 000</option>
-              </select>
+              <app-custom-select
+                [options]="budgetOptions"
+                placeholder="Illimité"
+                [value]="selectedBudget"
+                (valueChange)="onBudgetChange($event)">
+              </app-custom-select>
             </div>
             <button class="btn-primary" (click)="onSearch()">
               RECHERCHER
@@ -189,90 +188,153 @@
   </div>
 </section>
 
-  <!-- CARROUSEL DE MARQUES -->
-  <section style="margin: 60px 0 0;">
-    <p style="text-align: center; font-size: 11px; font-weight: 700; color: #7e7e7e; letter-spacing: 2px; margin-bottom: 24px;">
-      MARQUES DISPONIBLES
-    </p>
-    <div class="marquee-container">
-      <div class="marquee-track">
-        <!-- Série 1 -->
-        <div class="marquee-group">
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Audi' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/audi-new-logo.svg" alt="Audi" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+  <!-- SIMULATEUR CTA -->
+  <section class="simulateur-section">
+    <div class="simulateur-container">
+      <div class="simulateur-left">
+        <div class="simulateur-stripe"></div>
+        <h2 class="simulateur-title">CALCULEZ VOTRE BUDGET EN TOUTE TRANSPARENCE</h2>
+        <p class="simulateur-desc">
+          Notre simulateur vous permet d'estimer le coût total de votre véhicule importé : frais de douane, TVA, taxes diverses. Basé sur les grilles officielles de la DGDDI Bénin.
+        </p>
+        <div class="simulateur-cta">
+          <a routerLink="/simulateur" style="text-decoration: none;">
+            <button class="btn-primary">UTILISER LE SIMULATEUR →</button>
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'BMW' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/bmw-logo.svg" alt="BMW" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Cupra' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/cupra.svg" alt="Cupra" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Ford' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/ford-logo-flat.svg" alt="Ford" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Mercedes-Benz' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/mercedes-benz-9.svg" alt="Mercedes-Benz" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Opel' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/opel-6.svg" alt="Opel" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Renault' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/renault-7.svg" alt="Renault" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Skoda' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/skoda-6.svg" alt="Skoda" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Tesla' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/tesla-9.svg" alt="Tesla" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Toyota' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/toyota-7.svg" alt="Toyota" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volvo' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/volvo-logo-2021.svg" alt="Volvo" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
-          </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volkswagen' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/volkswagen-logo-2019.svg" alt="Volkswagen" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a routerLink="/decodeur-vin" style="text-decoration: none;">
+            <button class="btn-ghost">DÉCODER UN VIN</button>
           </a>
         </div>
+      </div>
+      <div class="simulateur-right">
+        <p class="frais-titre">EXEMPLE DE VENTILATION</p>
+        <div class="frais-item">
+          <span class="frais-label">Valeur FOB véhicule</span>
+          <span class="frais-valeur">5 000 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Frais de douane (35%)</span>
+          <span class="frais-valeur">1 750 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">TVA (18%)</span>
+          <span class="frais-valeur">900 000 FCFA</span>
+        </div>
+        <div class="frais-item">
+          <span class="frais-label">Prélèvement communautaire</span>
+          <span class="frais-valeur">50 000 FCFA</span>
+        </div>
+        <div class="frais-item frais-total">
+          <span class="frais-label">COÛT TOTAL ESTIMÉ</span>
+          <span class="frais-valeur">7 700 000 FCFA</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-        <!-- Série 2 — copie exacte -->
+  <!-- BRANDS MARQUEE CAROUSEL -->
+  <section style="background: #000; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 60px 0;">
+    <div class="marquee-container">
+      <div class="marquee-track">
         <div class="marquee-group">
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Audi' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/audi-new-logo.svg" alt="Audi" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Audi' }">
+            <img src="/logos/audi-new-logo.svg" alt="Audi" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'BMW' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/bmw-logo.svg" alt="BMW" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'BMW' }">
+            <img src="/logos/bmw-logo.svg" alt="BMW" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Cupra' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/cupra.svg" alt="Cupra" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Cupra' }">
+            <img src="/logos/cupra.svg" alt="Cupra" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Ford' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/ford-logo-flat.svg" alt="Ford" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Ford' }">
+            <img src="/logos/ford-logo-flat.svg" alt="Ford" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Mercedes-Benz' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/mercedes-benz-9.svg" alt="Mercedes-Benz" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Mercedes-Benz' }">
+            <img src="/logos/mercedes-benz-9.svg" alt="Mercedes-Benz" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Opel' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/opel-6.svg" alt="Opel" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Opel' }">
+            <img src="/logos/opel-6.svg" alt="Opel" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Renault' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/renault-7.svg" alt="Renault" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Renault' }">
+            <img src="/logos/renault-7.svg" alt="Renault" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Skoda' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/skoda-6.svg" alt="Skoda" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Skoda' }">
+            <img src="/logos/skoda-6.svg" alt="Skoda" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Tesla' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/tesla-9.svg" alt="Tesla" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Tesla' }">
+            <img src="/logos/tesla-9.svg" alt="Tesla" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Toyota' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/toyota-7.svg" alt="Toyota" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Toyota' }">
+            <img src="/logos/toyota-7.svg" alt="Toyota" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volvo' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/volvo-logo-2021.svg" alt="Volvo" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volkswagen' }">
+            <img src="/logos/volkswagen-logo-2019.svg" alt="Volkswagen" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
-          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volkswagen' }" style="cursor: pointer; display: flex; align-items: center;">
-            <img src="/logos/volkswagen-logo-2019.svg" alt="Volkswagen" style="height: 40px; opacity: 0.8; transition: opacity 0.3s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.8'"/>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volvo' }">
+            <img src="/logos/volvo-logo-2021.svg" alt="Volvo" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+        </div>
+        <!-- Duplicate group for seamless loop -->
+        <div class="marquee-group">
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Audi' }">
+            <img src="/logos/audi-new-logo.svg" alt="Audi" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'BMW' }">
+            <img src="/logos/bmw-logo.svg" alt="BMW" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Cupra' }">
+            <img src="/logos/cupra.svg" alt="Cupra" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Ford' }">
+            <img src="/logos/ford-logo-flat.svg" alt="Ford" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Mercedes-Benz' }">
+            <img src="/logos/mercedes-benz-9.svg" alt="Mercedes-Benz" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Opel' }">
+            <img src="/logos/opel-6.svg" alt="Opel" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Renault' }">
+            <img src="/logos/renault-7.svg" alt="Renault" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Skoda' }">
+            <img src="/logos/skoda-6.svg" alt="Skoda" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Tesla' }">
+            <img src="/logos/tesla-9.svg" alt="Tesla" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Toyota' }">
+            <img src="/logos/toyota-7.svg" alt="Toyota" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volkswagen' }">
+            <img src="/logos/volkswagen-logo-2019.svg" alt="Volkswagen" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
+          </a>
+          <a [routerLink]="['/catalogue']" [queryParams]="{ marque: 'Volvo' }">
+            <img src="/logos/volvo-logo-2021.svg" alt="Volvo" style="height: 40px; opacity: 0.4; transition: opacity 0.3s; cursor: pointer;"
+                 onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'">
           </a>
         </div>
       </div>

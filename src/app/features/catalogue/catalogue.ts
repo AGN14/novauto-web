@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../core/services/annonce';
 import { MarqueService } from '../../core/services/marque';
+import { CustomSelect, SelectOption } from '../../shared/components/custom-select/custom-select';
 
 @Component({
   selector: 'app-catalogue',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, CustomSelect],
   templateUrl: './catalogue.html',
   styleUrl: './catalogue.css'
 })
@@ -31,12 +32,20 @@ export class Catalogue implements OnInit {
     vin_verifie: false,
   };
 
-  budgets = [
+  budgets: SelectOption[] = [
     { label: 'Tous les budgets', value: '' },
     { label: 'Moins de 10 000 000 FCFA', value: '10000000' },
     { label: 'Moins de 20 000 000 FCFA', value: '20000000' },
     { label: 'Moins de 30 000 000 FCFA', value: '30000000' },
     { label: 'Moins de 50 000 000 FCFA', value: '50000000' },
+  ];
+
+  marqueOptions = signal<SelectOption[]>([]);
+  modeleOptions = signal<SelectOption[]>([{ label: 'Tous les modèles', value: '' }]);
+  statutOptions: SelectOption[] = [
+    { label: 'Tous', value: '' },
+    { label: 'Dédouané', value: 'DEDOUANE' },
+    { label: 'En transit', value: 'EN_TRANSIT' }
   ];
 
   constructor(
@@ -58,7 +67,14 @@ export class Catalogue implements OnInit {
 
   loadMarques(): void {
     this.marqueService.getAll().subscribe({
-      next: (data) => this.marques.set(data)
+      next: (data) => {
+        this.marques.set(data);
+        const options: SelectOption[] = [
+          { label: 'Toutes les marques', value: '' },
+          ...data.map(m => ({ label: m.nom, value: m.id.toString() }))
+        ];
+        this.marqueOptions.set(options);
+      }
     });
   }
 
@@ -87,14 +103,39 @@ export class Catalogue implements OnInit {
     });
   }
 
-  onMarqueChange(): void {
+  onMarqueChange(value: any): void {
+    this.filtres.marque_id = value;
     this.filtres.modele_id = '';
     this.modeles.set([]);
+    this.modeleOptions.set([{ label: 'Tous les modèles', value: '' }]);
+
     if (this.filtres.marque_id) {
       this.marqueService.getModeles(+this.filtres.marque_id).subscribe({
-        next: (data) => this.modeles.set(data)
+        next: (data) => {
+          this.modeles.set(data);
+          const options: SelectOption[] = [
+            { label: 'Tous les modèles', value: '' },
+            ...data.map((m: any) => ({ label: m.nom, value: m.id.toString() }))
+          ];
+          this.modeleOptions.set(options);
+        }
       });
     }
+    this.loadAnnonces();
+  }
+
+  onModeleChange(value: any): void {
+    this.filtres.modele_id = value;
+    this.loadAnnonces();
+  }
+
+  onStatutChange(value: any): void {
+    this.filtres.statut_douanier = value;
+    this.loadAnnonces();
+  }
+
+  onBudgetChange(value: any): void {
+    this.filtres.prix_max = value;
     this.loadAnnonces();
   }
 

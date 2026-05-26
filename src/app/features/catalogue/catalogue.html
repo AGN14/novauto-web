@@ -27,41 +27,43 @@
 
       <div class="filtre-group">
         <label class="filtre-label">Marque</label>
-        <select class="select-field" [(ngModel)]="filtres.marque_id" (change)="onMarqueChange()">
-          <option value="">Toutes les marques</option>
-          @for (marque of marques(); track marque.id) {
-            <option [value]="marque.id">{{ marque.nom }}</option>
-          }
-        </select>
+        <app-custom-select
+          [options]="marqueOptions()"
+          placeholder="Toutes les marques"
+          [value]="filtres.marque_id"
+          (valueChange)="onMarqueChange($event)">
+        </app-custom-select>
       </div>
 
       <div class="filtre-group">
         <label class="filtre-label">Modèle</label>
-        <select class="select-field" [(ngModel)]="filtres.modele_id" (change)="onFiltreChange()"
-                [disabled]="!filtres.marque_id">
-          <option value="">Tous les modèles</option>
-          @for (modele of modeles(); track modele.id) {
-            <option [value]="modele.id">{{ modele.nom }}</option>
-          }
-        </select>
+        <app-custom-select
+          [options]="modeleOptions()"
+          placeholder="Tous les modèles"
+          [value]="filtres.modele_id"
+          [disabled]="!filtres.marque_id"
+          (valueChange)="onModeleChange($event)">
+        </app-custom-select>
       </div>
 
       <div class="filtre-group">
         <label class="filtre-label">Statut douanier</label>
-        <select class="select-field" [(ngModel)]="filtres.statut_douanier" (change)="onFiltreChange()">
-          <option value="">Tous</option>
-          <option value="DEDOUANE">Dédouané</option>
-          <option value="EN_TRANSIT">En transit</option>
-        </select>
+        <app-custom-select
+          [options]="statutOptions"
+          placeholder="Tous"
+          [value]="filtres.statut_douanier"
+          (valueChange)="onStatutChange($event)">
+        </app-custom-select>
       </div>
 
       <div class="filtre-group">
         <label class="filtre-label">Budget maximum</label>
-        <select class="select-field" [(ngModel)]="filtres.prix_max" (change)="onFiltreChange()">
-          @for (budget of budgets; track budget.value) {
-            <option [value]="budget.value">{{ budget.label }}</option>
-          }
-        </select>
+        <app-custom-select
+          [options]="budgets"
+          placeholder="Tous les budgets"
+          [value]="filtres.prix_max"
+          (valueChange)="onBudgetChange($event)">
+        </app-custom-select>
       </div>
 
       <div class="filtre-group">

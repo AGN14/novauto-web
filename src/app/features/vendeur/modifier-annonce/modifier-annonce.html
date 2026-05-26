@@ -1,0 +1,190 @@
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1100px; margin: 0 auto;">
+      <a [routerLink]="['/vendeur/mes-annonces', annonceId()]" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 12px; color: #7e7e7e; margin-bottom: 16px;">
+        <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon>
+        Retour à l'annonce
+      </a>
+      <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+      <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; text-transform: uppercase; margin-bottom: 4px;">Espace Vendeur</p>
+      <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">MODIFIER L'ANNONCE</h1>
+    </div>
+  </section>
+
+  <div style="max-width: 1100px; margin: 0 auto; padding: 48px 80px;">
+
+    @if (errorMessage()) {
+      <div class="alert-error">
+        <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+        <span>{{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (successMessage()) {
+      <div class="alert-success">
+        <lucide-icon [img]="CheckCircle" [size]="16" color="#0fa336"></lucide-icon>
+        <span>{{ successMessage() }}</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+        <p>Chargement...</p>
+      </div>
+    } @else if (annonce()) {
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <!-- INFORMATIONS GÉNÉRALES -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <p class="form-section-title">INFORMATIONS GÉNÉRALES</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Titre de l'annonce *</label>
+            <input type="text" class="input-field" formControlName="titre"
+                   placeholder="Ex: Toyota Prado 2023 - Excellent état"/>
+            @if (form.get('titre')?.invalid && form.get('titre')?.touched) {
+              <p class="form-error">Titre requis (min. 10 caractères)</p>
+            }
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Prix de vente (FCFA) *</label>
+              <input type="number" class="input-field" formControlName="prix"
+                     placeholder="Ex: 25000000"/>
+              @if (form.get('prix')?.invalid && form.get('prix')?.touched) {
+                <p class="form-error">Prix requis (min. 1 FCFA)</p>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Montant de réservation (FCFA)</label>
+              <input type="number" class="input-field" formControlName="montant_reservation"
+                     placeholder="Ex: 50000"/>
+              @if (form.get('montant_reservation')?.invalid && form.get('montant_reservation')?.touched) {
+                <p class="form-error">Minimum 10,000 FCFA</p>
+              }
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description</label>
+            <textarea class="input-field" formControlName="description" rows="5"
+                      placeholder="Décrivez l'état du véhicule, les entretiens effectués..."
+                      style="height: auto; resize: vertical;"></textarea>
+          </div>
+        </div>
+
+        <!-- PHOTOS -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <p class="form-section-title">PHOTOS</p>
+            <span style="font-size: 11px; font-weight: 700; color: #7e7e7e;">
+              {{ photos().length }} photo(s)
+            </span>
+          </div>
+
+          @if (uploadError()) {
+            <div class="alert-error" style="margin-bottom: 16px;">
+              <lucide-icon [img]="AlertTriangle" [size]="16" color="#e22718"></lucide-icon>
+              <span>{{ uploadError() }}</span>
+            </div>
+          }
+
+          <!-- Photos existantes -->
+          <div class="photos-grid">
+            @for (photo of photos(); track $index) {
+              <div class="photo-item">
+                <img [src]="photo" alt="Photo véhicule" class="photo-preview"/>
+                <button type="button" class="photo-delete" (click)="removePhoto($index)"
+                        title="Supprimer cette photo">
+                  <lucide-icon [img]="Trash2" [size]="14" color="#e22718"></lucide-icon>
+                </button>
+              </div>
+            }
+
+            <!-- Bouton ajouter photo -->
+            <label class="photo-add">
+              <input type="file" accept="image/jpeg,image/png,image/webp"
+                     style="display:none;"
+                     (change)="onFileSelected($event)"
+                     [disabled]="isUploadingPhoto()"/>
+              @if (isUploadingPhoto()) {
+                <p style="font-size: 11px; color: #C9A84C;">UPLOAD...</p>
+              } @else {
+                <lucide-icon [img]="Plus" [size]="24" color="#2a2a2a"></lucide-icon>
+                <p style="font-size: 11px; color: #7e7e7e; margin-top: 8px;">Ajouter</p>
+              }
+            </label>
+          </div>
+
+          <p style="font-size: 12px; color: #7e7e7e; margin-top: 12px; font-weight: 300;">
+            Formats acceptés: JPG, PNG, WebP • Taille max: 5 MB
+          </p>
+        </div>
+
+        <!-- ÉTAT DU VÉHICULE -->
+        <div class="form-section">
+          <div class="form-section-header">
+            <p class="form-section-title">ÉTAT DU VÉHICULE</p>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Kilométrage (KM) *</label>
+              <input type="number" class="input-field" formControlName="kilometrage"
+                     placeholder="Ex: 45000"/>
+              @if (form.get('kilometrage')?.invalid && form.get('kilometrage')?.touched) {
+                <p class="form-error">Kilométrage requis</p>
+              }
+            </div>
+            <div class="form-group">
+              <label class="form-label">Statut *</label>
+              <select class="select-field" formControlName="statut">
+                <option value="DISPONIBLE">Disponible</option>
+                <option value="RESERVEE">Réservée</option>
+                <option value="VENDUE">Vendue</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">État douanier *</label>
+              <select class="select-field" formControlName="statut_douanier">
+                <option value="DEDOUANE">Dédouané</option>
+                <option value="EN_TRANSIT">En transit</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ville</label>
+              <input type="text" class="input-field" formControlName="ville"
+                     placeholder="Ex: Cotonou"/>
+            </div>
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div style="display: flex; gap: 12px; margin-top: 32px;">
+          <a [routerLink]="['/vendeur/mes-annonces', annonceId()]" style="text-decoration: none; flex: 1;">
+            <button type="button" class="btn-ghost" style="width: 100%;">ANNULER</button>
+          </a>
+          <button type="submit" class="btn-primary" style="flex: 2; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                  [disabled]="isSaving()">
+            <lucide-icon [img]="Save" [size]="16"></lucide-icon>
+            @if (isSaving()) { SAUVEGARDE EN COURS... }
+            @else { SAUVEGARDER LES MODIFICATIONS }
+          </button>
+        </div>
+
+      </form>
+
+    }
+
+  </div>
+
+</main>

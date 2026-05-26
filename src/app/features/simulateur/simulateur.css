@@ -6,6 +6,18 @@
   margin-bottom: 16px;
 }
 
+/* Retirer les flèches des inputs number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 .form-card-header {
   display: flex;
   align-items: center;

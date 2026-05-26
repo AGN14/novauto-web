@@ -1,1 +1,186 @@
-<p>dashboard works!</p>
+<main style="background: #000; min-height: 100vh; padding: 40px 80px;">
+  <div style="max-width: 1440px; margin: 0 auto;">
+
+    <!-- HEADER -->
+    <div style="margin-bottom: 40px;">
+      <div style="height: 3px; width: 48px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+      <h1 style="font-size: 36px; font-weight: 700; color: #fff; text-transform: uppercase; margin-bottom: 8px;">
+        TABLEAU DE BORD
+      </h1>
+      <p style="font-size: 14px; color: #7e7e7e;">Bienvenue sur votre espace acheteur</p>
+    </div>
+
+    <!-- STATS CARDS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(201, 168, 76, 0.1);">
+          <lucide-icon [img]="ShoppingCart" [size]="24" color="#C9A84C"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Réservations en cours</p>
+          <p class="stat-value">{{ stats().reservationsEnCours }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(15, 163, 54, 0.1);">
+          <lucide-icon [img]="Calendar" [size]="24" color="#0fa336"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Rendez-vous à venir</p>
+          <p class="stat-value">{{ stats().rdvAVenir }}</p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(201, 168, 76, 0.1);">
+          <lucide-icon [img]="TrendingUp" [size]="24" color="#C9A84C"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Total dépensé</p>
+          <p class="stat-value">{{ formatPrix(stats().totalDepense) }} <span style="font-size: 14px; color: #7e7e7e;">FCFA</span></p>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: rgba(59, 130, 246, 0.1);">
+          <lucide-icon [img]="Eye" [size]="24" color="#3b82f6"></lucide-icon>
+        </div>
+        <div class="stat-content">
+          <p class="stat-label">Véhicules consultés</p>
+          <p class="stat-value">{{ annonces().length }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTENT GRID -->
+    <div class="content-grid">
+
+      <!-- MES RÉSERVATIONS -->
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Mes Réservations</h2>
+            <p class="section-subtitle">Suivez l'état de vos réservations</p>
+          </div>
+          <a [routerLink]="['/acheteur/reservations']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
+          </a>
+        </div>
+
+        @if (isLoadingReservations()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (reservations().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="ShoppingCart" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucune réservation</p>
+            <p class="empty-subtitle">Commencez par réserver un véhicule depuis le catalogue</p>
+            <a [routerLink]="['/catalogue']" class="btn-outline" style="margin-top: 16px;">
+              Voir le catalogue
+            </a>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (reservation of reservations().slice(0, 3); track reservation.id) {
+              <div class="list-item" [routerLink]="['/acheteur/reservations', reservation.id]">
+                <div class="list-item-left">
+                  @if (reservation.annonce?.photos?.[0]) {
+                    <img [src]="reservation.annonce.photos[0]" [alt]="reservation.annonce.titre" class="list-item-image"/>
+                  } @else {
+                    <div class="list-item-image" style="background: #1a1a1a; display: flex; align-items: center; justify-content: center;">
+                      <lucide-icon [img]="ShoppingCart" [size]="24" color="#333"></lucide-icon>
+                    </div>
+                  }
+                  <div>
+                    <p class="list-item-title">{{ reservation.annonce?.titre || 'Véhicule' }}</p>
+                    <p class="list-item-subtitle">{{ formatDate(reservation.created_at) }}</p>
+                  </div>
+                </div>
+                <div class="list-item-right">
+                  <span [class]="'badge ' + getStatutBadgeClass(reservation.statut)">
+                    {{ getStatutLabel(reservation.statut) }}
+                  </span>
+                  <p class="list-item-price">{{ formatPrix(reservation.montant_paye) }} FCFA</p>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+      <!-- MES RENDEZ-VOUS -->
+      <section class="section-card">
+        <div class="section-header">
+          <div>
+            <h2 class="section-title">Mes Rendez-vous</h2>
+            <p class="section-subtitle">Prochaines inspections</p>
+          </div>
+          <a [routerLink]="['/acheteur/rendez-vous']" class="section-link">
+            Voir tout
+            <lucide-icon [img]="ArrowRight" [size]="14" color="#C9A84C"></lucide-icon>
+          </a>
+        </div>
+
+        @if (isLoadingRdv()) {
+          <div class="loading-state">
+            <lucide-icon [img]="Clock" [size]="32" color="#7e7e7e"></lucide-icon>
+            <p>Chargement...</p>
+          </div>
+        } @else if (rendezVous().length === 0) {
+          <div class="empty-state">
+            <lucide-icon [img]="Calendar" [size]="48" color="#333"></lucide-icon>
+            <p class="empty-title">Aucun rendez-vous</p>
+            <p class="empty-subtitle">Planifiez une inspection pour un véhicule qui vous intéresse</p>
+          </div>
+        } @else {
+          <div class="list-container">
+            @for (rdv of rendezVous().slice(0, 3); track rdv.id) {
+              <div class="list-item" [routerLink]="['/acheteur/rendez-vous', rdv.id]">
+                <div class="list-item-left">
+                  <div class="list-item-icon" style="background: rgba(15, 163, 54, 0.1);">
+                    <lucide-icon [img]="Calendar" [size]="20" color="#0fa336"></lucide-icon>
+                  </div>
+                  <div>
+                    <p class="list-item-title">{{ rdv.annonce?.titre || 'Véhicule' }}</p>
+                    <p class="list-item-subtitle">{{ formatDate(rdv.date_rdv) }} à {{ rdv.heure_rdv }}</p>
+                  </div>
+                </div>
+                <span [class]="'badge ' + getStatutBadgeClass(rdv.statut)">
+                  {{ getStatutLabel(rdv.statut) }}
+                </span>
+              </div>
+            }
+          </div>
+        }
+      </section>
+
+    </div>
+
+    <!-- ACTIONS RAPIDES -->
+    <section style="margin-top: 40px;">
+      <h2 class="section-title" style="margin-bottom: 24px;">Actions rapides</h2>
+      <div class="actions-grid">
+        <a [routerLink]="['/catalogue']" class="action-card">
+          <lucide-icon [img]="Eye" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Parcourir le catalogue</p>
+          <p class="action-subtitle">Découvrir les véhicules disponibles</p>
+        </a>
+        <a [routerLink]="['/simulateur']" class="action-card">
+          <lucide-icon [img]="TrendingUp" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Simuler un coût</p>
+          <p class="action-subtitle">Estimer le coût d'importation</p>
+        </a>
+        <a [routerLink]="['/acheteur/reservations']" class="action-card">
+          <lucide-icon [img]="ShoppingCart" [size]="28" color="#C9A84C"></lucide-icon>
+          <p class="action-title">Mes réservations</p>
+          <p class="action-subtitle">Gérer mes réservations</p>
+        </a>
+      </div>
+    </section>
+
+  </div>
+</main>

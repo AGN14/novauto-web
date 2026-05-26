@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AnnonceService } from '../../core/services/annonce';
 import { MarqueService } from '../../core/services/marque';
+import { CustomSelect, SelectOption } from '../../shared/components/custom-select/custom-select';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink, CommonModule, FormsModule],
+  imports: [RouterLink, CommonModule, FormsModule, CustomSelect],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -18,9 +19,29 @@ export class Home implements OnInit {
   marques = signal<any[]>([]);
   isLoading = signal(true);
 
-  selectedMarque = signal<number | null>(null);
-  selectedBudget = signal<number | null>(null);
-  selectedStatut = signal<string>('');
+  selectedMarque: number | null = null;
+  selectedBudget: number | null = null;
+  selectedStatut: string = '';
+
+  marqueOptions = signal<SelectOption[]>([]);
+  budgetOptions: SelectOption[] = [
+    { label: 'Illimité', value: null },
+    { label: '10 000 000 FCFA', value: 10000000 },
+    { label: '20 000 000 FCFA', value: 20000000 },
+    { label: '30 000 000 FCFA', value: 30000000 },
+    { label: '50 000 000 FCFA', value: 50000000 }
+  ];
+  modeleOptions: SelectOption[] = [
+    { label: 'Tous les modèles', value: '' }
+  ];
+
+  // Stats statiques
+  stats = {
+    vehicules: 847,
+    vendeurs: 156,
+    transactions: 2340,
+    satisfaction: 98
+  };
 
   fonctionnalites = [
     {
@@ -64,7 +85,14 @@ export class Home implements OnInit {
 
   loadMarques(): void {
     this.marqueService.getAll().subscribe({
-      next: (data) => this.marques.set(data)
+      next: (data) => {
+        this.marques.set(data);
+        const options: SelectOption[] = [
+          { label: 'Toutes les marques', value: null },
+          ...data.map(m => ({ label: m.nom, value: m.id }))
+        ];
+        this.marqueOptions.set(options);
+      }
     });
   }
 
@@ -78,10 +106,18 @@ export class Home implements OnInit {
 
   onSearch(): void {
     const queryParams: any = {};
-    if (this.selectedMarque()) queryParams.marque_id = this.selectedMarque();
-    if (this.selectedBudget()) queryParams.prix_max = this.selectedBudget();
-    if (this.selectedStatut()) queryParams.statut_douanier = this.selectedStatut();
+    if (this.selectedMarque) queryParams.marque_id = this.selectedMarque;
+    if (this.selectedBudget) queryParams.prix_max = this.selectedBudget;
+    if (this.selectedStatut) queryParams.statut_douanier = this.selectedStatut;
 
     this.router.navigate(['/catalogue'], { queryParams });
+  }
+
+  onMarqueChange(value: any): void {
+    this.selectedMarque = value;
+  }
+
+  onBudgetChange(value: any): void {
+    this.selectedBudget = value;
   }
 }

@@ -2,7 +2,7 @@ import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { LucideAngularModule, Users, Car, TrendingUp, ShieldCheck, Eye, CheckCircle, XCircle } from 'lucide-angular';
+import { LucideAngularModule, Users, Car, TrendingUp, ShieldCheck, Eye, CheckCircle, XCircle, Clock, ArrowRight, Package, UserPlus } from 'lucide-angular';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,6 +20,10 @@ export class Dashboard implements OnInit {
   readonly Eye = Eye;
   readonly CheckCircle = CheckCircle;
   readonly XCircle = XCircle;
+  readonly Clock = Clock;
+  readonly ArrowRight = ArrowRight;
+  readonly Package = Package;
+  readonly UserPlus = UserPlus;
 
   stats = signal<any>({
     totalVendeurs: 0,
@@ -45,24 +49,45 @@ export class Dashboard implements OnInit {
   }
 
   loadStats(): void {
+    console.log('=== Admin Dashboard - Loading Stats ===');
+    console.log('URL:', `${this.API_URL}/admin/stats`);
+    console.log('Token:', localStorage.getItem('novauto_token'));
+
     this.http.get<any>(`${this.API_URL}/admin/stats`).subscribe({
       next: (data) => {
+        console.log('✅ Stats loaded:', data);
         this.stats.set(data);
         this.isLoading.set(false);
       },
-      error: () => this.isLoading.set(false)
+      error: (err) => {
+        console.error('❌ Error loading stats:', err);
+        console.error('Status:', err.status);
+        console.error('Message:', err.message);
+        console.error('Error details:', err.error);
+        this.isLoading.set(false);
+      }
     });
   }
 
   loadDernieresAnnonces(): void {
+    console.log('=== Admin Dashboard - Loading Annonces ===');
     this.http.get<any>(`${this.API_URL}/admin/annonces?per_page=5`).subscribe({
-      next: (data) => this.dernieresAnnonces.set(data.data || data)
+      next: (data) => {
+        console.log('✅ Annonces loaded:', data);
+        this.dernieresAnnonces.set(data.data || data);
+      },
+      error: (err) => console.error('❌ Error loading annonces:', err)
     });
   }
 
   loadDerniersVendeurs(): void {
+    console.log('=== Admin Dashboard - Loading Vendeurs ===');
     this.http.get<any>(`${this.API_URL}/admin/vendeurs?per_page=5`).subscribe({
-      next: (data) => this.derniersVendeurs.set(data.data || data)
+      next: (data) => {
+        console.log('✅ Vendeurs loaded:', data);
+        this.derniersVendeurs.set(data.data || data);
+      },
+      error: (err) => console.error('❌ Error loading vendeurs:', err)
     });
   }
 
@@ -70,12 +95,20 @@ export class Dashboard implements OnInit {
     return new Intl.NumberFormat('fr-FR').format(prix);
   }
 
+  formatDate(date: string): string {
+    return new Date(date).toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
   getStatutClass(statut: string): string {
     switch (statut) {
-      case 'DISPONIBLE': return 'badge-success';
-      case 'RESERVEE':   return 'badge-gold';
-      case 'VENDUE':     return 'badge-muted';
-      default:           return 'badge-muted';
+      case 'DISPONIBLE': return 'badge badge-success';
+      case 'RESERVEE':   return 'badge badge-warning';
+      case 'VENDUE':     return 'badge badge-default';
+      default:           return 'badge badge-default';
     }
   }
 }
