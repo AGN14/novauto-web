@@ -46,6 +46,16 @@
           </a>
         }
 
+        <!-- Theme Toggle -->
+        <button class="theme-toggle-btn" (click)="toggleTheme()"
+                [title]="themeService.currentTheme() === 'dark' ? 'Mode Or' : 'Mode Sombre'">
+          @if (themeService.currentTheme() === 'dark') {
+            <lucide-icon [img]="Sun" [size]="18"></lucide-icon>
+          } @else {
+            <lucide-icon [img]="Moon" [size]="18"></lucide-icon>
+          }
+        </button>
+
         <!-- Notification Bell -->
         <app-notification-bell></app-notification-bell>
 

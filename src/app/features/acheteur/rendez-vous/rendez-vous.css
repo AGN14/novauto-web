@@ -5,7 +5,7 @@
 
 .page-container {
   min-height: 100vh;
-  background: #000;
+  background: var(--bg-primary);
   padding: 48px 80px;
 }
 

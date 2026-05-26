@@ -1,12 +1,14 @@
 /* FILTRES */
 .filtres-panel {
-  background: linear-gradient(135deg, rgba(10, 10, 10, 0.98) 0%, rgba(13, 13, 13, 0.95) 100%);
-  border: 1px solid #1a1a1a;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-primary);
   padding: 24px;
   position: sticky;
   top: 80px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   animation: filtres-slide-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 @keyframes filtres-slide-in {
@@ -21,7 +23,7 @@
 }
 
 .filtres-panel:hover {
-  border-color: rgba(201, 168, 76, 0.3);
+  border-color: var(--accent);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
@@ -31,19 +33,19 @@
   align-items: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--border-primary);
 }
 
 .filtres-title {
   font-size: 13px;
   font-weight: 700;
-  color: #fff;
+  color: var(--text-primary);
   letter-spacing: 2px;
 }
 
 .filtres-reset {
   font-size: 11px;
-  color: #C9A84C;
+  color: var(--accent);
   background: transparent;
   border: none;
   cursor: pointer;
@@ -60,12 +62,12 @@
   left: 0;
   width: 0;
   height: 1px;
-  background: #E8C97A;
+  background: var(--accent-light);
   transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .filtres-reset:hover {
-  color: #E8C97A;
+  color: var(--accent-light);
   text-shadow: 0 0 10px rgba(232, 201, 122, 0.3);
 }
 
@@ -80,7 +82,7 @@
 .filtre-label {
   font-size: 11px;
   font-weight: 700;
-  color: #7e7e7e;
+  color: var(--text-secondary);
   letter-spacing: 1.5px;
   text-transform: uppercase;
   display: block;
@@ -93,19 +95,19 @@
   gap: 10px;
   cursor: pointer;
   font-size: 13px;
-  color: #bbbbbb;
+  color: var(--text-body);
   font-weight: 300;
   padding: 6px 0;
   transition: all 0.2s ease;
 }
 
 .filtre-checkbox:hover {
-  color: #fff;
+  color: var(--text-primary);
   padding-left: 4px;
 }
 
 .filtre-checkbox input {
-  accent-color: #C9A84C;
+  accent-color: var(--accent);
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -140,8 +142,8 @@
    VEHICLE CARD PREMIUM
 ══════════════════════════ */
 .vehicle-card {
-  background: #0a0a0a;
-  border: 1px solid #1a1a1a;
+  background: #0a0a0a !important;
+  border: 1px solid rgba(201, 168, 76, 0.15) !important;
   border-radius: 2px;
   cursor: pointer;
   overflow: hidden;
@@ -162,7 +164,7 @@
 }
 
 .vehicle-card:hover {
-  border-color: #C9A84C;
+  border-color: #C9A84C !important;
   transform: translateY(-6px);
   box-shadow:
     0 12px 32px rgba(0, 0, 0, 0.5),
@@ -178,7 +180,7 @@
   height: 220px;
   position: relative;
   overflow: hidden;
-  background: #111;
+  background: #111 !important;
 }
 
 .vehicle-image::after {
@@ -226,7 +228,7 @@
 .vehicle-title {
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
+  color: #fff !important;
   line-height: 1.3;
   flex: 1;
   letter-spacing: 0.2px;
@@ -234,7 +236,7 @@
 
 .vehicle-year {
   font-size: 14px;
-  color: #C9A84C;
+  color: #C9A84C !important;
   font-weight: 700;
   white-space: nowrap;
   letter-spacing: 0.5px;
@@ -247,7 +249,7 @@
   gap: 8px;
   margin-bottom: 16px;
   font-size: 13px;
-  color: #7e7e7e;
+  color: #7e7e7e !important;
   font-weight: 300;
 }
 
@@ -258,12 +260,12 @@
 }
 
 .vehicle-meta-item svg {
-  color: #7e7e7e;
+  color: #7e7e7e !important;
   flex-shrink: 0;
 }
 
 .vehicle-meta-divider {
-  color: #2a2a2a;
+  color: #2a2a2a !important;
   font-weight: 400;
 }
 
@@ -334,7 +336,7 @@
   align-items: flex-end;
   gap: 16px;
   padding-top: 16px;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid rgba(201, 168, 76, 0.1) !important;
 }
 
 .vehicle-price-block {
@@ -343,7 +345,7 @@
 
 .vehicle-price-label {
   font-size: 9px;
-  color: #7e7e7e;
+  color: #7e7e7e !important;
   letter-spacing: 1.2px;
   text-transform: uppercase;
   margin-bottom: 4px;
@@ -353,21 +355,21 @@
 .vehicle-price {
   font-size: 22px;
   font-weight: 700;
-  color: #C9A84C;
+  color: #C9A84C !important;
   line-height: 1;
   letter-spacing: -0.5px;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .vehicle-card:hover .vehicle-price {
-  color: #E8C97A;
+  color: #E8C97A !important;
   text-shadow: 0 0 15px rgba(232, 201, 122, 0.3);
   transform: scale(1.05);
 }
 
 .vehicle-price span {
   font-size: 13px;
-  color: #7e7e7e;
+  color: #7e7e7e !important;
   font-weight: 400;
   margin-left: 4px;
 }
@@ -377,9 +379,9 @@
   align-items: center;
   gap: 6px;
   padding: 10px 16px;
-  background: transparent;
-  border: 1px solid #C9A84C;
-  color: #C9A84C;
+  background: transparent !important;
+  border: 1px solid #C9A84C !important;
+  color: #C9A84C !important;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -397,8 +399,8 @@
 }
 
 .vehicle-btn:hover {
-  background: #C9A84C;
-  color: #000;
+  background: #C9A84C !important;
+  color: #000 !important;
   transform: translateX(2px);
 }
 
@@ -413,7 +415,7 @@
   justify-content: center;
   gap: 24px;
   padding: 32px 0;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid var(--border-primary);
   animation: pagination-fade-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) backwards 0.4s;
 }
 
@@ -430,8 +432,8 @@
 
 .page-btn {
   background: transparent;
-  border: 1px solid #2a2a2a;
-  color: #fff;
+  border: 1px solid var(--border-secondary);
+  color: var(--text-primary);
   padding: 10px 20px;
   font-size: 12px;
   font-weight: 700;
@@ -446,14 +448,14 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, rgba(201, 168, 76, 0.15), transparent);
+  background: var(--card-bg);
   transform: translateX(-100%);
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .page-btn:hover:not(:disabled) {
-  border-color: #C9A84C;
-  color: #C9A84C;
+  border-color: var(--accent);
+  color: var(--accent);
   box-shadow: 0 4px 12px rgba(201, 168, 76, 0.2);
   transform: translateY(-2px);
 }
@@ -469,7 +471,7 @@
 
 .page-info {
   font-size: 13px;
-  color: #7e7e7e;
+  color: var(--text-secondary);
   font-weight: 600;
   letter-spacing: 0.5px;
 }

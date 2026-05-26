@@ -4,7 +4,7 @@
 
 .page-container {
   min-height: 100vh;
-  background: #000;
+  background: var(--bg-primary);
   padding: 48px 0;
   max-width: 700px;
   margin: 0 auto;

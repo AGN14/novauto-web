@@ -5,7 +5,7 @@
 
 .page-container {
   min-height: 100vh;
-  background: #000;
+  background: var(--bg-primary);
   padding: 48px 80px;
 }
 
@@ -208,7 +208,7 @@
   text-align: center;
   margin-bottom: 32px;
   padding: 24px;
-  background: #000;
+  background: var(--bg-primary);
   border: 1px solid rgba(201, 168, 76, 0.3);
 }
 
@@ -310,7 +310,7 @@
 }
 
 .calendar-container {
-  background: #000;
+  background: var(--bg-primary);
   border: 1px solid #1a1a1a;
   padding: 16px;
 }

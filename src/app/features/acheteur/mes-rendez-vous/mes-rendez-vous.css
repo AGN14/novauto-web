@@ -1,6 +1,6 @@
 .page-container {
   min-height: 100vh;
-  background: #000;
+  background: var(--bg-primary);
   padding: 2rem 1rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -157,7 +157,7 @@
   display: flex;
   gap: 1rem;
   padding: 1rem;
-  background: #000;
+  background: var(--bg-primary);
   border: 1px solid #222;
   border-radius: 6px;
 }

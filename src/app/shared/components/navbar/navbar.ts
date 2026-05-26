@@ -2,7 +2,8 @@ import { Component, signal, inject, OnInit, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../.././../core/services/auth.service';
-import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusCircle } from 'lucide-angular';
+import { ThemeService } from '../../../core/services/theme';
+import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusCircle, Sun, Moon } from 'lucide-angular';
 import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
@@ -21,8 +22,11 @@ export class Navbar implements OnInit {
   readonly LayoutDashboard = LayoutDashboard;
   readonly Car = Car;
   readonly PlusCircle = PlusCircle;
+  readonly Sun = Sun;
+  readonly Moon = Moon;
 
   authService = inject(AuthService);
+  themeService = inject(ThemeService);
   menuOuvert = signal(false);
   menuUserOuvert = signal(false);
   isScrolled = signal(false);
@@ -47,6 +51,10 @@ export class Navbar implements OnInit {
   logout(): void {
     this.authService.logout();
     this.menuUserOuvert.set(false);
+  }
+
+  toggleTheme(): void {
+    this.themeService.toggleTheme();
   }
 
   get dashboardLink(): string {
