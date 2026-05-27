@@ -83,6 +83,26 @@
   flex: 1;
   overflow-y: auto;
   max-height: 300px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 168, 76, 0.3) transparent;
+}
+
+/* Custom scrollbar WebKit (Chrome, Safari, Edge) */
+.notifications-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 2px;
+}
+
+.notifications-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.6);
 }
 
 .loading-state,

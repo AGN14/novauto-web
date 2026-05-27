@@ -2,8 +2,7 @@ import { Component, signal, inject, OnInit, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../.././../core/services/auth.service';
-import { ThemeService } from '../../../core/services/theme';
-import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusCircle, Sun, Moon } from 'lucide-angular';
+import { LucideAngularModule, Menu, X, User, LogOut, LayoutDashboard, Car, PlusCircle } from 'lucide-angular';
 import { NotificationBell } from '../notification-bell/notification-bell';
 
 @Component({
@@ -22,11 +21,8 @@ export class Navbar implements OnInit {
   readonly LayoutDashboard = LayoutDashboard;
   readonly Car = Car;
   readonly PlusCircle = PlusCircle;
-  readonly Sun = Sun;
-  readonly Moon = Moon;
 
   authService = inject(AuthService);
-  themeService = inject(ThemeService);
   menuOuvert = signal(false);
   menuUserOuvert = signal(false);
   isScrolled = signal(false);
@@ -40,6 +36,16 @@ export class Navbar implements OnInit {
     this.checkScroll();
   }
 
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    // Fermer le menu utilisateur si clic en dehors
+    if (this.menuUserOuvert() && !target.closest('.user-menu-wrapper') && !target.closest('.user-btn')) {
+      this.menuUserOuvert.set(false);
+    }
+  }
+
   private checkScroll() {
     this.isScrolled.set(window.scrollY > 20);
   }
@@ -51,10 +57,6 @@ export class Navbar implements OnInit {
   logout(): void {
     this.authService.logout();
     this.menuUserOuvert.set(false);
-  }
-
-  toggleTheme(): void {
-    this.themeService.toggleTheme();
   }
 
   get dashboardLink(): string {

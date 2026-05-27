@@ -1,1 +1,106 @@
-<p>garages works!</p>
+<div class="admin-container">
+  <div class="admin-header">
+    <div>
+      <h1>Gestion des Garages Partenaires</h1>
+      <p>Gérez les certifications et autorisations des garages</p>
+    </div>
+  </div>
+
+  <div class="admin-content">
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner-large"></div>
+        <p>Chargement des garages...</p>
+      </div>
+    } @else {
+      @if (garages().length === 0) {
+        <div class="empty-state">
+          <lucide-icon [img]="Building2" [size]="64"></lucide-icon>
+          <h3>Aucun garage enregistré</h3>
+          <p>Les garages partenaires apparaîtront ici</p>
+        </div>
+      } @else {
+        <div class="garages-grid">
+          @for (garage of garages(); track garage.id) {
+            <div class="garage-card">
+              <!-- En-tête -->
+              <div class="garage-header">
+                <div class="garage-icon">
+                  <lucide-icon [img]="Building2" [size]="24"></lucide-icon>
+                </div>
+                <div class="garage-header-info">
+                  <h3>{{ garage.nom }}</h3>
+                  <div class="garage-badges">
+                    @if (garage.agree) {
+                      <span class="badge-success-mini">AGRÉÉ</span>
+                    }
+                    @if (garage.certifie) {
+                      <span class="badge-gold-certified">✓ CERTIFIÉ</span>
+                    }
+                  </div>
+                </div>
+              </div>
+
+              <!-- Informations -->
+              <div class="garage-info">
+                <div class="info-row">
+                  <lucide-icon [img]="MapPin" [size]="16"></lucide-icon>
+                  <span>{{ garage.adresse }}, {{ garage.ville }}</span>
+                </div>
+                <div class="info-row">
+                  <lucide-icon [img]="Phone" [size]="16"></lucide-icon>
+                  <span>{{ garage.telephone }}</span>
+                </div>
+                <div class="info-row">
+                  <lucide-icon [img]="Mail" [size]="16"></lucide-icon>
+                  <span>{{ garage.email }}</span>
+                </div>
+                <div class="info-row">
+                  <span class="label">Prix inspection:</span>
+                  <span class="value-gold">{{ formatPrice(garage.prix_inspection) }} FCFA</span>
+                </div>
+                @if (garage.certifie && garage.date_certification) {
+                  <div class="info-row">
+                    <span class="label">Certifié le:</span>
+                    <span class="value">{{ formatDate(garage.date_certification) }}</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Actions -->
+              <div class="garage-actions">
+                @if (garage.certifie) {
+                  <button
+                    class="btn-suspend"
+                    (click)="suspendre(garage.id)"
+                    [disabled]="actionLoading() === garage.id">
+                    @if (actionLoading() === garage.id) {
+                      <span class="spinner-small"></span>
+                      <span>Suspension...</span>
+                    } @else {
+                      <lucide-icon [img]="XCircle" [size]="18"></lucide-icon>
+                      <span>SUSPENDRE</span>
+                    }
+                  </button>
+                } @else {
+                  <button
+                    class="btn-certify"
+                    (click)="certifier(garage.id)"
+                    [disabled]="actionLoading() === garage.id">
+                    @if (actionLoading() === garage.id) {
+                      <span class="spinner-small"></span>
+                      <span>Certification...</span>
+                    } @else {
+                      <lucide-icon [img]="CheckCircle" [size]="18"></lucide-icon>
+                      <span>CERTIFIER</span>
+                    }
+                  </button>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

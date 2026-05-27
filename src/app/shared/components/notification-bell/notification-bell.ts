@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { NotificationService } from '../../../core/services/notification.service';
@@ -36,6 +36,16 @@ export class NotificationBell implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     if (this.pollingInterval) {
       clearInterval(this.pollingInterval);
+    }
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+
+    // Fermer le dropdown des notifications si clic en dehors
+    if (this.dropdownOuvert() && !target.closest('.notification-wrapper') && !target.closest('.notification-trigger')) {
+      this.dropdownOuvert.set(false);
     }
   }
 

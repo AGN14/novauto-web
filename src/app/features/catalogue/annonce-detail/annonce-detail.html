@@ -126,6 +126,81 @@
             }
           </div>
 
+          <!-- RAPPORT D'INSPECTION -->
+          @if (annonce().vehicule?.rapport_inspection?.statut === 'VALIDEE') {
+            <div class="inspection-section">
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <p class="specs-title" style="margin-bottom: 0;">RAPPORT D'INSPECTION</p>
+                <span class="badge-blue">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M9 11l3 3L22 4"></path>
+                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                  </svg>
+                  INSPECTÉ
+                </span>
+              </div>
+
+              <div class="inspection-card">
+                <!-- En-tête garage -->
+                <div class="inspection-header">
+                  <div>
+                    <p class="inspection-garage-name">{{ annonce().vehicule?.rapport_inspection?.garage?.nom }}</p>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-top: 4px;">
+                      @if (annonce().vehicule?.rapport_inspection?.garage?.certifie) {
+                        <span class="badge-gold-mini">✓ CERTIFIÉ</span>
+                      }
+                      <span class="inspection-date">
+                        Inspecté le {{ formatDateInspection(annonce().vehicule?.rapport_inspection?.date_inspection) }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- États -->
+                <div class="inspection-grid">
+                  <div class="inspection-item">
+                    <p class="inspection-label">Carrosserie</p>
+                    <span [class]="'inspection-etat inspection-etat-' + getEtatClass(annonce().vehicule?.rapport_inspection?.etat_carrosserie)">
+                      {{ annonce().vehicule?.rapport_inspection?.etat_carrosserie }}
+                    </span>
+                  </div>
+                  <div class="inspection-item">
+                    <p class="inspection-label">Moteur</p>
+                    <span [class]="'inspection-etat inspection-etat-' + getEtatClass(annonce().vehicule?.rapport_inspection?.etat_moteur)">
+                      {{ annonce().vehicule?.rapport_inspection?.etat_moteur }}
+                    </span>
+                  </div>
+                  <div class="inspection-item">
+                    <p class="inspection-label">Freins</p>
+                    <span [class]="'inspection-etat inspection-etat-' + getEtatClass(annonce().vehicule?.rapport_inspection?.etat_freins)">
+                      {{ annonce().vehicule?.rapport_inspection?.etat_freins }}
+                    </span>
+                  </div>
+                  <div class="inspection-item">
+                    <p class="inspection-label">Pneus</p>
+                    <span [class]="'inspection-etat inspection-etat-' + getEtatClass(annonce().vehicule?.rapport_inspection?.etat_pneus)">
+                      {{ annonce().vehicule?.rapport_inspection?.etat_pneus }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Kilométrage vérifié -->
+                <div class="inspection-km">
+                  <p class="inspection-label">Kilométrage vérifié</p>
+                  <p class="inspection-km-value">{{ annonce().vehicule?.rapport_inspection?.kilometrage_verifie | number }} KM</p>
+                </div>
+
+                <!-- Observations -->
+                @if (annonce().vehicule?.rapport_inspection?.observations) {
+                  <div class="inspection-observations">
+                    <p class="inspection-label">Observations</p>
+                    <p class="inspection-observations-text">{{ annonce().vehicule?.rapport_inspection?.observations }}</p>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
         </div>
 
         <!-- DROITE : PRIX + ACTIONS -->

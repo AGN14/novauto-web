@@ -11,7 +11,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
-  const token = localStorage.getItem('novauto_token');
+  // Déterminer quel token utiliser selon l'URL
+  let token: string | null = null;
+
+  if (req.url.includes('/garage/')) {
+    // Routes garage utilisent garage_token
+    token = localStorage.getItem('garage_token');
+  } else {
+    // Routes normales utilisent novauto_token
+    token = localStorage.getItem('novauto_token');
+  }
+
   if (token) {
     const cloned = req.clone({
       headers: req.headers.set('Authorization', `Bearer ${token}`)

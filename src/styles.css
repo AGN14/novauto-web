@@ -5,11 +5,10 @@
 @tailwind utilities;
 
 /* ══════════════════════════
-   THEME SYSTEM
+   CSS VARIABLES
 ══════════════════════════ */
 
-/* DARK THEME (default) */
-.theme-dark {
+:root {
   --bg-primary: #000000;
   --bg-secondary: #0a0a0a;
   --bg-elevated: #111111;
@@ -24,31 +23,33 @@
   --border-secondary: rgba(255, 255, 255, 0.15);
 }
 
-/* GOLD THEME */
-.theme-gold {
-  --bg-primary: #C9A84C;
-  --bg-secondary: rgba(201, 168, 76, 0.9);
-  --bg-elevated: rgba(201, 168, 76, 0.95);
-  --text-primary: #000000;
-  --text-secondary: #1a1a1a;
-  --text-body: #2a2a2a;
-  --accent: #000000;
-  --accent-light: #1a1a1a;
-  --card-bg: rgba(0, 0, 0, 0.08);
-  --card-border: rgba(0, 0, 0, 0.15);
-  --border-primary: rgba(0, 0, 0, 0.15);
-  --border-secondary: rgba(0, 0, 0, 0.25);
+/* ══════════════════════════
+   CUSTOM SCROLLBAR GLOBALE
+══════════════════════════ */
+
+/* WebKit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
 }
 
-.theme-gold::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #C9A84C 0%, #E8C97A 50%, #B8960A 100%);
-  z-index: -1;
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(201, 168, 76, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(201, 168, 76, 0.6);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(201, 168, 76, 0.3) transparent;
 }
 
 @layer base {

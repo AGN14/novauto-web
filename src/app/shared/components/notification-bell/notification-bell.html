@@ -1,5 +1,5 @@
-<div class="notification-bell-wrapper">
-  <button class="bell-button" (click)="toggleDropdown()">
+<div class="notification-bell-wrapper notification-wrapper">
+  <button class="bell-button notification-trigger" (click)="toggleDropdown()">
     <lucide-icon [img]="Bell" [size]="20" color="#fff"></lucide-icon>
     @if (nonLuesCount() > 0) {
       <span class="badge">{{nonLuesCount()}}</span>

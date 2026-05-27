@@ -153,14 +153,20 @@
           </div>
         </div>
 
-        <!-- CARACTÉRISTIQUES TECHNIQUES -->
+        <!-- INFORMATIONS GÉNÉRALES -->
         <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
-          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">CARACTÉRISTIQUES TECHNIQUES</p>
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">INFORMATIONS GÉNÉRALES</p>
           <div class="result-grid">
-            @if (result().type) {
+            @if (result().pays_origine) {
+              <div class="result-item">
+                <p class="result-label">Pays d'origine</p>
+                <p class="result-value">{{ result().pays_origine }}</p>
+              </div>
+            }
+            @if (result().type_vehicule) {
               <div class="result-item">
                 <p class="result-label">Type de véhicule</p>
-                <p class="result-value">{{ result().type }}</p>
+                <p class="result-value">{{ result().type_vehicule }}</p>
               </div>
             }
             @if (result().carrosserie) {
@@ -169,52 +175,16 @@
                 <p class="result-value">{{ result().carrosserie }}</p>
               </div>
             }
-            @if (result().cylindres) {
+            @if (result().serie) {
               <div class="result-item">
-                <p class="result-label">Cylindres</p>
-                <p class="result-value">{{ result().cylindres }}</p>
+                <p class="result-label">Série</p>
+                <p class="result-value">{{ result().serie }}</p>
               </div>
             }
-            @if (result().cylindree) {
+            @if (result().finition) {
               <div class="result-item">
-                <p class="result-label">Cylindrée</p>
-                <p class="result-value">{{ result().cylindree }} cc</p>
-              </div>
-            }
-            @if (result().cylindreeLitres) {
-              <div class="result-item">
-                <p class="result-label">Cylindrée (L)</p>
-                <p class="result-value">{{ result().cylindreeLitres }} L</p>
-              </div>
-            }
-            @if (result().puissance) {
-              <div class="result-item">
-                <p class="result-label">Puissance</p>
-                <p class="result-value">{{ result().puissance }} hp</p>
-              </div>
-            }
-            @if (result().carburant) {
-              <div class="result-item">
-                <p class="result-label">Carburant</p>
-                <p class="result-value">{{ result().carburant }}</p>
-              </div>
-            }
-            @if (result().transmission) {
-              <div class="result-item">
-                <p class="result-label">Transmission</p>
-                <p class="result-value">{{ result().transmission }}</p>
-              </div>
-            }
-            @if (result().vitesses) {
-              <div class="result-item">
-                <p class="result-label">Vitesses</p>
-                <p class="result-value">{{ result().vitesses }}</p>
-              </div>
-            }
-            @if (result().traction) {
-              <div class="result-item">
-                <p class="result-label">Traction</p>
-                <p class="result-value">{{ result().traction }}</p>
+                <p class="result-label">Finition</p>
+                <p class="result-value">{{ result().finition }}</p>
               </div>
             }
             @if (result().portes) {
@@ -229,22 +199,189 @@
                 <p class="result-value">{{ result().places }}</p>
               </div>
             }
+            @if (result().prix_base) {
+              <div class="result-item">
+                <p class="result-label">Prix de base</p>
+                <p class="result-value">{{ result().prix_base }} $</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- MOTEUR & PERFORMANCES -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">MOTEUR & PERFORMANCES</p>
+          <div class="result-grid">
+            @if (result().modele_moteur) {
+              <div class="result-item">
+                <p class="result-label">Modèle moteur</p>
+                <p class="result-value">{{ result().modele_moteur }}</p>
+              </div>
+            }
+            @if (result().configuration_moteur) {
+              <div class="result-item">
+                <p class="result-label">Configuration</p>
+                <p class="result-value">{{ result().configuration_moteur }}</p>
+              </div>
+            }
+            @if (result().cylindres) {
+              <div class="result-item">
+                <p class="result-label">Cylindres</p>
+                <p class="result-value">{{ result().cylindres }}</p>
+              </div>
+            }
+            @if (result().cylindree) {
+              <div class="result-item">
+                <p class="result-label">Cylindrée</p>
+                <p class="result-value">{{ result().cylindree }} L</p>
+              </div>
+            }
+            @if (result().puissance) {
+              <div class="result-item">
+                <p class="result-label">Puissance</p>
+                <p class="result-value">{{ result().puissance }} hp</p>
+              </div>
+            }
             @if (result().turbo) {
               <div class="result-item">
                 <p class="result-label">Turbo</p>
                 <p class="result-value">{{ result().turbo }}</p>
               </div>
             }
-            @if (result().freinageABS) {
+            @if (result().carburant) {
               <div class="result-item">
-                <p class="result-label">ABS</p>
-                <p class="result-value">{{ result().freinageABS }}</p>
+                <p class="result-label">Carburant</p>
+                <p class="result-value">{{ result().carburant }}</p>
               </div>
             }
-            @if (result().pays) {
+          </div>
+        </div>
+
+        <!-- TRANSMISSION & DIRECTION -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">TRANSMISSION & DIRECTION</p>
+          <div class="result-grid">
+            @if (result().transmission) {
               <div class="result-item">
-                <p class="result-label">Pays de fabrication</p>
-                <p class="result-value">{{ result().pays }}</p>
+                <p class="result-label">Transmission</p>
+                <p class="result-value">{{ result().transmission }}</p>
+              </div>
+            }
+            @if (result().vitesses) {
+              <div class="result-item">
+                <p class="result-label">Nombre de vitesses</p>
+                <p class="result-value">{{ result().vitesses }}</p>
+              </div>
+            }
+            @if (result().roues_motrices) {
+              <div class="result-item">
+                <p class="result-label">Roues motrices</p>
+                <p class="result-value">{{ result().roues_motrices }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- DIMENSIONS & POIDS -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">DIMENSIONS & POIDS</p>
+          <div class="result-grid">
+            @if (result().poids) {
+              <div class="result-item">
+                <p class="result-label">Poids à vide</p>
+                <p class="result-value">{{ result().poids }} lbs</p>
+              </div>
+            }
+            @if (result().empattement) {
+              <div class="result-item">
+                <p class="result-label">Empattement</p>
+                <p class="result-value">{{ result().empattement }} in</p>
+              </div>
+            }
+            @if (result().largeur_voie) {
+              <div class="result-item">
+                <p class="result-label">Largeur de voie</p>
+                <p class="result-value">{{ result().largeur_voie }} in</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- SÉCURITÉ -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">ÉQUIPEMENTS DE SÉCURITÉ</p>
+          <div class="result-grid">
+            @if (result().abs) {
+              <div class="result-item">
+                <p class="result-label">ABS</p>
+                <p class="result-value">{{ result().abs }}</p>
+              </div>
+            }
+            @if (result().esc) {
+              <div class="result-item">
+                <p class="result-label">Contrôle de stabilité (ESC)</p>
+                <p class="result-value">{{ result().esc }}</p>
+              </div>
+            }
+            @if (result().controle_traction) {
+              <div class="result-item">
+                <p class="result-label">Contrôle de traction</p>
+                <p class="result-value">{{ result().controle_traction }}</p>
+              </div>
+            }
+            @if (result().airbags_avant) {
+              <div class="result-item">
+                <p class="result-label">Airbags avant</p>
+                <p class="result-value">{{ result().airbags_avant }}</p>
+              </div>
+            }
+            @if (result().airbags_lateraux) {
+              <div class="result-item">
+                <p class="result-label">Airbags latéraux</p>
+                <p class="result-value">{{ result().airbags_lateraux }}</p>
+              </div>
+            }
+            @if (result().airbags_rideaux) {
+              <div class="result-item">
+                <p class="result-label">Airbags rideaux</p>
+                <p class="result-value">{{ result().airbags_rideaux }}</p>
+              </div>
+            }
+          </div>
+        </div>
+
+        <!-- AIDES À LA CONDUITE -->
+        <div style="padding: 20px 28px; border-bottom: 1px solid #1a1a1a;">
+          <p style="font-size: 11px; font-weight: 700; color: #C9A84C; letter-spacing: 2px; margin-bottom: 16px;">AIDES À LA CONDUITE</p>
+          <div class="result-grid">
+            @if (result().camera_recul) {
+              <div class="result-item">
+                <p class="result-label">Caméra de recul</p>
+                <p class="result-value">{{ result().camera_recul }}</p>
+              </div>
+            }
+            @if (result().radar_recul) {
+              <div class="result-item">
+                <p class="result-label">Radar de recul</p>
+                <p class="result-value">{{ result().radar_recul }}</p>
+              </div>
+            }
+            @if (result().alerte_angle_mort) {
+              <div class="result-item">
+                <p class="result-label">Alerte angle mort</p>
+                <p class="result-value">{{ result().alerte_angle_mort }}</p>
+              </div>
+            }
+            @if (result().alerte_franchissement) {
+              <div class="result-item">
+                <p class="result-label">Alerte franchissement</p>
+                <p class="result-value">{{ result().alerte_franchissement }}</p>
+              </div>
+            }
+            @if (result().freinage_urgence) {
+              <div class="result-item">
+                <p class="result-label">Freinage d'urgence</p>
+                <p class="result-value">{{ result().freinage_urgence }}</p>
               </div>
             }
           </div>

@@ -1,0 +1,202 @@
+<div class="inspection-container">
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner-large"></div>
+      <p>Chargement du dossier...</p>
+    </div>
+  } @else if (rapport()) {
+    <div class="inspection-header">
+      <button class="btn-back" (click)="retour()">
+        <lucide-icon [img]="ArrowLeft" [size]="20"></lucide-icon>
+        <span>Retour</span>
+      </button>
+      <h1>Formulaire d'inspection</h1>
+    </div>
+
+    <div class="inspection-content">
+      <!-- Informations véhicule -->
+      <div class="vehicle-section">
+        <div class="section-title">
+          <lucide-icon [img]="Car" [size]="24"></lucide-icon>
+          <h2>Informations du véhicule</h2>
+        </div>
+        <div class="vehicle-details">
+          <div class="detail-item">
+            <span class="label">Véhicule:</span>
+            <span class="value">{{ rapport()!.annonce.vehicule.modele.marque.nom }} {{ rapport()!.annonce.vehicule.modele.nom }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">VIN:</span>
+            <span class="value">{{ rapport()!.annonce.vehicule.vin }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Année:</span>
+            <span class="value">{{ rapport()!.annonce.vehicule.annee }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Kilométrage annoncé:</span>
+            <span class="value">{{ formatPrice(rapport()!.annonce.vehicule.kilometrage) }} km</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Prix:</span>
+            <span class="value price">{{ formatPrice(rapport()!.annonce.prix) }} FCFA</span>
+          </div>
+          <div class="detail-item">
+            <span class="label">Vendeur:</span>
+            <span class="value">{{ rapport()!.annonce.vendeur.user.prenom }} {{ rapport()!.annonce.vendeur.user.nom }}</span>
+          </div>
+        </div>
+      </div>
+
+      @if (errorMessage()) {
+        <div class="error-alert">
+          <lucide-icon [img]="AlertCircle" [size]="20"></lucide-icon>
+          <span>{{ errorMessage() }}</span>
+        </div>
+      }
+
+      <!-- Formulaire d'inspection -->
+      <form [formGroup]="inspectionForm" (ngSubmit)="onSubmitValidation()" class="inspection-form">
+        <h2 class="form-title">Rapport d'inspection</h2>
+
+        <!-- État carrosserie -->
+        <div class="form-section">
+          <label class="field-label">État de la carrosserie *</label>
+          <div class="etat-buttons">
+            @for (etat of etats; track etat) {
+              <button
+                type="button"
+                [class]="'etat-btn ' + getEtatClass(etat) + (inspectionForm.get('etat_carrosserie')?.value === etat ? ' active' : '')"
+                (click)="inspectionForm.patchValue({etat_carrosserie: etat})"
+              >
+                {{ etat }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- État moteur -->
+        <div class="form-section">
+          <label class="field-label">État du moteur *</label>
+          <div class="etat-buttons">
+            @for (etat of etats; track etat) {
+              <button
+                type="button"
+                [class]="'etat-btn ' + getEtatClass(etat) + (inspectionForm.get('etat_moteur')?.value === etat ? ' active' : '')"
+                (click)="inspectionForm.patchValue({etat_moteur: etat})"
+              >
+                {{ etat }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- État freins -->
+        <div class="form-section">
+          <label class="field-label">État des freins *</label>
+          <div class="etat-buttons">
+            @for (etat of etats; track etat) {
+              <button
+                type="button"
+                [class]="'etat-btn ' + getEtatClass(etat) + (inspectionForm.get('etat_freins')?.value === etat ? ' active' : '')"
+                (click)="inspectionForm.patchValue({etat_freins: etat})"
+              >
+                {{ etat }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- État pneus -->
+        <div class="form-section">
+          <label class="field-label">État des pneus *</label>
+          <div class="etat-buttons">
+            @for (etat of etats; track etat) {
+              <button
+                type="button"
+                [class]="'etat-btn ' + getEtatClass(etat) + (inspectionForm.get('etat_pneus')?.value === etat ? ' active' : '')"
+                (click)="inspectionForm.patchValue({etat_pneus: etat})"
+              >
+                {{ etat }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <!-- Kilométrage vérifié -->
+        <div class="form-section">
+          <label for="kilometrage" class="field-label">Kilométrage vérifié *</label>
+          <input
+            type="number"
+            id="kilometrage"
+            formControlName="kilometrage_verifie"
+            placeholder="Entrez le kilométrage réel"
+            min="0"
+          />
+        </div>
+
+        <!-- Observations -->
+        <div class="form-section">
+          <label for="observations" class="field-label">Observations</label>
+          <textarea
+            id="observations"
+            formControlName="observations"
+            rows="5"
+            placeholder="Ajoutez vos observations sur l'état général du véhicule, défauts constatés, recommandations..."
+          ></textarea>
+          <span class="char-count">{{ inspectionForm.get('observations')?.value?.length || 0 }} / 2000</span>
+        </div>
+
+        <!-- Actions -->
+        <div class="form-actions">
+          <button type="button" class="btn-reject" (click)="openRejectModal()" [disabled]="submitting()">
+            <lucide-icon [img]="XCircle" [size]="20"></lucide-icon>
+            <span>REJETER L'INSPECTION</span>
+          </button>
+          <button type="submit" class="btn-validate" [disabled]="inspectionForm.invalid || submitting()">
+            @if (submitting()) {
+              <span class="spinner"></span>
+              <span>Validation...</span>
+            } @else {
+              <lucide-icon [img]="CheckCircle" [size]="20"></lucide-icon>
+              <span>VALIDER L'INSPECTION</span>
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+
+  <!-- Modal de rejet -->
+  @if (showRejectModal()) {
+    <div class="modal-overlay" (click)="closeRejectModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <h3>Rejeter l'inspection</h3>
+        <p>Veuillez indiquer le motif du rejet de cette demande d'inspection.</p>
+
+        <form [formGroup]="rejectForm" (ngSubmit)="onSubmitRejection()">
+          <textarea
+            formControlName="motif"
+            rows="4"
+            placeholder="Motif du rejet (ex: véhicule non disponible, problèmes de sécurité, etc.)"
+          ></textarea>
+          <span class="char-count">{{ rejectForm.get('motif')?.value?.length || 0 }} / 500</span>
+
+          <div class="modal-actions">
+            <button type="button" class="btn-cancel" (click)="closeRejectModal()" [disabled]="submitting()">
+              Annuler
+            </button>
+            <button type="submit" class="btn-confirm-reject" [disabled]="rejectForm.invalid || submitting()">
+              @if (submitting()) {
+                <span class="spinner"></span>
+                <span>Rejet...</span>
+              } @else {
+                Confirmer le rejet
+              }
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

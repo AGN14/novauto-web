@@ -1,0 +1,282 @@
+.admin-container {
+  min-height: 100vh;
+  background: #000;
+  padding: 2rem;
+}
+
+.admin-header {
+  margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #C9A84C;
+  margin-bottom: 0.5rem;
+}
+
+.admin-header p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.admin-content {
+  max-width: 1400px;
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  gap: 1rem;
+}
+
+.spinner-large {
+  width: 48px;
+  height: 48px;
+  border: 3px solid #333;
+  border-top-color: #C9A84C;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-state lucide-icon {
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.empty-state h3 {
+  color: #fff;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.empty-state p {
+  color: #999;
+  font-size: 1rem;
+}
+
+.garages-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 1.5rem;
+}
+
+.garage-card {
+  background: #111;
+  border: 1px solid #222;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.2s;
+}
+
+.garage-card:hover {
+  border-color: #C9A84C;
+  box-shadow: 0 4px 24px rgba(201, 168, 76, 0.1);
+}
+
+.garage-header {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #222;
+}
+
+.garage-icon {
+  width: 48px;
+  height: 48px;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.garage-icon lucide-icon {
+  color: #C9A84C;
+}
+
+.garage-header-info {
+  flex: 1;
+}
+
+.garage-header-info h3 {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.garage-badges {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.badge-success-mini {
+  background: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+
+.badge-gold-certified {
+  background: rgba(201, 168, 76, 0.15);
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.garage-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: #ccc;
+  font-size: 0.9rem;
+}
+
+.info-row lucide-icon {
+  color: #666;
+  flex-shrink: 0;
+}
+
+.info-row .label {
+  color: #999;
+  font-size: 0.875rem;
+}
+
+.info-row .value {
+  color: #fff;
+  font-weight: 500;
+}
+
+.info-row .value-gold {
+  color: #C9A84C;
+  font-weight: 600;
+}
+
+.garage-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-certify,
+.btn-suspend {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-certify {
+  background: #C9A84C;
+  color: #000;
+}
+
+.btn-certify:hover:not(:disabled) {
+  background: #b8973d;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(201, 168, 76, 0.3);
+}
+
+.btn-suspend {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+}
+
+.btn-suspend:hover:not(:disabled) {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.btn-certify:disabled,
+.btn-suspend:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.spinner-small {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+.btn-suspend .spinner-small {
+  border-color: rgba(239, 68, 68, 0.2);
+  border-top-color: #ef4444;
+}
+
+@media (max-width: 1024px) {
+  .garages-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .admin-container {
+    padding: 1rem;
+  }
+
+  .garages-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .garage-actions {
+    flex-direction: column;
+  }
+}

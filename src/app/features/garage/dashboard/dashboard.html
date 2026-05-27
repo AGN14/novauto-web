@@ -1,0 +1,77 @@
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <div>
+        <h1>Tableau de bord</h1>
+        <p>{{ garageAuth.garage()?.nom }}</p>
+      </div>
+      <button class="btn-logout" (click)="logout()">
+        <lucide-icon [img]="LogOut" [size]="20"></lucide-icon>
+        <span>Déconnexion</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="dashboard-content">
+    <div class="section-header">
+      <div class="section-title">
+        <lucide-icon [img]="ClipboardList" [size]="24"></lucide-icon>
+        <h2>Demandes d'inspection en attente</h2>
+      </div>
+      <span class="badge-count">{{ demandes().length }}</span>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner-large"></div>
+        <p>Chargement des demandes...</p>
+      </div>
+    } @else {
+      @if (demandes().length === 0) {
+        <div class="empty-state">
+          <lucide-icon [img]="ClipboardList" [size]="64"></lucide-icon>
+          <h3>Aucune demande en attente</h3>
+          <p>Les nouvelles demandes d'inspection apparaîtront ici</p>
+        </div>
+      } @else {
+        <div class="demandes-grid">
+          @for (demande of demandes(); track demande.id) {
+            <div class="demande-card">
+              <div class="card-header">
+                <div class="vehicle-info">
+                  <lucide-icon [img]="Car" [size]="20"></lucide-icon>
+                  <h3>{{ demande.annonce.vehicule.modele.marque.nom }} {{ demande.annonce.vehicule.modele.nom }}</h3>
+                </div>
+                <span class="badge-pending">EN ATTENTE</span>
+              </div>
+
+              <div class="card-details">
+                <div class="detail-row">
+                  <lucide-icon [img]="User" [size]="16"></lucide-icon>
+                  <span>{{ demande.annonce.vendeur.user.prenom }} {{ demande.annonce.vendeur.user.nom }}</span>
+                </div>
+                <div class="detail-row">
+                  <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
+                  <span>Demandé le {{ formatDate(demande.date_soumission) }}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Kilométrage:</span>
+                  <span class="value">{{ formatPrice(demande.annonce.vehicule.kilometrage) }} km</span>
+                </div>
+                <div class="detail-row">
+                  <span class="label">Prix annoncé:</span>
+                  <span class="value price">{{ formatPrice(demande.annonce.prix) }} FCFA</span>
+                </div>
+              </div>
+
+              <button class="btn-inspect" (click)="inspectionner(demande.id)">
+                <lucide-icon [img]="ClipboardList" [size]="20"></lucide-icon>
+                <span>INSPECTER</span>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    }
+  </div>
+</div>

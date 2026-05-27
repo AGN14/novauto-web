@@ -170,6 +170,24 @@ export class AnnonceDetail implements OnInit, OnDestroy {
     }
   }
 
+  getEtatClass(etat: string): string {
+    switch (etat) {
+      case 'EXCELLENT': return 'excellent';
+      case 'BON': return 'bon';
+      case 'MOYEN': return 'moyen';
+      case 'MAUVAIS': return 'mauvais';
+      default: return '';
+    }
+  }
+
+  formatDateInspection(date: string): string {
+    return new Date(date).toLocaleDateString('fr-FR', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
   // États des actions
   hasActionActive(): boolean {
     return !!this.reservationActive() || !!this.rendezVousActif();

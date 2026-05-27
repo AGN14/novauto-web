@@ -3,6 +3,7 @@ import { authGuard } from './core/guards/auth-guard';
 import { acheteurGuard } from './core/guards/acheteur-guard';
 import { vendeurGuard } from './core/guards/vendeur-guard';
 import { adminGuard } from './core/guards/admin-guard';
+import { garageGuard } from './core/guards/garage-guard';
 
 export const routes: Routes = [
   {
@@ -199,6 +200,28 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/auth/admin-login/admin-login').then(m => m.AdminLogin)
       },
+    ]
+  },
+  {
+    path: 'garage',
+    children: [
+      {
+        path: 'login',
+        loadComponent: () =>
+          import('./features/garage/login/login').then(m => m.GarageLogin)
+      },
+      {
+        path: 'dashboard',
+        canActivate: [garageGuard],
+        loadComponent: () =>
+          import('./features/garage/dashboard/dashboard').then(m => m.GarageDashboard)
+      },
+      {
+        path: 'inspections/:id',
+        canActivate: [garageGuard],
+        loadComponent: () =>
+          import('./features/garage/inspection-form/inspection-form').then(m => m.InspectionForm)
+      }
     ]
   },
   {

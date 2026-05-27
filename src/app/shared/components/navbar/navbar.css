@@ -9,12 +9,15 @@
   left: 0;
   right: 0;
   height: 64px;
-  z-index: 1000;
+  z-index: 10000;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Navbar transparente puis noire au scroll */
+.navbar {
   background: transparent;
 }
 
-/* État scrollé avec backdrop-blur */
 .navbar-scrolled {
   background: rgba(0, 0, 0, 0.85) !important;
   backdrop-filter: blur(20px) saturate(180%);
@@ -75,12 +78,15 @@
 .nav-link {
   font-size: 14px;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.7) !important;
   text-decoration: none;
   letter-spacing: 0.2px;
   position: relative;
   transition: color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 8px 0;
+}
+
+.nav-link {
+  color: rgba(255, 255, 255, 0.7) !important;
 }
 
 .nav-link::after {
@@ -128,8 +134,6 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  background: #C9A84C !important;
-  color: #000 !important;
   border: none;
   border-radius: 24px;
   font-size: 14px;
@@ -137,13 +141,21 @@
   letter-spacing: 0.3px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-publish {
+  background: #C9A84C !important;
+  color: #000 !important;
   box-shadow: 0 2px 8px rgba(201, 168, 76, 0.2);
 }
 
 .btn-publish:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
   background: #E8C97A !important;
+  box-shadow: 0 6px 20px rgba(201, 168, 76, 0.4);
+}
+
+.btn-publish:hover {
+  transform: translateY(-2px);
 }
 
 .btn-publish:active {
@@ -154,14 +166,17 @@
 .btn-secondary {
   padding: 10px 20px;
   background: transparent !important;
-  color: #fff !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   border-radius: 24px;
   font-size: 14px;
   font-weight: 500;
   letter-spacing: 0.3px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-secondary {
+  color: #fff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
 .btn-secondary:hover {
@@ -173,7 +188,6 @@
 /* Bouton theme toggle */
 .theme-toggle-btn {
   background: transparent !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   padding: 8px;
   cursor: pointer;
   display: flex;
@@ -183,18 +197,8 @@
   border-radius: 50%;
   width: 38px;
   height: 38px;
-  color: #C9A84C !important;
 }
 
-.theme-toggle-btn:hover {
-  transform: scale(1.05);
-  background: rgba(255, 255, 255, 0.05) !important;
-  border-color: #C9A84C !important;
-}
-
-.theme-toggle-btn lucide-icon {
-  color: #C9A84C !important;
-}
 
 /* ══════════════════════════
    AVATAR UTILISATEUR PREMIUM
@@ -219,15 +223,18 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: #C9A84C !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #000 !important;
   font-size: 15px;
   font-weight: 700;
-  border: 2px solid rgba(255, 255, 255, 0.15);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.user-avatar {
+  background: #C9A84C !important;
+  color: #000 !important;
+  border: 2px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 

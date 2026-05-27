@@ -141,6 +141,42 @@
                   <p class="vin-result-value">{{ vinData().type_vehicule }}</p>
                 </div>
               }
+              @if (vinData().cylindree) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">CYLINDRÉE</p>
+                  <p class="vin-result-value">{{ vinData().cylindree }} L</p>
+                </div>
+              }
+              @if (vinData().puissance) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">PUISSANCE</p>
+                  <p class="vin-result-value">{{ vinData().puissance }} hp</p>
+                </div>
+              }
+              @if (vinData().vitesses) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">VITESSES</p>
+                  <p class="vin-result-value">{{ vinData().vitesses }}</p>
+                </div>
+              }
+              @if (vinData().roues_motrices) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">ROUES MOTRICES</p>
+                  <p class="vin-result-value">{{ vinData().roues_motrices }}</p>
+                </div>
+              }
+              @if (vinData().serie) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">SÉRIE</p>
+                  <p class="vin-result-value">{{ vinData().serie }}</p>
+                </div>
+              }
+              @if (vinData().finition) {
+                <div class="vin-result-item">
+                  <p class="vin-result-label">FINITION</p>
+                  <p class="vin-result-value">{{ vinData().finition }}</p>
+                </div>
+              }
             </div>
 
           </div>
