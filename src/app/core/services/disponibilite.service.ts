@@ -10,6 +10,12 @@ export interface CreateDisponibiliteDTO {
   heure_fin: string;
 }
 
+export interface UpdateDisponibiliteDTO {
+  heure_debut: string;
+  heure_fin: string;
+  jour?: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -26,6 +32,14 @@ export class DisponibiliteService {
 
   creerDisponibilite(data: CreateDisponibiliteDTO): Observable<Disponibilite> {
     return this.http.post<Disponibilite>(this.vendeurUrl, data);
+  }
+
+  creerDisponibilitesBatch(jour: string, creneaux: Array<{ heure_debut: string; heure_fin: string }>): Observable<any> {
+    return this.http.post(`${this.vendeurUrl}/batch`, { jour, creneaux });
+  }
+
+  modifierDisponibilite(id: number, data: UpdateDisponibiliteDTO): Observable<Disponibilite> {
+    return this.http.put<Disponibilite>(`${this.vendeurUrl}/${id}`, data);
   }
 
   supprimerDisponibilite(id: number): Observable<any> {

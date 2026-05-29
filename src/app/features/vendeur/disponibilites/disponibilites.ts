@@ -76,22 +76,21 @@ export class Disponibilites implements OnInit {
     return `${year}-${month}-${day}`;
   }
 
-  onCreneauCreated(creneau: { heure_debut: string; heure_fin: string }): void {
+  onCreneauxBatchCreated(creneaux: Array<{ heure_debut: string; heure_fin: string }>): void {
     if (!this.selectedDate) return;
 
-    const data = {
-      jour: this.formatDate(this.selectedDate),
-      heure_debut: creneau.heure_debut,
-      heure_fin: creneau.heure_fin
-    };
+    const jour = this.formatDate(this.selectedDate);
 
     this.loading = true;
-    this.disponibiliteService.creerDisponibilite(data).subscribe({
-      next: () => {
+    this.disponibiliteService.creerDisponibilitesBatch(jour, creneaux).subscribe({
+      next: (response) => {
+        if (response.errors && response.errors.length > 0) {
+          this.error = `${response.success_count} créneaux créés, ${response.error_count} erreurs : ${response.errors.join(', ')}`;
+        }
         this.loadDisponibilites();
       },
       error: (err) => {
-        this.error = err.error?.message || 'Erreur lors de la création du créneau';
+        this.error = err.error?.message || 'Erreur lors de la création des créneaux';
         console.error('Erreur:', err);
         this.loading = false;
       }

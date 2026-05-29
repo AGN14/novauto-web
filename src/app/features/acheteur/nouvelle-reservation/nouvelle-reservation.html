@@ -47,50 +47,28 @@
           </div>
         </div>
 
-        <div class="date-section">
-          <h3 class="date-section-title">Date de visite souhaitée</h3>
-          <p class="date-section-subtitle">Choisissez une date pour visiter le véhicule</p>
-
-          <div class="calendar-container">
-            <div class="calendar-header">
-              <button type="button" (click)="previousMonth()" class="calendar-nav">‹</button>
-              <span class="calendar-month">{{getMonthName()}}</span>
-              <button type="button" (click)="nextMonth()" class="calendar-nav">›</button>
-            </div>
-
-            <div class="calendar-weekdays">
-              <span>Dim</span>
-              <span>Lun</span>
-              <span>Mar</span>
-              <span>Mer</span>
-              <span>Jeu</span>
-              <span>Ven</span>
-              <span>Sam</span>
-            </div>
-
-            <div class="calendar-days">
-              @for (day of getDaysInMonth(); track $index) {
-                @if (day.getTime() === 0) {
-                  <button type="button" class="calendar-day calendar-day-empty" disabled></button>
-                } @else {
-                  <button
-                    type="button"
-                    class="calendar-day"
-                    [class.calendar-day-past]="isPastDate(day)"
-                    [class.calendar-day-selected]="isSelectedDate(day)"
-                    [disabled]="isPastDate(day)"
-                    (click)="selectDate(day)"
-                  >
-                    {{day.getDate()}}
-                  </button>
-                }
-              }
-            </div>
+        <!-- Calendrier et créneaux -->
+        <div class="calendar-layout">
+          <!-- Partie gauche - Calendrier -->
+          <div class="calendar-section">
+            <app-calendar-disponibilites
+              [disponibilites]="disponibilites"
+              [selectedDate]="selectedDate"
+              (dateSelected)="onDateSelected($event)">
+            </app-calendar-disponibilites>
           </div>
 
-          @if (selectedDate()) {
-            <p class="date-selected">Date sélectionnée : {{selectedDate()!.toLocaleDateString('fr-FR')}}</p>
-          }
+          <!-- Partie droite - Créneaux du jour -->
+          <div class="creneaux-section">
+            <app-creneaux-horaires
+              [disponibilites]="selectedDateDisponibilites"
+              [selectedDate]="selectedDate"
+              [canEdit]="false"
+              [selectionMode]="true"
+              [selectedCreneauId]="selectedDisponibilite?.id || null"
+              (creneauSelected)="onCreneauSelected($event)">
+            </app-creneaux-horaires>
+          </div>
         </div>
 
         <div class="montant-section">
@@ -107,9 +85,9 @@
 
         <button
           (click)="confirmerReservation()"
-          [disabled]="isSubmitting() || !selectedDate()"
+          [disabled]="isSubmitting() || !selectedDisponibilite"
           class="reservation-btn"
-          [class.reservation-btn-disabled]="isSubmitting() || !selectedDate()"
+          [class.reservation-btn-disabled]="isSubmitting() || !selectedDisponibilite"
         >
           @if (isSubmitting()) {
             <span class="spinner-small"></span>

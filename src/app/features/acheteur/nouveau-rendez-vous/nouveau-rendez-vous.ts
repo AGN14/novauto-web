@@ -1,11 +1,10 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RendezVousService } from '../../../core/services/rendez-vous.service';
 import { DisponibiliteService } from '../../../core/services/disponibilite.service';
 import { AnnonceService } from '../../../core/services/annonce';
-import { LucideAngularModule, Calendar, Clock, MessageSquare, ArrowLeft, Send } from 'lucide-angular';
+import { LucideAngularModule, Calendar, Clock, ArrowLeft, Send } from 'lucide-angular';
 import { Disponibilite } from '../../../core/models/rendez-vous.model';
 import { CalendarDisponibilites } from '../../../shared/components/calendar-disponibilites/calendar-disponibilites';
 import { CreneauxHoraires } from '../../../shared/components/creneaux-horaires/creneaux-horaires';
@@ -15,7 +14,6 @@ import { CreneauxHoraires } from '../../../shared/components/creneaux-horaires/c
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     RouterLink,
     LucideAngularModule,
     CalendarDisponibilites,
@@ -27,11 +25,9 @@ import { CreneauxHoraires } from '../../../shared/components/creneaux-horaires/c
 export class NouveauRendezVous implements OnInit {
   readonly Calendar = Calendar;
   readonly Clock = Clock;
-  readonly MessageSquare = MessageSquare;
   readonly ArrowLeft = ArrowLeft;
   readonly Send = Send;
 
-  form!: FormGroup;
   annonceId = signal<number>(0);
   annonce = signal<any>(null);
   isLoading = signal(true);
@@ -45,7 +41,6 @@ export class NouveauRendezVous implements OnInit {
   selectedDisponibilite: Disponibilite | null = null;
 
   constructor(
-    private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private rendezVousService: RendezVousService,
@@ -60,10 +55,6 @@ export class NouveauRendezVous implements OnInit {
       this.loadAnnonce();
       this.loadDisponibilites();
     }
-
-    this.form = this.fb.group({
-      message: ['', [Validators.maxLength(500)]]
-    });
   }
 
   loadAnnonce(): void {
@@ -91,7 +82,7 @@ export class NouveauRendezVous implements OnInit {
   }
 
   onSubmit(): void {
-    if (this.form.invalid || !this.selectedDisponibilite) {
+    if (!this.selectedDisponibilite) {
       this.errorMessage.set('Veuillez sélectionner un créneau disponible.');
       return;
     }
@@ -102,15 +93,22 @@ export class NouveauRendezVous implements OnInit {
     const formData = {
       annonce_id: this.annonceId(),
       date_rdv: this.selectedDisponibilite.jour,
-      heure_rdv: this.selectedDisponibilite.heure_debut,
-      message: this.form.value.message
+      heure_rdv: this.selectedDisponibilite.heure_debut.substring(0, 5)
     };
+
+    console.log('Données envoyées:', JSON.stringify(formData, null, 2));
+    console.log('date_rdv:', formData.date_rdv, 'type:', typeof formData.date_rdv);
+    console.log('heure_rdv:', formData.heure_rdv, 'type:', typeof formData.heure_rdv);
 
     this.rendezVousService.creerRendezVous(formData).subscribe({
       next: () => {
         this.router.navigate(['/acheteur/mes-rendez-vous']);
       },
       error: (err) => {
+        console.error('Erreur complète:', JSON.stringify(err, null, 2));
+        console.error('Erreur error:', JSON.stringify(err.error, null, 2));
+        console.error('Erreur status:', err.status);
+        console.error('Erreur message:', err.message);
         this.isSubmitting.set(false);
         this.errorMessage.set(err.error?.message || 'Une erreur est survenue.');
       }

@@ -10,6 +10,11 @@ export interface SuggestedCreneau {
   label: string;
 }
 
+export interface PendingCreneau {
+  heure_debut: string;
+  heure_fin: string;
+}
+
 @Component({
   selector: 'app-creneaux-horaires',
   standalone: true,
@@ -20,11 +25,11 @@ export interface SuggestedCreneau {
 export class CreneauxHoraires {
   @Input() disponibilites: Disponibilite[] = [];
   @Input() selectedDate: Date | null = null;
-  @Input() canEdit = true; // Si false, mode lecture seule (pour acheteur)
-  @Input() selectionMode = false; // Si true, permet la sélection d'un créneau
+  @Input() canEdit = true;
+  @Input() selectionMode = false;
   @Input() selectedCreneauId: number | null = null;
 
-  @Output() creneauCreated = new EventEmitter<{ heure_debut: string; heure_fin: string }>();
+  @Output() creneauxBatchCreated = new EventEmitter<PendingCreneau[]>();
   @Output() creneauDeleted = new EventEmitter<number>();
   @Output() creneauSelected = new EventEmitter<Disponibilite>();
 
@@ -33,9 +38,8 @@ export class CreneauxHoraires {
   readonly Clock = Clock;
   readonly StatutDisponibiliteEnum = StatutDisponibiliteEnum;
 
-  heureDebut = '';
-  heureFin = '';
-  showForm = false;
+  pendingCreneaux: PendingCreneau[] = [];
+  showBatchForm = false;
 
   readonly suggestedCreneaux: SuggestedCreneau[] = [
     { heure_debut: '09:00', heure_fin: '10:00', label: '09:00 - 10:00' },
@@ -58,45 +62,54 @@ export class CreneauxHoraires {
   }
 
   get sortedDisponibilites(): Disponibilite[] {
-    return [...this.disponibilites].sort((a, b) => {
-      return a.heure_debut.localeCompare(b.heure_debut);
-    });
+    return [...this.disponibilites].sort((a, b) =>
+      a.heure_debut.localeCompare(b.heure_debut)
+    );
   }
 
-  get availableCreneaux(): Disponibilite[] {
-    return this.sortedDisponibilites.filter(d => d.statut === StatutDisponibiliteEnum.LIBRE);
-  }
-
-  toggleForm(): void {
-    this.showForm = !this.showForm;
-    if (!this.showForm) {
-      this.heureDebut = '';
-      this.heureFin = '';
+  toggleBatchForm(): void {
+    this.showBatchForm = !this.showBatchForm;
+    if (!this.showBatchForm) {
+      this.pendingCreneaux = [];
     }
   }
 
-  useSuggestedCreneau(suggested: SuggestedCreneau): void {
-    this.heureDebut = suggested.heure_debut;
-    this.heureFin = suggested.heure_fin;
-    this.showForm = true;
+  addEmptyLine(): void {
+    this.pendingCreneaux.push({ heure_debut: '', heure_fin: '' });
   }
 
-  createCreneau(): void {
-    if (!this.heureDebut || !this.heureFin) return;
+  removePendingLine(index: number): void {
+    this.pendingCreneaux.splice(index, 1);
+  }
 
-    if (this.heureDebut >= this.heureFin) {
-      alert('L\'heure de fin doit être après l\'heure de début');
+  addSuggestedToBatch(suggested: SuggestedCreneau): void {
+    this.pendingCreneaux.push({
+      heure_debut: suggested.heure_debut,
+      heure_fin: suggested.heure_fin
+    });
+    if (!this.showBatchForm) {
+      this.showBatchForm = true;
+    }
+  }
+
+  createAllCreneaux(): void {
+    for (const creneau of this.pendingCreneaux) {
+      if (!creneau.heure_debut || !creneau.heure_fin) {
+        alert('Toutes les lignes doivent avoir une heure de début et une heure de fin');
+        return;
+      }
+      if (creneau.heure_debut >= creneau.heure_fin) {
+        alert('L\'heure de fin doit être après l\'heure de début');
+        return;
+      }
+    }
+    if (this.pendingCreneaux.length === 0) {
+      alert('Ajoutez au moins un créneau');
       return;
     }
-
-    this.creneauCreated.emit({
-      heure_debut: this.heureDebut,
-      heure_fin: this.heureFin
-    });
-
-    this.heureDebut = '';
-    this.heureFin = '';
-    this.showForm = false;
+    this.creneauxBatchCreated.emit([...this.pendingCreneaux]);
+    this.pendingCreneaux = [];
+    this.showBatchForm = false;
   }
 
   deleteCreneau(id: number): void {

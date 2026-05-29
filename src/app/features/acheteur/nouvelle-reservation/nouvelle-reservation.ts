@@ -4,12 +4,16 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ReservationService } from '../../../core/services/reservation.service';
 import { AnnonceService } from '../../../core/services/annonce';
 import { PaiementService } from '../../../core/services/paiement.service';
+import { DisponibiliteService } from '../../../core/services/disponibilite.service';
 import { LucideAngularModule, ArrowLeft, CreditCard, AlertCircle, CheckCircle } from 'lucide-angular';
+import { Disponibilite } from '../../../core/models/rendez-vous.model';
+import { CalendarDisponibilites } from '../../../shared/components/calendar-disponibilites/calendar-disponibilites';
+import { CreneauxHoraires } from '../../../shared/components/creneaux-horaires/creneaux-horaires';
 
 @Component({
   selector: 'app-nouvelle-reservation',
   standalone: true,
-  imports: [CommonModule, RouterLink, LucideAngularModule],
+  imports: [CommonModule, RouterLink, LucideAngularModule, CalendarDisponibilites, CreneauxHoraires],
   templateUrl: './nouvelle-reservation.html',
   styleUrl: './nouvelle-reservation.css'
 })
@@ -25,16 +29,19 @@ export class NouvelleReservation implements OnInit {
   isSubmitting = signal(false);
   errorMessage = signal<string | null>(null);
 
-  // Calendrier
-  currentMonth = signal<Date>(new Date());
-  selectedDate = signal<Date | null>(null);
+  // Disponibilités
+  disponibilites: Disponibilite[] = [];
+  selectedDate: Date | null = null;
+  selectedDateDisponibilites: Disponibilite[] = [];
+  selectedDisponibilite: Disponibilite | null = null;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private reservationService: ReservationService,
     private annonceService: AnnonceService,
-    private paiementService: PaiementService
+    private paiementService: PaiementService,
+    private disponibiliteService: DisponibiliteService
   ) {}
 
   ngOnInit(): void {
@@ -42,6 +49,7 @@ export class NouvelleReservation implements OnInit {
     if (id) {
       this.annonceId.set(+id);
       this.loadAnnonce();
+      this.loadDisponibilites();
     }
   }
 
@@ -58,6 +66,17 @@ export class NouvelleReservation implements OnInit {
     });
   }
 
+  loadDisponibilites(): void {
+    this.disponibiliteService.getDisponibilitesAnnonce(this.annonceId()).subscribe({
+      next: (data) => {
+        this.disponibilites = data;
+      },
+      error: (err) => {
+        console.error('Erreur lors du chargement des disponibilités:', err);
+      }
+    });
+  }
+
   getMontantReservation(): number {
     if (this.annonce()?.montant_reservation) {
       return this.annonce().montant_reservation;
@@ -66,8 +85,8 @@ export class NouvelleReservation implements OnInit {
   }
 
   confirmerReservation(): void {
-    if (!this.selectedDate()) {
-      this.errorMessage.set('Veuillez sélectionner une date de visite.');
+    if (!this.selectedDisponibilite) {
+      this.errorMessage.set('Veuillez sélectionner un créneau disponible.');
       return;
     }
 
@@ -109,53 +128,31 @@ export class NouvelleReservation implements OnInit {
     return new Intl.NumberFormat('fr-FR').format(prix);
   }
 
-  // Calendrier
-  getDaysInMonth(): Date[] {
-    const year = this.currentMonth().getFullYear();
-    const month = this.currentMonth().getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const days: Date[] = [];
+  onDateSelected(date: Date): void {
+    this.selectedDate = date;
+    this.updateSelectedDateDisponibilites();
+    this.selectedDisponibilite = null;
+  }
 
-    const startDay = firstDay.getDay();
-    for (let i = 0; i < startDay; i++) {
-      days.push(new Date(0));
+  private updateSelectedDateDisponibilites(): void {
+    if (!this.selectedDate) {
+      this.selectedDateDisponibilites = [];
+      return;
     }
 
-    for (let d = 1; d <= lastDay.getDate(); d++) {
-      days.push(new Date(year, month, d));
-    }
-
-    return days;
+    const dateString = this.formatDate(this.selectedDate);
+    this.selectedDateDisponibilites = this.disponibilites.filter(d => d.jour === dateString);
   }
 
-  previousMonth(): void {
-    const current = this.currentMonth();
-    this.currentMonth.set(new Date(current.getFullYear(), current.getMonth() - 1, 1));
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   }
 
-  nextMonth(): void {
-    const current = this.currentMonth();
-    this.currentMonth.set(new Date(current.getFullYear(), current.getMonth() + 1, 1));
-  }
-
-  selectDate(date: Date): void {
-    if (date.getTime() === 0 || this.isPastDate(date)) return;
-    this.selectedDate.set(date);
-  }
-
-  isPastDate(date: Date): boolean {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return date < today;
-  }
-
-  isSelectedDate(date: Date): boolean {
-    if (!this.selectedDate() || date.getTime() === 0) return false;
-    return date.toDateString() === this.selectedDate()!.toDateString();
-  }
-
-  getMonthName(): string {
-    return this.currentMonth().toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+  onCreneauSelected(disponibilite: Disponibilite): void {
+    this.selectedDisponibilite = disponibilite;
+    this.errorMessage.set(null);
   }
 }

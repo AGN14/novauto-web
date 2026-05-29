@@ -12,12 +12,12 @@
     </div>
 
     <button
-      *ngIf="canEdit && selectedDate"
+      *ngIf="canEdit && selectedDate && !showBatchForm"
       type="button"
       class="add-button"
-      (click)="toggleForm()">
+      (click)="toggleBatchForm()">
       <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
-      <span>Ajouter</span>
+      <span>Ajouter des créneaux</span>
     </button>
   </div>
 
@@ -26,9 +26,18 @@
   </div>
 
   <div *ngIf="selectedDate">
-    <!-- Formulaire d'ajout -->
-    <div *ngIf="showForm && canEdit" class="add-form">
-      <h4 class="form-title">Nouveau créneau</h4>
+    <!-- Formulaire d'ajout par lot -->
+    <div *ngIf="showBatchForm && canEdit" class="batch-form">
+      <div class="batch-header">
+        <h4 class="form-title">Ajouter plusieurs créneaux</h4>
+        <button
+          type="button"
+          class="add-line-button"
+          (click)="addEmptyLine()">
+          <lucide-angular [img]="Plus" [size]="16"></lucide-angular>
+          <span>Ajouter une ligne</span>
+        </button>
+      </div>
 
       <!-- Créneaux suggérés -->
       <div class="suggested-creneaux">
@@ -36,41 +45,49 @@
           *ngFor="let suggested of suggestedCreneaux"
           type="button"
           class="suggested-button"
-          (click)="useSuggestedCreneau(suggested)">
+          (click)="addSuggestedToBatch(suggested)">
           {{ suggested.label }}
         </button>
       </div>
 
-      <div class="form-fields">
-        <div class="field-group">
-          <label for="heureDebut">Heure de début</label>
+      <!-- Liste des créneaux en attente -->
+      <div *ngIf="pendingCreneaux.length > 0" class="pending-creneaux">
+        <div *ngFor="let pending of pendingCreneaux; let i = index" class="pending-line">
+          <span class="line-number">{{ i + 1 }}.</span>
           <input
-            id="heureDebut"
             type="time"
-            [(ngModel)]="heureDebut"
-            class="time-input" />
-        </div>
-
-        <div class="field-group">
-          <label for="heureFin">Heure de fin</label>
+            [(ngModel)]="pending.heure_debut"
+            class="time-input"
+            placeholder="Début" />
+          <span class="separator">→</span>
           <input
-            id="heureFin"
             type="time"
-            [(ngModel)]="heureFin"
-            class="time-input" />
+            [(ngModel)]="pending.heure_fin"
+            class="time-input"
+            placeholder="Fin" />
+          <button
+            type="button"
+            class="remove-line-button"
+            (click)="removePendingLine(i)">
+            <lucide-angular [img]="Trash2" [size]="16"></lucide-angular>
+          </button>
         </div>
       </div>
 
+      <div *ngIf="pendingCreneaux.length === 0" class="empty-batch">
+        <p>Cliquez sur un créneau suggéré ou ajoutez une ligne</p>
+      </div>
+
       <div class="form-actions">
-        <button type="button" class="cancel-button" (click)="toggleForm()">
+        <button type="button" class="cancel-button" (click)="toggleBatchForm()">
           Annuler
         </button>
         <button
           type="button"
           class="submit-button"
-          [disabled]="!heureDebut || !heureFin"
-          (click)="createCreneau()">
-          Créer le créneau
+          [disabled]="pendingCreneaux.length === 0"
+          (click)="createAllCreneaux()">
+          Créer tous les créneaux ({{ pendingCreneaux.length }})
         </button>
       </div>
     </div>
@@ -89,6 +106,7 @@
           [class.selected]="isCreneauSelected(dispo)"
           [class.selectable]="selectionMode && dispo.statut === StatutDisponibiliteEnum.LIBRE"
           (click)="selectCreneau(dispo)">
+
           <div class="creneau-time">
             <span class="time-badge">{{ dispo.heure_debut }}</span>
             <span class="separator">→</span>
@@ -101,26 +119,29 @@
             </span>
           </div>
 
-          <button
-            *ngIf="canEdit && !selectionMode && dispo.statut === StatutDisponibiliteEnum.LIBRE"
-            type="button"
-            class="delete-button"
-            (click)="deleteCreneau(dispo.id); $event.stopPropagation()">
-            <lucide-angular [img]="Trash2" [size]="16"></lucide-angular>
-          </button>
+          <!-- Bouton suppression uniquement -->
+          <div *ngIf="canEdit && !selectionMode && dispo.statut === StatutDisponibiliteEnum.LIBRE" class="creneau-actions">
+            <button
+              type="button"
+              class="delete-button"
+              (click)="deleteCreneau(dispo.id); $event.stopPropagation()">
+              <lucide-angular [img]="Trash2" [size]="16"></lucide-angular>
+            </button>
+          </div>
+
         </div>
       </div>
     </div>
 
-    <div *ngIf="disponibilites.length === 0 && !showForm" class="empty-state">
+    <div *ngIf="disponibilites.length === 0 && !showBatchForm" class="empty-state">
       <p>Aucun créneau défini pour cette date</p>
       <button
         *ngIf="canEdit"
         type="button"
         class="add-button-large"
-        (click)="toggleForm()">
+        (click)="toggleBatchForm()">
         <lucide-angular [img]="Plus" [size]="20"></lucide-angular>
-        <span>Ajouter un créneau</span>
+        <span>Ajouter des créneaux</span>
       </button>
     </div>
   </div>
