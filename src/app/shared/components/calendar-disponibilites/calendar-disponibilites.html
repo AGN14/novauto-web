@@ -1,0 +1,47 @@
+<div class="calendar-container">
+  <!-- Header avec navigation -->
+  <div class="calendar-header">
+    <button
+      type="button"
+      class="nav-button"
+      (click)="previousMonth()"
+      aria-label="Mois précédent">
+      <lucide-angular [img]="ChevronLeft" [size]="20"></lucide-angular>
+    </button>
+
+    <h3 class="month-title">{{ monthName }} {{ year }}</h3>
+
+    <button
+      type="button"
+      class="nav-button"
+      (click)="nextMonth()"
+      aria-label="Mois suivant">
+      <lucide-angular [img]="ChevronRight" [size]="20"></lucide-angular>
+    </button>
+  </div>
+
+  <!-- Jours de la semaine -->
+  <div class="weekdays-grid">
+    <div *ngFor="let day of daysOfWeek" class="weekday-label">
+      {{ day }}
+    </div>
+  </div>
+
+  <!-- Grille du calendrier -->
+  <div class="calendar-grid">
+    <button
+      *ngFor="let day of calendarDays"
+      type="button"
+      class="calendar-day"
+      [class.past]="day.isPast"
+      [class.today]="day.isToday"
+      [class.other-month]="!day.isCurrentMonth"
+      [class.has-disponibilites]="day.hasDisponibilites"
+      [class.selected]="isDaySelected(day)"
+      [disabled]="day.isPast || !day.isCurrentMonth"
+      (click)="onDayClick(day)">
+      <span class="day-number">{{ day.date.getDate() }}</span>
+      <span *ngIf="day.hasDisponibilites && !day.isPast" class="disponibilite-indicator"></span>
+    </button>
+  </div>
+</div>

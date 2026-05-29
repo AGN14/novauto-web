@@ -1,0 +1,127 @@
+<div class="creneaux-container">
+  <!-- Header avec date sélectionnée -->
+  <div class="creneaux-header">
+    <div class="date-info">
+      <lucide-angular [img]="Clock" [size]="20" class="clock-icon"></lucide-angular>
+      <div>
+        <h3 class="date-title">{{ formattedDate || 'Sélectionnez une date' }}</h3>
+        <p class="date-subtitle" *ngIf="selectedDate && disponibilites.length > 0">
+          {{ disponibilites.length }} créneau{{ disponibilites.length > 1 ? 'x' : '' }}
+        </p>
+      </div>
+    </div>
+
+    <button
+      *ngIf="canEdit && selectedDate"
+      type="button"
+      class="add-button"
+      (click)="toggleForm()">
+      <lucide-angular [img]="Plus" [size]="18"></lucide-angular>
+      <span>Ajouter</span>
+    </button>
+  </div>
+
+  <div *ngIf="!selectedDate" class="empty-state">
+    <p>Sélectionnez une date dans le calendrier pour voir ou ajouter des créneaux</p>
+  </div>
+
+  <div *ngIf="selectedDate">
+    <!-- Formulaire d'ajout -->
+    <div *ngIf="showForm && canEdit" class="add-form">
+      <h4 class="form-title">Nouveau créneau</h4>
+
+      <!-- Créneaux suggérés -->
+      <div class="suggested-creneaux">
+        <button
+          *ngFor="let suggested of suggestedCreneaux"
+          type="button"
+          class="suggested-button"
+          (click)="useSuggestedCreneau(suggested)">
+          {{ suggested.label }}
+        </button>
+      </div>
+
+      <div class="form-fields">
+        <div class="field-group">
+          <label for="heureDebut">Heure de début</label>
+          <input
+            id="heureDebut"
+            type="time"
+            [(ngModel)]="heureDebut"
+            class="time-input" />
+        </div>
+
+        <div class="field-group">
+          <label for="heureFin">Heure de fin</label>
+          <input
+            id="heureFin"
+            type="time"
+            [(ngModel)]="heureFin"
+            class="time-input" />
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="cancel-button" (click)="toggleForm()">
+          Annuler
+        </button>
+        <button
+          type="button"
+          class="submit-button"
+          [disabled]="!heureDebut || !heureFin"
+          (click)="createCreneau()">
+          Créer le créneau
+        </button>
+      </div>
+    </div>
+
+    <!-- Liste des créneaux existants -->
+    <div class="creneaux-list" *ngIf="disponibilites.length > 0">
+      <h4 class="list-title">
+        {{ selectionMode ? 'Créneaux disponibles' : 'Créneaux du jour' }}
+      </h4>
+
+      <div class="creneaux-grid">
+        <div
+          *ngFor="let dispo of sortedDisponibilites"
+          class="creneau-card"
+          [class]="getStatutClass(dispo.statut)"
+          [class.selected]="isCreneauSelected(dispo)"
+          [class.selectable]="selectionMode && dispo.statut === StatutDisponibiliteEnum.LIBRE"
+          (click)="selectCreneau(dispo)">
+          <div class="creneau-time">
+            <span class="time-badge">{{ dispo.heure_debut }}</span>
+            <span class="separator">→</span>
+            <span class="time-badge">{{ dispo.heure_fin }}</span>
+          </div>
+
+          <div class="creneau-status">
+            <span class="status-badge" [class]="getStatutClass(dispo.statut)">
+              {{ getStatutLabel(dispo.statut) }}
+            </span>
+          </div>
+
+          <button
+            *ngIf="canEdit && !selectionMode && dispo.statut === StatutDisponibiliteEnum.LIBRE"
+            type="button"
+            class="delete-button"
+            (click)="deleteCreneau(dispo.id); $event.stopPropagation()">
+            <lucide-angular [img]="Trash2" [size]="16"></lucide-angular>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="disponibilites.length === 0 && !showForm" class="empty-state">
+      <p>Aucun créneau défini pour cette date</p>
+      <button
+        *ngIf="canEdit"
+        type="button"
+        class="add-button-large"
+        (click)="toggleForm()">
+        <lucide-angular [img]="Plus" [size]="20"></lucide-angular>
+        <span>Ajouter un créneau</span>
+      </button>
+    </div>
+  </div>
+</div>

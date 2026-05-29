@@ -8,7 +8,7 @@
     <div class="form-wrapper">
       <div class="form-header">
         <a routerLink="/catalogue/{{annonceId()}}" class="back-link">
-          <lucide-icon [img]="ArrowLeft" [size]="20"></lucide-icon>
+          <lucide-angular [img]="ArrowLeft" [size]="20"></lucide-angular>
           Retour à l'annonce
         </a>
         <h1 class="page-title">Prendre un Rendez-Vous</h1>
@@ -32,77 +32,43 @@
       }
 
       <form [formGroup]="form" (ngSubmit)="onSubmit()" class="rdv-form">
-        <div class="form-group">
-          <label class="form-label">
-            <lucide-icon [img]="Calendar" [size]="18"></lucide-icon>
-            Date du rendez-vous
-          </label>
-
-          <div class="calendar-container">
-            <div class="calendar-header">
-              <button type="button" (click)="previousMonth()" class="calendar-nav">‹</button>
-              <span class="calendar-month">{{getMonthName()}}</span>
-              <button type="button" (click)="nextMonth()" class="calendar-nav">›</button>
-            </div>
-
-            <div class="calendar-weekdays">
-              <span>Dim</span>
-              <span>Lun</span>
-              <span>Mar</span>
-              <span>Mer</span>
-              <span>Jeu</span>
-              <span>Ven</span>
-              <span>Sam</span>
-            </div>
-
-            <div class="calendar-days">
-              @for (day of getDaysInMonth(); track $index) {
-                @if (day.getTime() === 0) {
-                  <button type="button" class="calendar-day calendar-day-empty" disabled></button>
-                } @else {
-                  <button
-                    type="button"
-                    class="calendar-day"
-                    [class.calendar-day-past]="isPastDate(day)"
-                    [class.calendar-day-selected]="isSelectedDate(day)"
-                    [disabled]="isPastDate(day)"
-                    (click)="selectDate(day)"
-                  >
-                    {{day.getDate()}}
-                  </button>
-                }
-              }
-            </div>
-          </div>
-
-          @if (selectedDate()) {
-            <p class="date-selected">Date sélectionnée : {{selectedDate()!.toLocaleDateString('fr-FR')}}</p>
-          }
-        </div>
-
-        <div class="form-group">
-          <label class="form-label">
-            <lucide-icon [img]="Clock" [size]="18"></lucide-icon>
-            Heure du rendez-vous
-          </label>
-
-          <div class="creneaux-container">
-            @for (creneau of creneaux; track creneau) {
-              <button
-                type="button"
-                class="creneau-pill"
-                [class.creneau-selected]="selectedHeure() === creneau"
-                (click)="selectHeure(creneau)"
-              >
-                {{creneau}}
-              </button>
-            }
+        <!-- Instructions -->
+        <div class="info-banner">
+          <lucide-angular [img]="Calendar" [size]="20"></lucide-angular>
+          <div>
+            <p class="info-title">Sélectionnez un créneau disponible</p>
+            <p class="info-text">Choisissez d'abord une date, puis un créneau horaire proposé par le vendeur</p>
           </div>
         </div>
 
+        <!-- Calendrier et créneaux -->
+        <div class="calendar-layout">
+          <!-- Partie gauche - Calendrier -->
+          <div class="calendar-section">
+            <app-calendar-disponibilites
+              [disponibilites]="disponibilites"
+              [selectedDate]="selectedDate"
+              (dateSelected)="onDateSelected($event)">
+            </app-calendar-disponibilites>
+          </div>
+
+          <!-- Partie droite - Créneaux du jour -->
+          <div class="creneaux-section">
+            <app-creneaux-horaires
+              [disponibilites]="selectedDateDisponibilites"
+              [selectedDate]="selectedDate"
+              [canEdit]="false"
+              [selectionMode]="true"
+              [selectedCreneauId]="selectedDisponibilite?.id || null"
+              (creneauSelected)="onCreneauSelected($event)">
+            </app-creneaux-horaires>
+          </div>
+        </div>
+
+        <!-- Message optionnel -->
         <div class="form-group">
           <label for="message" class="form-label">
-            <lucide-icon [img]="MessageSquare" [size]="18"></lucide-icon>
+            <lucide-angular [img]="MessageSquare" [size]="18"></lucide-angular>
             Message (optionnel)
           </label>
           <textarea
@@ -115,9 +81,9 @@
           <span class="char-count">{{form.get('message')?.value?.length || 0}} / 500</span>
         </div>
 
-        <button type="submit" [disabled]="!selectedDate() || !selectedHeure() || isSubmitting()" class="submit-btn">
-          <lucide-icon [img]="Send" [size]="20"></lucide-icon>
-          {{isSubmitting() ? 'Envoi en cours...' : 'Envoyer la demande'}}
+        <button type="submit" [disabled]="!selectedDisponibilite || isSubmitting()" class="submit-btn">
+          <lucide-angular [img]="Send" [size]="20"></lucide-angular>
+          {{isSubmitting() ? 'Envoi en cours...' : 'Confirmer le rendez-vous'}}
         </button>
       </form>
     </div>

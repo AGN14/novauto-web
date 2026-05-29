@@ -28,7 +28,7 @@
 }
 
 .form-wrapper {
-  max-width: 600px;
+  max-width: 1400px;
   margin: 0 auto;
 }
 
@@ -108,15 +108,60 @@
   font-size: 0.95rem;
 }
 
+.info-banner {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: rgba(201, 168, 76, 0.1);
+  border: 1px solid rgba(201, 168, 76, 0.3);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  color: #C9A84C;
+}
+
+.info-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0 0 4px 0;
+}
+
+.info-text {
+  font-size: 0.875rem;
+  color: rgba(201, 168, 76, 0.8);
+  margin: 0;
+}
+
 .rdv-form {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 8px;
-  padding: 2rem;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.calendar-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+  align-items: start;
+}
+
+.calendar-section {
+  position: sticky;
+  top: 24px;
+}
+
+.creneaux-section {
+  min-height: 400px;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  background: rgba(10, 10, 10, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(26, 26, 26, 0.8);
+  border-radius: 12px;
+  padding: 20px;
 }
 
 .form-label {
@@ -322,6 +367,17 @@
   font-weight: 600;
 }
 
+@media (max-width: 1200px) {
+  .calendar-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .calendar-section {
+    position: relative;
+    top: 0;
+  }
+}
+
 @media (max-width: 768px) {
   .page-title {
     font-size: 1.5rem;
@@ -338,5 +394,9 @@
 
   .creneaux-container {
     grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  }
+
+  .calendar-layout {
+    gap: 16px;
   }
 }

@@ -1,1 +1,49 @@
-<p>disponibilites works!</p>
+<div class="page-container">
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-content">
+      <div class="icon-wrapper">
+        <lucide-angular [img]="Calendar" [size]="32" class="header-icon"></lucide-angular>
+      </div>
+      <div>
+        <h1 class="page-title">Mes disponibilités</h1>
+        <p class="page-subtitle">Gérez vos créneaux horaires pour les rendez-vous</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Message d'erreur -->
+  <div *ngIf="error" class="error-message">
+    {{ error }}
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p>Chargement...</p>
+  </div>
+
+  <!-- Calendrier et créneaux -->
+  <div *ngIf="!loading" class="calendar-layout">
+    <!-- Partie gauche - Calendrier -->
+    <div class="calendar-section">
+      <app-calendar-disponibilites
+        [disponibilites]="disponibilites"
+        [selectedDate]="selectedDate"
+        (dateSelected)="onDateSelected($event)">
+      </app-calendar-disponibilites>
+    </div>
+
+    <!-- Partie droite - Créneaux du jour -->
+    <div class="creneaux-section">
+      <app-creneaux-horaires
+        [disponibilites]="selectedDateDisponibilites"
+        [selectedDate]="selectedDate"
+        [canEdit]="true"
+        [selectionMode]="false"
+        (creneauCreated)="onCreneauCreated($event)"
+        (creneauDeleted)="onCreneauDeleted($event)">
+      </app-creneaux-horaires>
+    </div>
+  </div>
+</div>
