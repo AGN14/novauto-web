@@ -6,7 +6,7 @@ import { AnnonceService } from '../../../core/services/annonce';
 import { InspectionService } from '../../../core/services/inspection.service';
 import { AvisService } from '../../../core/services/avis.service';
 import { StarRating } from '../../../shared/components/star-rating/star-rating';
-import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin, ShieldCheck, AlertTriangle } from 'lucide-angular';
+import { LucideAngularModule, ArrowLeft, Edit, Trash2, Eye, Calendar, Gauge, Shield, CheckCircle, Copy, MapPin, ShieldCheck, AlertTriangle, Clock, AlertCircle } from 'lucide-angular';
 
 @Component({
   selector: 'app-vendeur-annonce-detail',
@@ -29,6 +29,8 @@ export class VendeurAnnonceDetail implements OnInit {
   readonly MapPin = MapPin;
   readonly ShieldCheck = ShieldCheck;
   readonly AlertTriangle = AlertTriangle;
+  readonly Clock = Clock;
+  readonly AlertCircle = AlertCircle;
 
   annonce = signal<any>(null);
   isLoading = signal(true);
@@ -40,6 +42,11 @@ export class VendeurAnnonceDetail implements OnInit {
   // Certification
   inspections = signal<any[]>([]);
   isLoadingInspections = signal(true);
+
+  // Confirmation présence
+  codePresence = signal('');
+  isConfirmingPresence = signal(false);
+  presenceError = signal('');
 
   // Avis
   avis = signal<any[]>([]);
@@ -208,5 +215,43 @@ export class VendeurAnnonceDetail implements OnInit {
       month: 'long',
       day: 'numeric'
     });
+  }
+
+  confirmerMaPresence(): void {
+    const inspection = this.getInspectionActive();
+    const code = this.codePresence().toUpperCase().trim();
+
+    if (!inspection || !code) {
+      this.presenceError.set('Veuillez entrer le code de présence');
+      return;
+    }
+
+    if (code.length !== 6) {
+      this.presenceError.set('Le code doit contenir 6 caractères');
+      return;
+    }
+
+    this.isConfirmingPresence.set(true);
+    this.presenceError.set('');
+
+    this.inspectionService.confirmerPresence(inspection.id, code).subscribe({
+      next: () => {
+        this.isConfirmingPresence.set(false);
+        this.codePresence.set('');
+        // Recharger les inspections pour voir le changement
+        this.loadInspections(this.annonce().id);
+      },
+      error: (err) => {
+        this.isConfirmingPresence.set(false);
+        this.presenceError.set(err.error?.message || 'Code incorrect ou expiré');
+      }
+    });
+  }
+
+  onCodeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = input.value.toUpperCase().replace(/[^A-Z0-9]/g, '').substring(0, 6);
+    this.codePresence.set(value);
+    input.value = value;
   }
 }

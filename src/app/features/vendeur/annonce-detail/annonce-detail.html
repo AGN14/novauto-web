@@ -165,6 +165,71 @@
                 </a>
               }
 
+              <!-- Bloc confirmation de présence -->
+              @if (hasInspectionEnCours() && getInspectionActive()?.statut === 'EN_ATTENTE' && !getInspectionActive()?.presence_confirmee) {
+                <div style="background: #0a0a0a; border: 1px solid #C9A84C; padding: 20px; margin-top: 16px;">
+                  <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+                    <lucide-icon [img]="ShieldCheck" [size]="20" color="#C9A84C"></lucide-icon>
+                    <p style="font-size: 13px; font-weight: 700; color: #C9A84C; letter-spacing: 1px;">CONFIRMER MA PRÉSENCE</p>
+                  </div>
+
+                  <!-- Statut selon code -->
+                  @if (!getInspectionActive()?.code_presence) {
+                    <div style="background: rgba(255, 193, 7, 0.15); border: 1px solid #FFC107; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                      <lucide-icon [img]="Clock" [size]="18" color="#FFC107"></lucide-icon>
+                      <span style="font-size: 12px; font-weight: 700; color: #FFC107;">Code non encore généré par le garage</span>
+                    </div>
+                  } @else {
+                    <div style="background: rgba(226, 39, 24, 0.15); border: 1px solid #e22718; padding: 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px;">
+                      <lucide-icon [img]="AlertCircle" [size]="18" color="#e22718"></lucide-icon>
+                      <span style="font-size: 12px; font-weight: 700; color: #e22718;">En attente de confirmation de présence</span>
+                    </div>
+
+                    <p style="font-size: 12px; color: #7e7e7e; margin-bottom: 12px;">
+                      Entrez le code à 6 caractères affiché par le garage :
+                    </p>
+
+                    <input
+                      type="text"
+                      [value]="codePresence()"
+                      (input)="onCodeInput($event)"
+                      placeholder="XXXXXX"
+                      maxlength="6"
+                      style="width: 100%; background: #000; border: 1px solid #2a2a2a; padding: 12px; font-size: 16px; font-weight: 700; color: #fff; font-family: monospace; letter-spacing: 4px; text-align: center; text-transform: uppercase; margin-bottom: 12px;"
+                    />
+
+                    @if (presenceError()) {
+                      <div style="background: rgba(226, 39, 24, 0.15); border: 1px solid #e22718; padding: 10px; margin-bottom: 12px;">
+                        <span style="font-size: 12px; color: #e22718;">{{ presenceError() }}</span>
+                      </div>
+                    }
+
+                    <button
+                      (click)="confirmerMaPresence()"
+                      [disabled]="codePresence().length !== 6 || isConfirmingPresence()"
+                      style="width: 100%; background: #C9A84C; border: none; padding: 12px; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                      [style.opacity]="codePresence().length !== 6 || isConfirmingPresence() ? '0.5' : '1'"
+                      [style.cursor]="codePresence().length !== 6 || isConfirmingPresence() ? 'not-allowed' : 'pointer'"
+                    >
+                      @if (isConfirmingPresence()) {
+                        <span>VÉRIFICATION...</span>
+                      } @else {
+                        <lucide-icon [img]="CheckCircle" [size]="16"></lucide-icon>
+                        <span>CONFIRMER MA PRÉSENCE</span>
+                      }
+                    </button>
+                  }
+                </div>
+              }
+
+              <!-- Badge présence confirmée -->
+              @if (hasInspectionEnCours() && getInspectionActive()?.presence_confirmee) {
+                <div style="background: rgba(15, 163, 54, 0.15); border: 1px solid #0fa336; padding: 12px; margin-top: 16px; display: flex; align-items: center; gap: 8px;">
+                  <lucide-icon [img]="CheckCircle" [size]="18" color="#0fa336"></lucide-icon>
+                  <span style="font-size: 12px; font-weight: 700; color: #0fa336;">Présence confirmée</span>
+                </div>
+              }
+
               <button class="btn-danger" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 8px;"
                       (click)="deleteConfirm.set(true)">
                 <lucide-icon [img]="Trash2" [size]="14"></lucide-icon>

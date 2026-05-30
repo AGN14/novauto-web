@@ -32,4 +32,13 @@ export class InspectionService {
       headers: { Authorization: `Bearer ${token}` }
     });
   }
+
+  confirmerPresence(inspectionId: number, code: string): Observable<any> {
+    const token = localStorage.getItem('novauto_token');
+    return this.http.post<any>(`${this.API_URL}/vendeur/inspections/${inspectionId}/confirmer-presence`, {
+      code
+    }, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+  }
 }

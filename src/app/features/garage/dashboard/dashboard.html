@@ -88,6 +88,52 @@
                 </div>
               </div>
 
+              <!-- Badge statut présence -->
+              <div style="margin: 16px 0;">
+                @if (demande.presence_confirmee) {
+                  <div style="background: rgba(15, 163, 54, 0.15); border: 1px solid #0fa336; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                    <lucide-icon [img]="CheckCircle" [size]="18" color="#0fa336"></lucide-icon>
+                    <span style="font-size: 13px; font-weight: 700; color: #0fa336;">Présence confirmée</span>
+                  </div>
+                } @else {
+                  <div style="background: rgba(226, 39, 24, 0.15); border: 1px solid #e22718; padding: 10px 16px; display: flex; align-items: center; gap: 8px;">
+                    <lucide-icon [img]="AlertCircle" [size]="18" color="#e22718"></lucide-icon>
+                    <span style="font-size: 13px; font-weight: 700; color: #e22718;">En attente de présence</span>
+                  </div>
+                }
+              </div>
+
+              <!-- Code de présence -->
+              @if (demande.code_presence && !demande.presence_confirmee && !isCodeExpired(demande.code_expire_at)) {
+                <div style="background: linear-gradient(135deg, #C9A84C 0%, #E8C97A 100%); border: 2px solid #C9A84C; padding: 24px; margin: 16px 0; text-align: center;">
+                  <p style="font-size: 11px; font-weight: 700; color: #000; letter-spacing: 2px; margin-bottom: 8px;">CODE DE PRÉSENCE</p>
+                  <div style="display: flex; justify-content: center; gap: 8px; margin: 16px 0;">
+                    @for (char of demande.code_presence.split(''); track $index) {
+                      <div style="background: #000; width: 40px; height: 50px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: 700; color: #C9A84C; font-family: monospace; border: 2px solid #C9A84C;">
+                        {{ char }}
+                      </div>
+                    }
+                  </div>
+                  <p style="font-size: 13px; font-weight: 700; color: #000; margin: 12px 0 4px;">{{ getTimeRemaining(demande.code_expire_at) }}</p>
+                  <p style="font-size: 11px; color: #000; opacity: 0.8;">Montrez ce code au vendeur</p>
+                </div>
+              }
+
+              <!-- Bouton générer code -->
+              @if (!demande.presence_confirmee && (!demande.code_presence || isCodeExpired(demande.code_expire_at))) {
+                <button
+                  style="width: 100%; background: #C9A84C; border: none; padding: 12px; font-size: 13px; font-weight: 700; color: #000; cursor: pointer; margin: 16px 0; display: flex; align-items: center; justify-content: center; gap: 8px;"
+                  (click)="genererCode(demande.id)"
+                  [disabled]="generatingCode() === demande.id">
+                  @if (generatingCode() === demande.id) {
+                    <span>Génération...</span>
+                  } @else {
+                    <lucide-icon [img]="Key" [size]="18"></lucide-icon>
+                    <span>GÉNÉRER LE CODE DE PRÉSENCE</span>
+                  }
+                </button>
+              }
+
               <button class="btn-inspect" (click)="inspectionner(demande.id)">
                 <lucide-icon [img]="ClipboardList" [size]="20"></lucide-icon>
                 <span>INSPECTER</span>
