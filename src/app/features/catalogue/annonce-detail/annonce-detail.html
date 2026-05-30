@@ -74,28 +74,32 @@
                 <lucide-icon [img]="Shield" [size]="16" color="#C9A84C"></lucide-icon>
                 <div>
                   <p class="spec-label">Statut douanier</p>
-                  <p class="spec-value">{{ getStatutDouanier() }}</p>
+                  <span [class]="annonce().vehicule?.statut_douanier === 'DEDOUANE' ? 'badge-success' : 'badge-muted'">
+                    {{ getStatutDouanier() }}
+                  </span>
                 </div>
               </div>
               <div class="spec-item">
                 <lucide-icon [img]="CheckCircle" [size]="16" color="#C9A84C"></lucide-icon>
                 <div>
                   <p class="spec-label">VIN vérifié</p>
-                  <p class="spec-value">{{ annonce().vehicule?.vin_verifie ? 'Oui' : 'Non' }}</p>
+                  <span [class]="annonce().vehicule?.vin_verifie ? 'badge-gold' : 'badge-muted'">
+                    {{ annonce().vehicule?.vin_verifie ? 'OUI ✓' : 'NON' }}
+                  </span>
                 </div>
               </div>
               <div class="spec-item">
                 <lucide-icon [img]="MapPin" [size]="16" color="#C9A84C"></lucide-icon>
                 <div>
                   <p class="spec-label">Localisation</p>
-                  <p class="spec-value">Cotonou, Bénin</p>
+                  <p class="spec-value">{{ annonce().ville }}, Bénin</p>
                 </div>
               </div>
               <div class="spec-item">
                 <lucide-icon [img]="Shield" [size]="16" color="#C9A84C"></lucide-icon>
                 <div>
                   <p class="spec-label">Type</p>
-                  <p class="spec-value">{{ annonce().vehicule?.modele?.type_carrosserie }}</p>
+                  <p class="spec-value">{{ annonce().vehicule?.modele?.type_carrosserie || '—' }}</p>
                 </div>
               </div>
             </div>
@@ -141,7 +145,6 @@
               </div>
 
               <div class="inspection-card">
-                <!-- En-tête garage -->
                 <div class="inspection-header">
                   <div>
                     <p class="inspection-garage-name">{{ annonce().vehicule?.rapport_inspection?.garage?.nom }}</p>
@@ -156,7 +159,6 @@
                   </div>
                 </div>
 
-                <!-- États -->
                 <div class="inspection-grid">
                   <div class="inspection-item">
                     <p class="inspection-label">Carrosserie</p>
@@ -184,13 +186,11 @@
                   </div>
                 </div>
 
-                <!-- Kilométrage vérifié -->
                 <div class="inspection-km">
                   <p class="inspection-label">Kilométrage vérifié</p>
                   <p class="inspection-km-value">{{ annonce().vehicule?.rapport_inspection?.kilometrage_verifie | number }} KM</p>
                 </div>
 
-                <!-- Observations -->
                 @if (annonce().vehicule?.rapport_inspection?.observations) {
                   <div class="inspection-observations">
                     <p class="inspection-label">Observations</p>
@@ -234,10 +234,9 @@
                     </button>
                   </a>
                 } @else if (canTakeAction()) {
-                  <!-- Aucune action active -->
                   <div style="display: grid; gap: 12px;">
                     <a [routerLink]="['/acheteur/nouveau-rendez-vous', annonce().id]" style="text-decoration: none;">
-                      <button class="btn-ghost" style="width: 100%;">
+                      <button class="btn-secondary" style="width: 100%;">
                         PRENDRE UN RENDEZ-VOUS
                       </button>
                     </a>
@@ -248,7 +247,6 @@
                     </a>
                   </div>
                 } @else {
-                  <!-- Action active - boutons grisés -->
                   <div style="display: grid; gap: 12px;">
                     <button class="btn-disabled" style="width: 100%;" disabled>
                       PRENDRE UN RENDEZ-VOUS
@@ -291,7 +289,7 @@
               Estimez votre coût de revient total incluant les frais de douane, CNCB, PVI et ANaTT.
             </p>
             <a [routerLink]="['/simulateur']" [queryParams]="{prix: annonce().prix}" style="text-decoration: none;">
-              <button class="btn-ghost" style="width: 100%; font-size: 11px;">
+              <button class="btn-secondary" style="width: 100%; font-size: 11px;">
                 LANCER LE SIMULATEUR →
               </button>
             </a>
@@ -319,7 +317,6 @@
           </div>
         </div>
 
-        <!-- FORMULAIRE AVIS (si acheteur connecté avec réservation confirmée) -->
         @if (authService.isAcheteur() && !avisSuccess()) {
           <div class="avis-form-card">
             <h4 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">
@@ -354,6 +351,7 @@
 
             <button
               class="btn-primary"
+              style="width: auto; padding: 12px 24px;"
               (click)="soumettreAvis()"
               [disabled]="isSubmittingAvis() || noteFormulaire() === 0">
               @if (isSubmittingAvis()) {
@@ -375,7 +373,6 @@
           </div>
         }
 
-        <!-- LISTE DES AVIS APPROUVÉS -->
         @if (isLoadingAvis()) {
           <div style="text-align: center; padding: 40px; color: #7e7e7e;">
             <p style="font-size: 14px;">Chargement des avis...</p>

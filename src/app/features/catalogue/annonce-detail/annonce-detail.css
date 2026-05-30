@@ -343,7 +343,51 @@
   padding: 24px;
   margin-top: 24px;
 }
+/* CHIPS BADGES - même style que les cards */
+.badge-success {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: rgba(15, 163, 54, 0.12);
+  color: #0fa336;
+  border: 1px solid rgba(15, 163, 54, 0.2);
+}
 
+.badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: rgba(201, 168, 76, 0.12);
+  color: #C9A84C;
+  border: 1px solid rgba(201, 168, 76, 0.2);
+}
+
+.badge-muted {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: rgba(126, 126, 126, 0.08);
+  color: #7e7e7e;
+  border: 1px solid rgba(126, 126, 126, 0.15);
+}
 .badge-blue {
   background: rgba(26, 115, 232, 0.12);
   color: #1a73e8;
@@ -499,6 +543,23 @@
   letter-spacing: 1.5px;
   cursor: not-allowed;
   text-transform: uppercase;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #C9A84C;
+  border: 1px solid #C9A84C;
+  padding: 16px 32px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+
+.btn-secondary:hover {
+  background: rgba(201, 168, 76, 0.1);
 }
 
 .btn-danger {
