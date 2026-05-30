@@ -1,0 +1,68 @@
+<main style="background: #000; min-height: 100vh;">
+
+  <!-- HEADER -->
+  <section style="background: #0a0a0a; border-bottom: 1px solid #1a1a1a; padding: 32px 80px;">
+    <div style="max-width: 1440px; margin: 0 auto;">
+      <a routerLink="/garage/dashboard" style="text-decoration: none; display: flex; align-items: center; gap: 8px; font-size: 13px; color: #7e7e7e; margin-bottom: 16px;">
+        <lucide-icon [img]="ArrowLeft" [size]="16"></lucide-icon>
+        Retour au tableau de bord
+      </a>
+      <div style="height: 3px; width: 40px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 16px;"></div>
+      <p style="font-size: 11px; color: #C9A84C; letter-spacing: 2px; font-weight: 700; margin-bottom: 4px;">Espace Garage</p>
+      <h1 style="font-size: 28px; font-weight: 700; color: #fff; text-transform: uppercase;">MES DISPONIBILITÉS</h1>
+    </div>
+  </section>
+
+  <div style="max-width: 1440px; margin: 0 auto; padding: 40px 80px;">
+
+    @if (successMessage()) {
+      <div style="background: rgba(15, 163, 54, 0.1); border: 1px solid #0fa336; padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 13px; color: #0fa336; font-weight: 700;">✓ {{ successMessage() }}</span>
+      </div>
+    }
+
+    @if (errorMessage()) {
+      <div style="background: rgba(226, 39, 24, 0.1); border: 1px solid #e22718; padding: 16px; margin-bottom: 24px; display: flex; align-items: center; gap: 12px;">
+        <span style="font-size: 13px; color: #e22718; font-weight: 700;">✗ {{ errorMessage() }}</span>
+      </div>
+    }
+
+    @if (isLoading()) {
+      <div style="text-align: center; padding: 80px; color: #7e7e7e;">
+        <p style="font-size: 14px; letter-spacing: 1px;">CHARGEMENT...</p>
+      </div>
+    } @else {
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px;">
+
+        <!-- CALENDRIER -->
+        <div>
+          <h2 style="font-size: 16px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <lucide-icon [img]="Calendar" [size]="18" color="#C9A84C"></lucide-icon>
+            CALENDRIER
+          </h2>
+          <app-calendar-disponibilites
+            [disponibilites]="disponibilites"
+            (dateSelected)="onDateSelected($event)">
+          </app-calendar-disponibilites>
+        </div>
+
+        <!-- CRÉNEAUX -->
+        <div>
+          <h2 style="font-size: 16px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+            <lucide-icon [img]="Clock" [size]="18" color="#C9A84C"></lucide-icon>
+            CRÉNEAUX HORAIRES
+          </h2>
+          <app-creneaux-horaires
+            [disponibilites]="selectedDateDisponibilites"
+            [selectedDate]="selectedDate"
+            [canEdit]="true"
+            (creneauxBatchCreated)="onCreneauxBatchCreated($event)"
+            (creneauDeleted)="onCreneauDeleted($event)">
+          </app-creneaux-horaires>
+        </div>
+
+      </div>
+    }
+
+  </div>
+</main>

@@ -221,6 +221,12 @@ export const routes: Routes = [
         canActivate: [garageGuard],
         loadComponent: () =>
           import('./features/garage/inspection-form/inspection-form').then(m => m.InspectionForm)
+      },
+      {
+        path: 'disponibilites',
+        canActivate: [garageGuard],
+        loadComponent: () =>
+          import('./features/garage/disponibilites/disponibilites').then(m => m.GarageDisponibilites)
       }
     ]
   },

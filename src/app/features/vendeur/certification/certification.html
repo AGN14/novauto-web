@@ -175,6 +175,45 @@
               }
             </div>
 
+            <!-- CALENDRIER DISPONIBILITÉS GARAGE -->
+            @if (selectedGarage()) {
+              <div style="margin-top: 40px;">
+                <div style="height: 2px; background: linear-gradient(to right, #C9A84C, #E8C97A); margin-bottom: 32px;"></div>
+
+                <h3 style="font-size: 18px; font-weight: 700; color: #fff; text-transform: uppercase; letter-spacing: 1px; text-align: center; margin-bottom: 8px;">
+                  CHOISISSEZ UN CRÉNEAU
+                </h3>
+                <p style="font-size: 13px; color: #7e7e7e; text-align: center; margin-bottom: 32px;">
+                  Sélectionnez une date et un horaire pour votre inspection
+                </p>
+
+                @if (isLoadingDisponibilites()) {
+                  <div style="text-align: center; padding: 40px; color: #7e7e7e;">
+                    <p style="font-size: 13px;">Chargement des créneaux disponibles...</p>
+                  </div>
+                } @else if (disponibilites.length === 0) {
+                  <div style="text-align: center; padding: 40px; color: #7e7e7e;">
+                    <lucide-icon [img]="AlertTriangle" [size]="24" color="#7e7e7e" style="margin-bottom: 12px;"></lucide-icon>
+                    <p style="font-size: 13px;">Aucun créneau disponible pour ce garage.</p>
+                  </div>
+                } @else {
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 32px;">
+                    <app-calendar-disponibilites
+                      [disponibilites]="disponibilites"
+                      (dateSelected)="onDateSelected($event)">
+                    </app-calendar-disponibilites>
+
+                    <app-creneaux-horaires
+                      [disponibilites]="selectedDateDisponibilites"
+                      [selectedDate]="selectedDate"
+                      [selectionMode]="true"
+                      (creneauSelected)="onCreneauSelected($event)">
+                    </app-creneaux-horaires>
+                  </div>
+                }
+              </div>
+            }
+
             @if (errorMessage()) {
               <div class="alert-error">
                 <lucide-icon [img]="AlertTriangle" [size]="18" color="#e22718"></lucide-icon>
@@ -185,7 +224,7 @@
             <div style="margin-top: 32px; text-align: center;">
               <button class="btn-primary"
                       (click)="demanderInspection()"
-                      [disabled]="isSendingInspection() || !selectedGarage()"
+                      [disabled]="isSendingInspection() || !selectedGarage() || !selectedDisponibilite"
                       style="min-width: 320px;">
                 @if (isSendingInspection()) {
                   ENVOI EN COURS...

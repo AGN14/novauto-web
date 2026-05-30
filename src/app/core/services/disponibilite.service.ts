@@ -63,4 +63,12 @@ export class DisponibiliteService {
   getDisponibilitesGarage(garageId: number): Observable<Disponibilite[]> {
     return this.http.get<Disponibilite[]>(`${environment.apiUrl}/garages/${garageId}/disponibilites`);
   }
+
+  creerDisponibilitesBatchGarage(jour: string, creneaux: Array<{ heure_debut: string; heure_fin: string }>): Observable<any> {
+    return this.http.post(`${this.garageUrl}/batch`, { jour, creneaux });
+  }
+
+  supprimerDisponibiliteGarage(id: number): Observable<any> {
+    return this.http.delete(`${this.garageUrl}/${id}`);
+  }
 }

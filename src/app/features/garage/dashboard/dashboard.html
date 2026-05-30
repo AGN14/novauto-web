@@ -13,6 +13,20 @@
   </div>
 
   <div class="dashboard-content">
+
+    <!-- NAVIGATION RAPIDE -->
+    <div style="display: flex; gap: 16px; margin-bottom: 32px;">
+      <a routerLink="/garage/disponibilites" style="text-decoration: none; flex: 1;">
+        <div style="background: #0a0a0a; border: 1px solid #1a1a1a; padding: 20px; display: flex; align-items: center; gap: 16px; transition: all 0.2s; cursor: pointer;">
+          <lucide-icon [img]="Calendar" [size]="32" color="#C9A84C"></lucide-icon>
+          <div>
+            <p style="font-size: 11px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">GÉRER</p>
+            <p style="font-size: 16px; font-weight: 700; color: #fff;">Mes disponibilités</p>
+          </div>
+        </div>
+      </a>
+    </div>
+
     <div class="section-header">
       <div class="section-title">
         <lucide-icon [img]="ClipboardList" [size]="24"></lucide-icon>
@@ -54,6 +68,16 @@
                   <lucide-icon [img]="Calendar" [size]="16"></lucide-icon>
                   <span>Demandé le {{ formatDate(demande.date_soumission) }}</span>
                 </div>
+                @if (demande.date_rdv && demande.heure_rdv) {
+                  <div class="detail-row" style="background: rgba(201, 168, 76, 0.1); padding: 8px; border-left: 2px solid #C9A84C; margin: 4px 0;">
+                    <span class="label" style="color: #C9A84C; font-weight: 700;">DATE RDV:</span>
+                    <span class="value" style="color: #fff; font-weight: 700;">{{ formatDate(demande.date_rdv) }}</span>
+                  </div>
+                  <div class="detail-row" style="background: rgba(201, 168, 76, 0.1); padding: 8px; border-left: 2px solid #C9A84C;">
+                    <span class="label" style="color: #C9A84C; font-weight: 700;">HEURE:</span>
+                    <span class="value" style="color: #fff; font-weight: 700;">{{ demande.heure_rdv.substring(0, 5) }}</span>
+                  </div>
+                }
                 <div class="detail-row">
                   <span class="label">Kilométrage:</span>
                   <span class="value">{{ formatPrice(demande.annonce.vehicule.kilometrage) }} km</span>

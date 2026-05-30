@@ -1,6 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../../environments/environment';
 import { GarageAuthService } from '../../../core/services/garage-auth';
@@ -10,6 +10,8 @@ export interface DemandeInspection {
   id: number;
   statut: string;
   date_soumission: string;
+  date_rdv?: string | null;
+  heure_rdv?: string | null;
   annonce: {
     id: number;
     titre: string;
@@ -36,7 +38,7 @@ export interface DemandeInspection {
 @Component({
   selector: 'app-garage-dashboard',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, RouterLink],
   templateUrl: './dashboard.html',
   styleUrls: ['./dashboard.css']
 })

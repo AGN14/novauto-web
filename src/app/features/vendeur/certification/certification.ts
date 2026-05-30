@@ -3,12 +3,16 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { InspectionService } from '../../../core/services/inspection.service';
 import { AnnonceService } from '../../../core/services/annonce';
+import { DisponibiliteService } from '../../../core/services/disponibilite.service';
+import { Disponibilite } from '../../../core/models/rendez-vous.model';
+import { CalendarDisponibilites } from '../../../shared/components/calendar-disponibilites/calendar-disponibilites';
+import { CreneauxHoraires } from '../../../shared/components/creneaux-horaires/creneaux-horaires';
 import { LucideAngularModule, ArrowLeft, ShieldCheck, CheckCircle, Clock, AlertTriangle, MapPin, Phone } from 'lucide-angular';
 
 @Component({
   selector: 'app-certification',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule],
+  imports: [CommonModule, LucideAngularModule, CalendarDisponibilites, CreneauxHoraires],
   templateUrl: './certification.html',
   styleUrl: './certification.css'
 })
@@ -27,9 +31,16 @@ export class Certification implements OnInit {
   inspections = signal<any[]>([]);
   selectedGarage = signal<number | null>(null);
 
+  // Disponibilités du garage sélectionné
+  disponibilites: Disponibilite[] = [];
+  selectedDate: Date | null = null;
+  selectedDateDisponibilites: Disponibilite[] = [];
+  selectedDisponibilite: Disponibilite | null = null;
+
   isLoadingAnnonce = signal(true);
   isLoadingGarages = signal(true);
   isLoadingInspections = signal(true);
+  isLoadingDisponibilites = signal(false);
   isSendingInspection = signal(false);
 
   inspectionSuccess = signal(false);
@@ -39,7 +50,8 @@ export class Certification implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private annonceService: AnnonceService,
-    private inspectionService: InspectionService
+    private inspectionService: InspectionService,
+    private disponibiliteService: DisponibiliteService
   ) {}
 
   ngOnInit(): void {
@@ -85,6 +97,24 @@ export class Certification implements OnInit {
   selectGarage(garageId: number): void {
     this.selectedGarage.set(garageId);
     this.errorMessage.set('');
+
+    // Charger les disponibilités du garage
+    this.isLoadingDisponibilites.set(true);
+    this.disponibilites = [];
+    this.selectedDate = null;
+    this.selectedDateDisponibilites = [];
+    this.selectedDisponibilite = null;
+
+    this.disponibiliteService.getDisponibilitesGarage(garageId).subscribe({
+      next: (data) => {
+        this.disponibilites = data;
+        this.isLoadingDisponibilites.set(false);
+      },
+      error: (err) => {
+        console.error('Erreur chargement disponibilités garage:', err);
+        this.isLoadingDisponibilites.set(false);
+      }
+    });
   }
 
   demanderInspection(): void {
@@ -93,12 +123,22 @@ export class Certification implements OnInit {
       return;
     }
 
+    if (!this.selectedDisponibilite) {
+      this.errorMessage.set('Veuillez sélectionner un créneau disponible.');
+      return;
+    }
+
     this.isSendingInspection.set(true);
     this.errorMessage.set('');
 
+    const dateRdv = this.selectedDisponibilite.jour;
+    const heureRdv = this.selectedDisponibilite.heure_debut;
+
     this.inspectionService.demanderInspection(
       this.annonce()!.id,
-      this.selectedGarage()!
+      this.selectedGarage()!,
+      dateRdv,
+      heureRdv
     ).subscribe({
       next: () => {
         this.isSendingInspection.set(false);
@@ -143,5 +183,33 @@ export class Certification implements OnInit {
 
   retourAnnonce(): void {
     this.router.navigate(['/vendeur/mes-annonces', this.annonce()?.id]);
+  }
+
+  onDateSelected(date: Date): void {
+    this.selectedDate = date;
+    this.updateSelectedDateDisponibilites();
+    this.selectedDisponibilite = null;
+  }
+
+  private updateSelectedDateDisponibilites(): void {
+    if (!this.selectedDate) {
+      this.selectedDateDisponibilites = [];
+      return;
+    }
+
+    const dateString = this.formatDateToString(this.selectedDate);
+    this.selectedDateDisponibilites = this.disponibilites.filter(d => d.jour === dateString);
+  }
+
+  private formatDateToString(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  onCreneauSelected(disponibilite: Disponibilite): void {
+    this.selectedDisponibilite = disponibilite;
+    this.errorMessage.set('');
   }
 }
