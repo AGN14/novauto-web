@@ -93,8 +93,12 @@ export class NouvelleReservation implements OnInit {
     this.isSubmitting.set(true);
     this.errorMessage.set(null);
 
+    // Préparer les données du créneau sélectionné
+    const dateRdv = this.selectedDisponibilite.jour;
+    const heureRdv = this.selectedDisponibilite.heure_debut;
+
     // Étape 1: Créer la réservation
-    this.reservationService.creerReservation(this.annonceId()).subscribe({
+    this.reservationService.creerReservation(this.annonceId(), dateRdv, heureRdv).subscribe({
       next: (reservation) => {
         console.log('Réservation créée:', reservation);
 

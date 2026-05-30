@@ -83,6 +83,18 @@
                       <p style="font-size: 12px; color: #7e7e7e;">{{ reservation.acheteur?.user?.email }}</p>
                     </div>
                     <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">DATE VISITE</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ reservation.date_rdv ? formatDate(reservation.date_rdv) : '—' }}
+                      </p>
+                    </div>
+                    <div>
+                      <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">HEURE</p>
+                      <p style="font-size: 14px; font-weight: 700; color: #fff;">
+                        {{ reservation.heure_rdv ? formatHeure(reservation.heure_rdv) : '—' }}
+                      </p>
+                    </div>
+                    <div>
                       <p style="font-size: 10px; color: #7e7e7e; letter-spacing: 1px; margin-bottom: 4px;">ACOMPTE PAYÉ</p>
                       <p style="font-size: 16px; font-weight: 700; color: #C9A84C;">
                         {{ formatPrix(reservation.montant_paye) }} FCFA

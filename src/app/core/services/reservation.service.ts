@@ -12,8 +12,12 @@ export class ReservationService {
 
   constructor(private http: HttpClient) {}
 
-  creerReservation(annonceId: number): Observable<any> {
-    return this.http.post(this.apiUrl, { annonce_id: annonceId });
+  creerReservation(annonceId: number, dateRdv?: string, heureRdv?: string): Observable<any> {
+    return this.http.post(this.apiUrl, {
+      annonce_id: annonceId,
+      date_rdv: dateRdv,
+      heure_rdv: heureRdv
+    });
   }
 
   getMesReservations(): Observable<any[]> {
