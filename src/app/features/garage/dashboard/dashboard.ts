@@ -64,6 +64,7 @@ export class GarageDashboard implements OnInit, OnDestroy {
   loading = signal(true);
   generatingCode = signal<number | null>(null);
   codeTimers = new Map<number, any>();
+  codeErrors = new Map<number, string>();
 
   ngOnInit() {
     this.chargerDemandes();
@@ -106,6 +107,7 @@ export class GarageDashboard implements OnInit, OnDestroy {
 
   genererCode(demandeId: number): void {
     this.generatingCode.set(demandeId);
+    this.codeErrors.delete(demandeId); // Effacer les anciennes erreurs
 
     this.http.post<{ code: string; expire_at: string }>(`${environment.apiUrl}/garage/inspections/${demandeId}/generer-code`, {})
       .subscribe({
@@ -118,7 +120,9 @@ export class GarageDashboard implements OnInit, OnDestroy {
         error: (err) => {
           console.error('Erreur génération code:', err);
           this.generatingCode.set(null);
-          alert(err.error?.message || 'Erreur lors de la génération du code');
+          this.codeErrors.set(demandeId, err.error?.message || 'Erreur lors de la génération du code');
+          // L'erreur disparaît après 5 secondes
+          setTimeout(() => this.codeErrors.delete(demandeId), 5000);
         }
       });
   }
