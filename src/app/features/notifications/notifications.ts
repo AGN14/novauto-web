@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { NotificationService } from '../../core/services/notification.service';
 import { Bell } from 'lucide-angular';
 import { LucideAngularModule } from 'lucide-angular';
@@ -7,10 +8,7 @@ import { LucideAngularModule } from 'lucide-angular';
 @Component({
   selector: 'app-notifications',
   standalone: true,
-  imports: [
-    CommonModule,
-    LucideAngularModule
-  ],
+  imports: [CommonModule, LucideAngularModule],
   templateUrl: './notifications.html',
   styleUrl: './notifications.css'
 })
@@ -20,7 +18,10 @@ export class Notifications implements OnInit {
   notifications = signal<any[]>([]);
   isLoading = signal(true);
 
-  constructor(private notificationService: NotificationService) {}
+  constructor(
+    private notificationService: NotificationService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.loadNotifications();
@@ -29,11 +30,6 @@ export class Notifications implements OnInit {
   loadNotifications(): void {
     this.notificationService.getNotifications().subscribe({
       next: (data) => {
-        console.log('Notifications reçues:', data);
-        // Afficher la première notification en détail pour voir la structure
-        if (data && data.length > 0) {
-          console.log('Première notification détaillée:', JSON.stringify(data[0], null, 2));
-        }
         this.notifications.set(data);
         this.isLoading.set(false);
       },
@@ -70,22 +66,15 @@ export class Notifications implements OnInit {
   }
 
   onNotificationClick(notification: any): void {
-    // Marquer comme lue
     this.marquerLue(notification.id);
-
-    // Rediriger si lien disponible
-    // if (notification.lien) {
-    //   this.router.navigate([notification.lien]);
-    // }
+    if (notification.lien) {
+      this.router.navigate([notification.lien]);
+    }
   }
 
   getInitiales(notification: any): string {
     const expediteur = this.getExpediteur(notification);
-
-    if (expediteur === 'NOVAuto') {
-      return 'N';
-    }
-
+    if (expediteur === 'NOVAuto') return 'N';
     const mots = expediteur.split(' ');
     if (mots.length >= 2) {
       return (mots[0][0] + mots[1][0]).toUpperCase();
@@ -94,21 +83,15 @@ export class Notifications implements OnInit {
   }
 
   getExpediteur(notification: any): string {
-    // Si expéditeur disponible (nouveau système)
     if (notification.expediteur) {
-      // Si l'expéditeur a un profil acheteur
       if (notification.expediteur.acheteur) {
         return `${notification.expediteur.prenom || ''} ${notification.expediteur.nom || ''}`.trim();
       }
-      // Si l'expéditeur a un profil vendeur
       if (notification.expediteur.vendeur) {
         return notification.expediteur.vendeur.nom_entreprise || `${notification.expediteur.prenom || ''} ${notification.expediteur.nom || ''}`.trim();
       }
-      // Sinon juste le nom de l'user
       return `${notification.expediteur.prenom || ''} ${notification.expediteur.nom || ''}`.trim() || 'Utilisateur';
     }
-
-    // Fallback : notifications système
     return 'NOVAuto';
   }
 

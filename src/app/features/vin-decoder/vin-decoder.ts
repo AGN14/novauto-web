@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { VinService } from '../../core/services/vin';
-import { LucideAngularModule, Search, AlertTriangle, CheckCircle, Car, Info } from 'lucide-angular';
+import { AuthService } from '../../core/services/auth.service';
+import { LucideAngularModule, Search, AlertTriangle, CheckCircle, Car, Info, Lock } from 'lucide-angular';
 
 @Component({
   selector: 'app-vin-decoder',
@@ -13,32 +14,32 @@ import { LucideAngularModule, Search, AlertTriangle, CheckCircle, Car, Info } fr
   styleUrl: './vin-decoder.css'
 })
 export class VinDecoder {
-
   readonly Search = Search;
   readonly AlertTriangle = AlertTriangle;
   readonly CheckCircle = CheckCircle;
   readonly Car = Car;
   readonly Info = Info;
+  readonly Lock = Lock;
 
   vin = signal('');
   isLoading = signal(false);
   errorMessage = signal('');
   result = signal<any>(null);
 
-  constructor(private vinService: VinService) {}
+  constructor(
+    private vinService: VinService,
+    public authService: AuthService
+  ) {}
 
   onSubmit(): void {
     const vinValue = this.vin().trim().toUpperCase();
-
     if (vinValue.length !== 17) {
       this.errorMessage.set('Le numéro VIN doit contenir exactement 17 caractères.');
       return;
     }
-
     this.isLoading.set(true);
     this.errorMessage.set('');
     this.result.set(null);
-
     this.vinService.decodeVin(vinValue).subscribe({
       next: (data) => {
         if (!data.marque && !data.modele) {

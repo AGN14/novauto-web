@@ -21,7 +21,26 @@
 
       <!-- FORMULAIRE -->
       <div>
-        <div class="form-card">
+        <div class="form-card" style="position: relative;">
+
+          <!-- OVERLAY CONNEXION -->
+          @if (!authService.isLoggedIn()) {
+            <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px);">
+              <lucide-icon [img]="Lock" [size]="40" color="#C9A84C" style="margin-bottom: 16px;"></lucide-icon>
+              <p style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+                Connexion requise
+              </p>
+              <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 24px; text-align: center; max-width: 260px; line-height: 1.5;">
+                Connectez-vous pour utiliser le simulateur de coût
+              </p>
+              <a routerLink="/auth/login" style="text-decoration: none;">
+                <button class="btn-primary" style="padding: 12px 32px; font-size: 12px; letter-spacing: 1.5px;">
+                  SE CONNECTER
+                </button>
+              </a>
+            </div>
+          }
+
           <div class="form-card-header">
             <lucide-icon [img]="Calculator" [size]="18" color="#C9A84C"></lucide-icon>
             <p class="form-card-title">PARAMÈTRES DU VÉHICULE</p>
@@ -101,7 +120,18 @@
       </div>
 
       <!-- RÉSULTATS -->
-      <div>
+      <div style="position: relative;">
+
+        <!-- OVERLAY CONNEXION RÉSULTATS -->
+        @if (!authService.isLoggedIn()) {
+          <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px);">
+            <lucide-icon [img]="Lock" [size]="40" color="#C9A84C" style="margin-bottom: 16px;"></lucide-icon>
+            <p style="font-size: 14px; color: #7e7e7e; text-align: center; max-width: 260px; line-height: 1.5;">
+              Les résultats seront visibles après connexion
+            </p>
+          </div>
+        }
+
         @if (!hasResult()) {
           <div class="result-empty">
             <lucide-icon [img]="Calculator" [size]="48" color="#2a2a2a"></lucide-icon>
@@ -126,9 +156,7 @@
             <div style="height: 1px; background: #1a1a1a; margin: 8px 0;"></div>
 
             <div class="result-ligne">
-              <span class="result-label">
-                Droits de douane ({{ tauxDouane() * 100 }}%)
-              </span>
+              <span class="result-label">Droits de douane ({{ tauxDouane() * 100 }}%)</span>
               <span class="result-valeur">{{ formatPrix(droitsDouane()) }} FCFA</span>
             </div>
 

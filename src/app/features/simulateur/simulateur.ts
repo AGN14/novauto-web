@@ -1,14 +1,15 @@
 import { Component, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
-import { LucideAngularModule, Calculator, Info, Download, RotateCcw } from 'lucide-angular';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { LucideAngularModule, Calculator, Info, Download, RotateCcw, Lock } from 'lucide-angular';
 import { CustomSelect, SelectOption } from '../../shared/components/custom-select/custom-select';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-simulateur',
   standalone: true,
-  imports: [CommonModule, FormsModule, LucideAngularModule, CustomSelect],
+  imports: [CommonModule, FormsModule, LucideAngularModule, CustomSelect, RouterLink],
   templateUrl: './simulateur.html',
   styleUrl: './simulateur.css'
 })
@@ -18,6 +19,7 @@ export class Simulateur implements OnInit {
   readonly Info = Info;
   readonly Download = Download;
   readonly RotateCcw = RotateCcw;
+  readonly Lock = Lock;
 
   prixFOB = signal<number | null>(null);
   anneeVehicule = signal<number>(new Date().getFullYear());
@@ -89,7 +91,10 @@ export class Simulateur implements OnInit {
 
   hasResult = computed(() => this.prixFOB() !== null && this.prixFOB()! > 0);
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(
+    private route: ActivatedRoute,
+    public authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {

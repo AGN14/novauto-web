@@ -19,7 +19,26 @@
   <div style="max-width: 1000px; margin: 0 auto; padding: 48px 80px;">
 
     <!-- FORMULAIRE -->
-    <div class="vin-form-card">
+    <div class="vin-form-card" style="position: relative;">
+
+      <!-- OVERLAY CONNEXION -->
+      @if (!authService.isLoggedIn()) {
+        <div style="position: absolute; inset: 0; background: rgba(0,0,0,0.88); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; backdrop-filter: blur(4px);">
+          <lucide-icon [img]="Lock" [size]="40" color="#C9A84C" style="margin-bottom: 16px;"></lucide-icon>
+          <p style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">
+            Connexion requise
+          </p>
+          <p style="font-size: 13px; color: #7e7e7e; margin-bottom: 24px; text-align: center; max-width: 260px; line-height: 1.5;">
+            Connectez-vous pour utiliser le décodeur VIN
+          </p>
+          <a routerLink="/auth/login" style="text-decoration: none;">
+            <button class="btn-primary" style="padding: 12px 32px; font-size: 12px; letter-spacing: 1.5px;">
+              SE CONNECTER
+            </button>
+          </a>
+        </div>
+      }
+
       <div class="vin-form-header">
         <lucide-icon [img]="Search" [size]="18" color="#C9A84C"></lucide-icon>
         <p class="vin-form-title">ENTREZ LE NUMÉRO VIN</p>
